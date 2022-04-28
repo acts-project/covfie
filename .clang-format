@@ -1,0 +1,44 @@
+---
+Language: Cpp
+Standard: c++17
+AccessModifierOffset: -4
+AlignAfterOpenBracket: BlockIndent
+AllowAllParametersOfDeclarationOnNextLine: true
+AllowShortBlocksOnASingleLine: Empty
+AllowShortEnumsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: false
+AllowShortIfStatementsOnASingleLine: false
+AllowShortLoopsOnASingleLine: false
+AlwaysBreakTemplateDeclarations: Yes
+BreakConstructorInitializers: BeforeComma
+BreakInheritanceList: BeforeComma
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterClass: true
+  AfterControlStatement: MultiLine
+  AfterFunction: true
+PointerAlignment: Left
+BinPackParameters: false
+BinPackArguments: false
+EmptyLineAfterAccessModifier: Never
+EmptyLineBeforeAccessModifier: Always
+FixNamespaceComments: false
+PackConstructorInitializers: Never
+PointerAlignment: Middle
+IndentWidth: 4
+ColumnLimit: 80
+IncludeBlocks: Regroup
+IncludeCategories:
+  # standard library includes: '<...>' without any '/' or '.' in the path
+  - Regex: '^<[^/.]*>'
+    Priority: 0
+  # boost/test is special and must be included at the top
+  - Regex: '^<boost.*'
+    Priority: 1
+  # other system includes: '<...>' without further conditions
+  - Regex: '^<.*>'
+    Priority: 2
+  # covfie headers before system headers to ensure that they include what they use
+  - Regex: '^<covfie.*'
+    Priority: 3
+---

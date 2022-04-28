@@ -1,0 +1,5 @@
+build/
+install/
+*.bmp
+*.cvf
+*.covfie
