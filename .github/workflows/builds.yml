@@ -1,0 +1,51 @@
+# This file is part of covfie, a part of the ACTS project
+#
+# Copyright (c) 2022 CERN
+#
+# This Source Code Form is subject to the terms of the Mozilla Public License,
+# v. 2.0. If a copy of the MPL was not distributed with this file, You can
+# obtain one at http://mozilla.org/MPL/2.0/.
+
+name: Build Tests
+
+on: [ push, pull_request ]
+
+jobs:
+  native:
+    strategy:
+      matrix:
+        BUILD:
+          - "Release"
+          - "Debug"
+
+    runs-on: "ubuntu-latest"
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install Google Test
+      run: |
+        wget https://github.com/google/googletest/archive/refs/tags/release-1.11.0.tar.gz
+        tar -xzvf release-1.11.0.tar.gz
+        cmake -S googletest-release-1.11.0 -B gtest_build -DCMAKE_INSTALL_PREFIX=${{ github.workspace }}/.prefixes/gtest/
+        cmake --build gtest_build
+        cmake --install gtest_build
+    - name: Install Boost
+      run: sudo apt install
+        libboost-filesystem-dev
+        libboost-program-options-dev
+        libboost-log-dev
+    - name: Configure
+      run: cmake
+        -DCMAKE_BUILD_TYPE=${{ matrix.BUILD }}
+        -DCOVFIE_BUILD_TESTS=On
+        -DCOVFIE_BUILD_EXAMPLES=On
+        -DCOVFIE_BUILD_BENCHMARKS=On
+        -DCMAKE_PREFIX_PATH=${{ github.workspace }}/.prefixes/gtest/
+        -S ${{ github.workspace }}
+        -B build
+    - name: Build
+      run: cmake --build build
+    - name: Core Tests
+      run: build/tests/core/test_core
+    - name: CPU Tests
+      run: build/tests/cpu/test_cpu

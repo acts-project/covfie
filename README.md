@@ -1,5 +1,7 @@
 # Covfie
 
+![](https://github.com/stephenswat/covfie/actions/workflows/builds.yml/badge.svg?branch=main)
+
 Covfie (pronounced _coffee_) is a **Co**-processor **v**ector **fie**ld
 library. Covfie consists of two main components; the first is the library
 itself, which can be used by any scientific application using CUDA or other
