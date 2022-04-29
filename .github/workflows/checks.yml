@@ -1,0 +1,26 @@
+# This file is part of covfie, a part of the ACTS project
+#
+# Copyright (c) 2022 CERN
+#
+# This Source Code Form is subject to the terms of the Mozilla Public License,
+# v. 2.0. If a copy of the MPL was not distributed with this file, You can
+# obtain one at http://mozilla.org/MPL/2.0/.
+
+name: Code Checks
+
+on: [ push, pull_request ]
+
+jobs:
+  native:
+    runs-on: "ubuntu-20.04"
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install clang-format
+      run: |
+        wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
+        echo "deb http://apt.llvm.org/focal/ llvm-toolchain-focal-14 main" | sudo tee /etc/apt/sources.list
+        sudo apt update
+        sudo apt install clang-format-14
+    - name: clang-format
+      run: clang-format-14 -Werror -n --verbose -i --style=file $(find tests lib examples benchmarks -name "*.cpp" -o -name "*.hpp" -o -name "*.cu")
