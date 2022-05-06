@@ -17,16 +17,16 @@
 #include <covfie/core/qualifiers.hpp>
 
 namespace covfie::backend::transformer::interpolator {
-template <typename _backend_tc>
+template <typename _backend_tc, typename _input_scalar_type = float>
 struct _nearest_neighbour {
-
+    using input_scalar_type = _input_scalar_type;
     using backend_t = _backend_tc;
     static constexpr std::size_t output_dimensions =
         backend_t::output_dimensions;
     static constexpr std::size_t coordinate_dimensions =
         backend_t::coordinate_dimensions;
 
-    using coordinate_t = std::array<float, coordinate_dimensions>;
+    using coordinate_t = std::array<input_scalar_type, coordinate_dimensions>;
     using integral_coordinate_t = typename backend_t::integral_coordinate_t;
     using coordinate_scalar_t = typename backend_t::coordinate_scalar_t;
     using output_t = typename backend_t::output_t;

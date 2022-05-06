@@ -29,13 +29,15 @@ struct _modular {
     using index_t = std::size_t;
     using layout_t = _layout_t;
     static constexpr std::size_t coordinate_dimensions = layout_t::dims;
-    using storage_t = _storage_tc<float, output_dimensions, std::size_t>;
-    using value_t = float[output_dimensions];
+    using output_scalar_t = typename datatype_t::output_scalar_t;
+    using storage_t =
+        _storage_tc<output_scalar_t, output_dimensions, std::size_t>;
+    using value_t = output_scalar_t[output_dimensions];
 
     using builder_t = builder<coordinate_dimensions, output_dimensions>;
 
     using coordinate_t = typename layout_t::coordinate_t;
-    using output_t = _array_t<float, output_dimensions>;
+    using output_t = _array_t<output_scalar_t, output_dimensions>;
 
     struct owning_data_t {
         static std::unique_ptr<value_t[]> make_data(

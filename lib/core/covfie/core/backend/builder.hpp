@@ -20,6 +20,7 @@ template <
     typename _input_scalar_type,
     std::size_t _input_dimensions,
     std::size_t _output_dimensions,
+    typename _output_scalar_type,
     template <typename, std::size_t>
     typename _array_tc>
 struct _builder {
@@ -28,9 +29,10 @@ struct _builder {
 
     using index_t = _input_scalar_type;
     using ndsize_t = std::array<index_t, coordinate_dimensions>;
+    using output_scalar_t = _output_scalar_type;
 
     using coordinate_scalar_t = index_t;
-    using value_t = float[output_dimensions];
+    using value_t = output_scalar_t[output_dimensions];
 
     using coordinate_t = _array_tc<index_t, coordinate_dimensions>;
     using output_t = std::add_lvalue_reference_t<value_t>;
@@ -135,11 +137,13 @@ struct _builder {
 template <
     std::size_t _input_dimensions,
     std::size_t _output_dimensions,
+    typename _output_scalar_type = float,
     typename _input_scalar_type = std::size_t,
     template <typename, std::size_t> typename _array_tc = std::array>
 using builder = _builder<
     _input_scalar_type,
     _input_dimensions,
     _output_dimensions,
+    _output_scalar_type,
     _array_tc>;
 }

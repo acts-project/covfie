@@ -17,6 +17,7 @@ template <
     std::size_t _output_dimensions,
     std::size_t _input_dimensions,
     typename _input_scalar_type = float,
+    typename _output_scalar_type = float,
     template <typename, std::size_t> typename _array_tc = std::array>
 struct _constant {
     static constexpr std::size_t coordinate_dimensions = _input_dimensions;
@@ -32,7 +33,8 @@ struct _constant {
     using coordinate_scalar_t = _input_scalar_type;
     using coordinate_t = _array_tc<_input_scalar_type, coordinate_dimensions>;
     using integral_coordinate_t = _array_tc<std::size_t, coordinate_dimensions>;
-    using output_t = _array_tc<float, output_dimensions>;
+    using output_scalar_t = _output_scalar_type;
+    using output_t = _array_tc<output_scalar_t, output_dimensions>;
 
     struct owning_data_t;
 

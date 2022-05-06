@@ -17,6 +17,7 @@ template <
     template <typename, std::size_t> typename _array_tc = std::array>
 struct datatype {
     static constexpr std::size_t dimensions = _dimensions;
+    using output_scalar_t = _scalar_type;
 };
 
 using float1 = datatype<float, 1>;

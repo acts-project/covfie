@@ -17,15 +17,16 @@
 #include <covfie/core/qualifiers.hpp>
 
 namespace covfie::backend::transformer::interpolator {
-template <typename _backend_tc>
+template <typename _backend_tc, typename _input_scalar_type = float>
 struct linear {
-
+    using input_scalar_type = _input_scalar_type;
     using backend_t = _backend_tc;
     static constexpr std::size_t output_dimensions =
         backend_t::output_dimensions;
 
-    using coordinate_t = std::
-        array<float, std::tuple_size<typename backend_t::coordinate_t>::value>;
+    using coordinate_t = std::array<
+        input_scalar_type,
+        std::tuple_size<typename backend_t::coordinate_t>::value>;
     using output_t = typename backend_t::output_t;
 
     struct configuration_data_t {
@@ -71,9 +72,9 @@ struct linear {
                 std::size_t j = std::lround(std::floor(coord[1]));
                 std::size_t k = std::lround(std::floor(coord[2]));
 
-                float a = std::fmod(coord[0], 1.f);
-                float b = std::fmod(coord[1], 1.f);
-                float c = std::fmod(coord[2], 1.f);
+                input_scalar_type a = std::fmod(coord[0], 1.f);
+                input_scalar_type b = std::fmod(coord[1], 1.f);
+                input_scalar_type c = std::fmod(coord[2], 1.f);
 
                 output_t rv;
 
