@@ -15,11 +15,15 @@
 namespace covfie::backend::vector {
 template <
     CONSTRAINT(concepts::output_scalar) _scalar_t,
-    std::size_t _dimensions>
+    std::size_t _dimensions,
+    template <typename, std::size_t> typename _vector_tc = std::array>
 struct input_vector {
+    template <typename T, std::size_t N>
+    using vector_tc = _vector_tc<T, N>;
+
     static constexpr std::size_t dimensions = _dimensions;
     using scalar_t = _scalar_t;
-    using vector_t = std::array<scalar_t, dimensions>;
+    using vector_t = vector_tc<scalar_t, dimensions>;
 };
 
 namespace input {
