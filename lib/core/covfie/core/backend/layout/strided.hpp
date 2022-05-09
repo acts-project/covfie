@@ -19,7 +19,7 @@ namespace covfie::backend::layout {
 template <
     std::size_t _dims,
     CONSTRAINT(concepts::integral_input_scalar) _index_t,
-    typename _storage_t>
+    CONSTRAINT(concepts::storage) _storage_t>
 struct strided {
     static constexpr std::size_t coordinate_dimensions = _dims;
 
