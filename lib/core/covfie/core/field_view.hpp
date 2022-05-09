@@ -49,7 +49,8 @@ public:
         std::enable_if_t<
             (std::is_convertible_v<Args, typename coordinate_t::value_type> &&
              ...),
-            bool> = true>
+            bool> = true,
+        std::enable_if_t<sizeof...(Args) == coordinate_dimensions, bool> = true>
     COVFIE_DEVICE output_t at(Args... c) const
     {
         return at(coordinate_t{c...});
