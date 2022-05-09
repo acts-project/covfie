@@ -67,8 +67,7 @@ struct _constant {
 };
 
 template <
-    std::size_t input_dimensions,
+    CONSTRAINT(concepts::input_vector) _input_vector_t,
     CONSTRAINT(concepts::output_vector) _output_vector_t>
-using constant =
-    _constant<vector::input_vector<float, input_dimensions>, _output_vector_t>;
+using constant = _constant<_input_vector_t, _output_vector_t>;
 }
