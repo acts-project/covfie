@@ -11,10 +11,7 @@
 #pragma once
 
 namespace covfie::backend::datatype {
-template <
-    typename _scalar_type,
-    std::size_t _dimensions,
-    template <typename, std::size_t> typename _array_tc = std::array>
+template <typename _scalar_type, std::size_t _dimensions>
 struct datatype {
     static constexpr std::size_t dimensions = _dimensions;
     using output_scalar_t = _scalar_type;

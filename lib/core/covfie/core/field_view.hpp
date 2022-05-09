@@ -18,9 +18,7 @@ namespace covfie {
 template <typename _backend>
 class field;
 
-template <
-    typename _backend_tc,
-    template <typename, std::size_t> typename _array_tc = std::array>
+template <typename _backend_tc>
 class field_view
 {
 public:

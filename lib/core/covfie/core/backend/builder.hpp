@@ -28,7 +28,7 @@ struct _builder {
     static constexpr std::size_t output_dimensions = _output_dimensions;
 
     using index_t = _input_scalar_type;
-    using ndsize_t = std::array<index_t, coordinate_dimensions>;
+    using ndsize_t = _array_tc<index_t, coordinate_dimensions>;
     using output_scalar_t = _output_scalar_type;
 
     using coordinate_scalar_t = index_t;
