@@ -84,7 +84,7 @@ render(cuda_field_t::view_t vf, char * out, uint width, uint height, float z)
         float fx = x / static_cast<float>(width);
         float fy = y / static_cast<float>(height);
 
-        std::array<float, 3> p =
+        cuda_field_t::output_t p =
             vf.at(fx * 20000.f - 10000.f, fy * 20000.f - 10000.f, z);
         out[height * x + y] = static_cast<char>(std::lround(
             255.f *
