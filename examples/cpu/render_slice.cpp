@@ -15,9 +15,9 @@
 #include <boost/log/trivial.hpp>
 #include <boost/program_options.hpp>
 
-#include <covfie/core/backend/datatype/datatype.hpp>
 #include <covfie/core/backend/transformer/affine.hpp>
 #include <covfie/core/backend/transformer/interpolator/linear.hpp>
+#include <covfie/core/backend/vector/output.hpp>
 #include <covfie/core/field.hpp>
 #include <covfie/cpu/backend/cpu_array.hpp>
 
@@ -81,10 +81,12 @@ int main(int argc, char ** argv)
 {
     using field_t1 = covfie::field<covfie::backend::transformer::affine<
         covfie::backend::transformer::interpolator::linear<
-            covfie::backend::builder<3, covfie::backend::datatype::float3>>>>;
+            covfie::backend::
+                builder<3, covfie::backend::vector::output::float3>>>>;
     using field_t2 = covfie::field<covfie::backend::transformer::affine<
         covfie::backend::transformer::interpolator::linear<
-            covfie::backend::cpu_array<3, covfie::backend::datatype::float3>>>>;
+            covfie::backend::
+                cpu_array<3, covfie::backend::vector::output::float3>>>>;
 
     boost::program_options::variables_map vm;
     parse_opts(argc, argv, vm);

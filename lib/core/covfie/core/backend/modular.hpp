@@ -13,7 +13,7 @@
 #include <cmath>
 
 #include <covfie/core/backend/builder.hpp>
-#include <covfie/core/backend/datatype/datatype.hpp>
+#include <covfie/core/backend/vector/output.hpp>
 #include <covfie/core/concepts.hpp>
 #include <covfie/core/utility/nd_map.hpp>
 
@@ -22,24 +22,25 @@ template <
     CONSTRAINT(concepts::layout) _layout_t,
     template <typename, std::size_t, typename>
     typename _storage_tc,
-    CONSTRAINT(concepts::datatype) _datatype_t>
+    CONSTRAINT(concepts::output_vector) _output_vector_t>
 struct _modular {
-    using datatype_t = _datatype_t;
-    static constexpr std::size_t output_dimensions = datatype_t::dimensions;
+    using output_vector_t = _output_vector_t;
+    static constexpr std::size_t output_dimensions =
+        output_vector_t::dimensions;
     using index_t = std::size_t;
     using layout_t = _layout_t;
     static constexpr std::size_t coordinate_dimensions = layout_t::dims;
-    using output_scalar_t = typename datatype_t::output_scalar_t;
+    using output_scalar_t = typename output_vector_t::output_scalar_t;
     using storage_t =
         _storage_tc<output_scalar_t, output_dimensions, std::size_t>;
     using value_t = output_scalar_t[output_dimensions];
 
     using builder_t = builder<
         coordinate_dimensions,
-        datatype::datatype<float, output_dimensions>>;
+        vector::output_vector<float, output_dimensions>>;
 
     using coordinate_t = typename layout_t::coordinate_t;
-    using output_t = typename datatype_t::vector_t;
+    using output_t = typename output_vector_t::vector_t;
 
     struct owning_data_t {
         static std::unique_ptr<value_t[]> make_data(
@@ -153,6 +154,6 @@ template <
     CONSTRAINT(concepts::layout) _layout_tc,
     template <typename, std::size_t, typename>
     typename _storage_tc,
-    CONSTRAINT(concepts::datatype) _datatype_t>
-using modular = _modular<_layout_tc, _storage_tc, _datatype_t>;
+    CONSTRAINT(concepts::output_vector) _output_vector_t>
+using modular = _modular<_layout_tc, _storage_tc, _output_vector_t>;
 }

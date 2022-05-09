@@ -12,17 +12,19 @@
 
 #include <covfie/core/concepts.hpp>
 
-namespace covfie::backend::datatype {
+namespace covfie::backend::vector {
 template <
     CONSTRAINT(concepts::output_scalar) _scalar_type,
     std::size_t _dimensions>
-struct datatype {
+struct output_vector {
     static constexpr std::size_t dimensions = _dimensions;
     using output_scalar_t = _scalar_type;
     using vector_t = std::array<output_scalar_t, dimensions>;
 };
 
-using float1 = datatype<float, 1>;
-using float2 = datatype<float, 2>;
-using float3 = datatype<float, 3>;
+namespace output {
+using float1 = output_vector<float, 1>;
+using float2 = output_vector<float, 2>;
+using float3 = output_vector<float, 3>;
+}
 }

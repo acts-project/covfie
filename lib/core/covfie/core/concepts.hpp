@@ -33,6 +33,6 @@ template <typename T>
 concept layout = true;
 
 template <typename T>
-concept datatype = true;
+concept output_vector = true;
 }
 #endif
