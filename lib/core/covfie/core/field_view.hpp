@@ -12,13 +12,14 @@
 
 #include <type_traits>
 
+#include <covfie/core/concepts.hpp>
 #include <covfie/core/qualifiers.hpp>
 
 namespace covfie {
-template <typename _backend>
+template <CONSTRAINT(concepts::field_backend) _backend>
 class field;
 
-template <typename _backend_tc>
+template <CONSTRAINT(concepts::field_backend) _backend_tc>
 class field_view
 {
 public:

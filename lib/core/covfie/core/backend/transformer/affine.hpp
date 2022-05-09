@@ -13,11 +13,12 @@
 #include <cstddef>
 #include <fstream>
 
+#include <covfie/core/concepts.hpp>
 #include <covfie/core/qualifiers.hpp>
 #include <covfie/core/utility/binary_io.hpp>
 
 namespace covfie::backend::transformer {
-template <typename _backend_tc>
+template <CONSTRAINT(concepts::field_backend) _backend_tc>
 struct affine {
     using backend_t = _backend_tc;
     static constexpr std::size_t output_dimensions =

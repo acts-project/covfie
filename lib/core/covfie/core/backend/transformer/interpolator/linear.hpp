@@ -14,10 +14,13 @@
 #include <fstream>
 
 #include <covfie/core/backend/builder.hpp>
+#include <covfie/core/concepts.hpp>
 #include <covfie/core/qualifiers.hpp>
 
 namespace covfie::backend::transformer::interpolator {
-template <typename _backend_tc, typename _input_scalar_type = float>
+template <
+    CONSTRAINT(concepts::field_backend) _backend_tc,
+    typename _input_scalar_type = float>
 struct linear {
     using input_scalar_type = _input_scalar_type;
     using backend_t = _backend_tc;

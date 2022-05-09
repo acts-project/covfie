@@ -12,10 +12,11 @@
 
 #include <fstream>
 
+#include <covfie/core/concepts.hpp>
 #include <covfie/core/field_view.hpp>
 
 namespace covfie {
-template <typename _backend_t>
+template <CONSTRAINT(concepts::field_backend) _backend_t>
 class field
 {
 public:
@@ -55,7 +56,7 @@ private:
 
     friend class field_view<_backend_t>;
 
-    template <typename other_backend>
+    template <CONSTRAINT(concepts::field_backend) other_backend>
     friend class field;
 };
 }
