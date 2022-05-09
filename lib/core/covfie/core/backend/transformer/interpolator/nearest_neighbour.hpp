@@ -25,11 +25,10 @@ template <
 struct _nearest_neighbour {
     using input_scalar_type = _input_scalar_type;
     using backend_t = _backend_tc;
-    static constexpr std::size_t coordinate_dimensions =
-        backend_t::coordinate_dimensions;
 
-    using coordinate_t = std::array<input_scalar_type, coordinate_dimensions>;
     using integral_coordinate_t = typename backend_t::integral_coordinate_t;
+    using coordinate_t = std::
+        array<input_scalar_type, std::tuple_size<integral_coordinate_t>::value>;
     using coordinate_scalar_t = typename backend_t::coordinate_scalar_t;
     using output_t = typename backend_t::output_t;
 
@@ -73,7 +72,8 @@ struct _nearest_neighbour {
         {
             typename backend_t::integral_coordinate_t nc;
 
-            for (std::size_t i = 0; i < coordinate_dimensions; ++i) {
+            for (std::size_t i = 0; i < std::tuple_size<coordinate_t>::value;
+                 ++i) {
                 nc[i] = std::lround(c[i]);
             }
 

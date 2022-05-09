@@ -25,14 +25,10 @@ class field_view
 public:
     using backend_t = _backend_tc;
 
-    static constexpr std::size_t coordinate_dimensions =
-        backend_t::coordinate_dimensions;
     using storage_t = typename backend_t::non_owning_data_t;
     using output_t = typename backend_t::output_t;
 
     using coordinate_t = typename backend_t::coordinate_t;
-
-    // using output_coordinate_t = typename backend_t::input_coordinate_t;
 
     using field_t = field<_backend_tc>;
 
@@ -49,7 +45,9 @@ public:
             (std::is_convertible_v<Args, typename coordinate_t::value_type> &&
              ...),
             bool> = true,
-        std::enable_if_t<sizeof...(Args) == coordinate_dimensions, bool> = true>
+        std::enable_if_t<
+            sizeof...(Args) == std::tuple_size<coordinate_t>::value,
+            bool> = true>
     COVFIE_DEVICE output_t at(Args... c) const
     {
         return at(coordinate_t{c...});

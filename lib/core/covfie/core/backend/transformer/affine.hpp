@@ -22,9 +22,6 @@ template <CONSTRAINT(concepts::field_backend) _backend_tc>
 struct affine {
     using backend_t = _backend_tc;
 
-    static constexpr std::size_t coordinate_dimensions =
-        backend_t::coordinate_dimensions;
-
     using coordinate_t = typename backend_t::coordinate_t;
 
     using output_t = typename backend_t::output_t;

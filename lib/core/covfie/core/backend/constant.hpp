@@ -24,14 +24,11 @@ struct _constant {
     using input_vector_t = _input_vector_t;
     using output_vector_t = _output_vector_t;
 
-    static constexpr std::size_t coordinate_dimensions =
-        input_vector_t::dimensions;
-
     using index_t = std::size_t;
 
     using coordinate_t = typename input_vector_t::vector_t;
     using integral_coordinate_t =
-        std::array<std::size_t, coordinate_dimensions>;
+        std::array<std::size_t, input_vector_t::dimensions>;
     using output_scalar_t = typename output_vector_t::output_scalar_t;
     using output_t = typename output_vector_t::vector_t;
 

@@ -25,8 +25,6 @@ template <
 struct linear {
     using input_scalar_type = _input_scalar_type;
     using backend_t = _backend_tc;
-    static constexpr std::size_t coordinate_dimensions =
-        backend_t::coordinate_dimensions;
 
     using coordinate_t = std::array<
         input_scalar_type,

@@ -27,19 +27,17 @@ struct _builder {
     using input_vector_t = _input_vector_t;
     using output_vector_t = _output_vector_t;
 
-    static constexpr std::size_t coordinate_dimensions =
-        input_vector_t::dimensions;
-
     using index_t = typename input_vector_t::scalar_t;
-    using ndsize_t = std::array<index_t, coordinate_dimensions>;
+    using ndsize_t = std::array<index_t, input_vector_t::dimensions>;
     using output_scalar_t = typename output_vector_t::output_scalar_t;
 
     using coordinate_scalar_t = index_t;
     using value_t = output_scalar_t[output_vector_t::dimensions];
 
-    using coordinate_t = std::array<index_t, coordinate_dimensions>;
+    using coordinate_t = std::array<index_t, input_vector_t::dimensions>;
     using output_t = std::add_lvalue_reference_t<value_t>;
-    using integral_coordinate_t = std::array<index_t, coordinate_dimensions>;
+    using integral_coordinate_t =
+        std::array<index_t, input_vector_t::dimensions>;
 
     struct configuration_data_t {
         ndsize_t m_sizes;
@@ -60,7 +58,7 @@ struct _builder {
 
         owning_data_t(std::ifstream & fs)
         {
-            for (std::size_t i = 0; i < coordinate_dimensions; ++i) {
+            for (std::size_t i = 0; i < input_vector_t::dimensions; ++i) {
                 fs.read(
                     reinterpret_cast<char *>(&m_sizes[i]),
                     sizeof(typename decltype(m_sizes)::value_type)
@@ -86,10 +84,11 @@ struct _builder {
         {
             index_t idx = 0;
 
-            for (std::size_t k = 0; k < coordinate_dimensions; ++k) {
+            for (std::size_t k = 0; k < input_vector_t::dimensions; ++k) {
                 index_t tmp = c[k];
 
-                for (std::size_t l = k + 1; l < coordinate_dimensions; ++l) {
+                for (std::size_t l = k + 1; l < input_vector_t::dimensions; ++l)
+                {
                     tmp *= m_sizes[l];
                 }
 
@@ -101,7 +100,7 @@ struct _builder {
 
         void dump(std::ofstream & fs) const
         {
-            for (std::size_t i = 0; i < coordinate_dimensions; ++i) {
+            for (std::size_t i = 0; i < input_vector_t::dimensions; ++i) {
                 fs.write(
                     reinterpret_cast<const char *>(&m_sizes[i]),
                     sizeof(typename decltype(m_sizes)::value_type)
@@ -136,10 +135,11 @@ struct _builder {
         {
             index_t idx = 0;
 
-            for (std::size_t k = 0; k < coordinate_dimensions; ++k) {
+            for (std::size_t k = 0; k < input_vector_t::dimensions; ++k) {
                 index_t tmp = c[k];
 
-                for (std::size_t l = k + 1; l < coordinate_dimensions; ++l) {
+                for (std::size_t l = k + 1; l < input_vector_t::dimensions; ++l)
+                {
                     tmp *= m_sizes[l];
                 }
 
