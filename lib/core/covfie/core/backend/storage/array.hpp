@@ -11,58 +11,45 @@
 #pragma once
 
 #include <memory>
-
-#include <covfie/core/backend/storage/array.hpp>
-#include <covfie/cuda/error_check.hpp>
-#include <cuda_runtime.h>
+#include <utility>
 
 namespace covfie::backend::storage {
 template <typename _value_t, std::size_t _dims, typename _index_t = std::size_t>
-struct cuda_device_array {
+struct array {
     static constexpr std::size_t dims = _dims;
 
     using value_t = _value_t[_dims];
     using index_t = _index_t;
 
     struct owning_data_t {
-        owning_data_t(
-            typename array<_value_t, _dims, _index_t>::owning_data_t && o
-        )
+        owning_data_t(owning_data_t && o)
             : m_size(o.m_size)
-            , m_ptr(nullptr)
+            , m_ptr(std::move(o.m_ptr))
         {
-            cudaErrorCheck(cudaMalloc(
-                reinterpret_cast<void **>(&m_ptr), m_size * sizeof(value_t)
-            ));
-            cudaErrorCheck(cudaMemcpy(
-                m_ptr,
-                o.m_ptr.get(),
-                m_size * sizeof(value_t),
-                cudaMemcpyHostToDevice
-            ));
         }
 
-        ~owning_data_t()
+        owning_data_t(std::size_t n)
+            : m_size(n)
+            , m_ptr(std::make_unique<value_t[]>(n))
         {
-            cudaErrorCheck(cudaFree(m_ptr));
         }
 
         std::size_t m_size;
-        value_t * m_ptr;
+        std::unique_ptr<value_t[]> m_ptr;
     };
 
     struct non_owning_data_t {
         non_owning_data_t(const owning_data_t & o)
-            : m_ptr(o.m_ptr)
+            : m_ptr(o.m_ptr.get())
         {
         }
 
-        COVFIE_DEVICE value_t & operator[](index_t i) const
+        value_t & operator[](index_t i) const
         {
             return m_ptr[i];
         }
 
-        value_t * m_ptr;
+        typename decltype(owning_data_t::m_ptr)::pointer m_ptr;
     };
 };
 }

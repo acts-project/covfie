@@ -12,35 +12,9 @@
 
 #include <memory>
 
+#include <covfie/core/backend/storage/array.hpp>
+
 namespace covfie::backend::storage {
 template <typename _value_t, std::size_t _dims, typename _index_t = std::size_t>
-struct c_array {
-    static constexpr std::size_t dims = _dims;
-
-    using value_t = _value_t[_dims];
-    using index_t = _index_t;
-
-    struct owning_data_t {
-        owning_data_t(std::unique_ptr<value_t[]> && ptr, std::size_t)
-            : m_ptr(std::forward<std::unique_ptr<value_t[]>>(ptr))
-        {
-        }
-
-        std::unique_ptr<value_t[]> m_ptr;
-    };
-
-    struct non_owning_data_t {
-        non_owning_data_t(const owning_data_t & o)
-            : m_ptr(o.m_ptr.get())
-        {
-        }
-
-        value_t & operator[](index_t i) const
-        {
-            return m_ptr[i];
-        }
-
-        typename decltype(owning_data_t::m_ptr)::pointer m_ptr;
-    };
-};
+using c_array = array<_value_t, _dims, _index_t>;
 }

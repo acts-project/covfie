@@ -11,13 +11,13 @@
 #pragma once
 
 #include <covfie/core/backend/layout/strided.hpp>
-#include <covfie/core/backend/modular.hpp>
 #include <covfie/cuda/backend/storage/cuda_device_array.hpp>
 
 namespace covfie::backend {
 template <std::size_t input_dimensions, typename _datatype_t>
-using cuda_array = _modular<
-    layout::strided<input_dimensions>,
+using cuda_array = layout::strided<
+    input_dimensions,
+    std::size_t,
     storage::cuda_device_array,
     _datatype_t>;
 }

@@ -80,6 +80,23 @@ struct _builder {
             );
         }
 
+        output_t at(integral_coordinate_t c) const
+        {
+            index_t idx = 0;
+
+            for (std::size_t k = 0; k < coordinate_dimensions; ++k) {
+                index_t tmp = c[k];
+
+                for (std::size_t l = k + 1; l < coordinate_dimensions; ++l) {
+                    tmp *= m_sizes[l];
+                }
+
+                idx += tmp;
+            }
+
+            return m_ptr[idx];
+        }
+
         void dump(std::ofstream & fs) const
         {
             for (std::size_t i = 0; i < coordinate_dimensions; ++i) {
