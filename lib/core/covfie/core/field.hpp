@@ -23,6 +23,8 @@ public:
     using backend_t = _backend_t;
     using view_t = field_view<backend_t>;
     using storage_t = typename backend_t::owning_data_t;
+    using output_t = typename backend_t::output_t;
+    using coordinate_t = typename backend_t::coordinate_t;
 
     template <typename other_backend>
     field(const field<other_backend> & other)
