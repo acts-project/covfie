@@ -71,9 +71,8 @@ struct _constant {
     };
 };
 
-template <std::size_t input_dimensions, std::size_t _output_dimensions>
-using constant = _constant<
-    input_dimensions,
-    float,
-    datatype::datatype<float, _output_dimensions>>;
+template <
+    std::size_t input_dimensions,
+    CONSTRAINT(concepts::datatype) _datatype_t>
+using constant = _constant<input_dimensions, float, _datatype_t>;
 }
