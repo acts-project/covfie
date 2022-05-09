@@ -17,6 +17,9 @@ jobs:
         BUILD:
           - "Release"
           - "Debug"
+        CXX_STANDARD:
+          - 17
+          - 20
 
     runs-on: "ubuntu-latest"
 
@@ -47,6 +50,7 @@ jobs:
         -DCOVFIE_BUILD_TESTS=On
         -DCOVFIE_BUILD_EXAMPLES=On
         -DCOVFIE_BUILD_BENCHMARKS=On
+        -DCMAKE_CXX_STANDARD=${{ matrix.CXX_STANDARD }}
         -DCMAKE_PREFIX_PATH="${{ github.workspace }}/.prefixes/gtest/;${{ github.workspace }}/.prefixes/gbench/"
         -S ${{ github.workspace }}
         -B build
