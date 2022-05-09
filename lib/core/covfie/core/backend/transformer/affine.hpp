@@ -21,8 +21,7 @@ namespace covfie::backend::transformer {
 template <CONSTRAINT(concepts::field_backend) _backend_tc>
 struct affine {
     using backend_t = _backend_tc;
-    static constexpr std::size_t output_dimensions =
-        backend_t::output_dimensions;
+
     static constexpr std::size_t coordinate_dimensions =
         backend_t::coordinate_dimensions;
 

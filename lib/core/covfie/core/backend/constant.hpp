@@ -24,13 +24,6 @@ struct _constant {
     using output_vector_t = _output_vector_t;
 
     static constexpr std::size_t coordinate_dimensions = _input_dimensions;
-    static constexpr std::size_t output_dimensions =
-        output_vector_t::dimensions;
-
-    static constexpr bool support_access_global = true;
-    static constexpr bool support_access_integral = false;
-
-    static constexpr bool support_host = true;
 
     using index_t = std::size_t;
 

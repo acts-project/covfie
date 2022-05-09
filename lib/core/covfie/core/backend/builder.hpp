@@ -27,15 +27,13 @@ struct _builder {
     using output_vector_t = _output_vector_t;
 
     static constexpr std::size_t coordinate_dimensions = _input_dimensions;
-    static constexpr std::size_t output_dimensions =
-        output_vector_t::dimensions;
 
     using index_t = _input_scalar_type;
     using ndsize_t = std::array<index_t, coordinate_dimensions>;
     using output_scalar_t = typename output_vector_t::output_scalar_t;
 
     using coordinate_scalar_t = index_t;
-    using value_t = output_scalar_t[output_dimensions];
+    using value_t = output_scalar_t[output_vector_t::dimensions];
 
     using coordinate_t = std::array<index_t, coordinate_dimensions>;
     using output_t = std::add_lvalue_reference_t<value_t>;

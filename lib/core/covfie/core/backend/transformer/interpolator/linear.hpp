@@ -25,8 +25,6 @@ template <
 struct linear {
     using input_scalar_type = _input_scalar_type;
     using backend_t = _backend_tc;
-    static constexpr std::size_t output_dimensions =
-        backend_t::output_dimensions;
     static constexpr std::size_t coordinate_dimensions =
         backend_t::coordinate_dimensions;
 
@@ -84,7 +82,8 @@ struct linear {
 
                 output_t rv;
 
-                for (std::size_t q = 0; q < output_dimensions; ++q) {
+                for (std::size_t q = 0; q < std::tuple_size<output_t>::value;
+                     ++q) {
                     rv[q] =
                         (1. - a) * (1. - b) * (1. - c) *
                             m_backend.at({i, j, k})[q] +

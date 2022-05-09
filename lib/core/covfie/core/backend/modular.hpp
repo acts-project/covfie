@@ -25,19 +25,18 @@ template <
     CONSTRAINT(concepts::output_vector) _output_vector_t>
 struct _modular {
     using output_vector_t = _output_vector_t;
-    static constexpr std::size_t output_dimensions =
-        output_vector_t::dimensions;
+
     using index_t = std::size_t;
     using layout_t = _layout_t;
     static constexpr std::size_t coordinate_dimensions = layout_t::dims;
     using output_scalar_t = typename output_vector_t::output_scalar_t;
     using storage_t =
-        _storage_tc<output_scalar_t, output_dimensions, std::size_t>;
-    using value_t = output_scalar_t[output_dimensions];
+        _storage_tc<output_scalar_t, output_vector_t::dimensions, std::size_t>;
+    using value_t = output_scalar_t[output_vector_t::dimensions];
 
     using builder_t = builder<
         coordinate_dimensions,
-        vector::output_vector<float, output_dimensions>>;
+        vector::output_vector<float, output_vector_t::dimensions>>;
 
     using coordinate_t = typename layout_t::coordinate_t;
     using output_t = typename output_vector_t::vector_t;
@@ -65,8 +64,9 @@ struct _modular {
 
                             coordinate_t c{args...};
 
-                            for (std::size_t j = 0; j < output_dimensions; ++j)
-                            {
+                            for (std::size_t j = 0;
+                                 j < output_vector_t::dimensions;
+                                 ++j) {
                                 rv[layout_view(c)][j] = bv[j];
                             }
                         }
@@ -82,8 +82,9 @@ struct _modular {
 
                             coordinate_t c{args...};
 
-                            for (std::size_t j = 0; j < output_dimensions; ++j)
-                            {
+                            for (std::size_t j = 0;
+                                 j < output_vector_t::dimensions;
+                                 ++j) {
                                 rv[layout_view(c)][j] = bv[j];
                             }
                         }
@@ -100,8 +101,9 @@ struct _modular {
 
                             coordinate_t c{args...};
 
-                            for (std::size_t j = 0; j < output_dimensions; ++j)
-                            {
+                            for (std::size_t j = 0;
+                                 j < output_vector_t::dimensions;
+                                 ++j) {
                                 rv[layout_view(c)][j] = bv[j];
                             }
                         }
@@ -138,7 +140,7 @@ struct _modular {
             value_t & res = storage[idx];
             output_t rv;
 
-            for (std::size_t i = 0; i < output_dimensions; ++i) {
+            for (std::size_t i = 0; i < output_vector_t::dimensions; ++i) {
                 rv[i] = res[i];
             }
 
