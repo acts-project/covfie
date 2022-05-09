@@ -2,6 +2,7 @@
 
 ![](https://github.com/stephenswat/covfie/actions/workflows/builds.yml/badge.svg?branch=main)
 ![](https://github.com/stephenswat/covfie/actions/workflows/checks.yml/badge.svg?branch=main)
+[![Documentation Status](https://readthedocs.org/projects/covfie/badge/?version=latest)](https://covfie.readthedocs.io/en/latest/?badge=latest)
 
 **covfie** (pronounced _coffee_) is a **co**-processor **v**ector **fie**ld
 projects. Covfie consists of two main components; the first is the library
