@@ -13,6 +13,7 @@
 #include <cmath>
 
 #include <covfie/core/backend/builder.hpp>
+#include <covfie/core/backend/datatype/datatype.hpp>
 #include <covfie/core/concepts.hpp>
 #include <covfie/core/utility/nd_map.hpp>
 
@@ -33,7 +34,9 @@ struct _modular {
         _storage_tc<output_scalar_t, output_dimensions, std::size_t>;
     using value_t = output_scalar_t[output_dimensions];
 
-    using builder_t = builder<coordinate_dimensions, output_dimensions>;
+    using builder_t = builder<
+        coordinate_dimensions,
+        datatype::datatype<float, output_dimensions>>;
 
     using coordinate_t = typename layout_t::coordinate_t;
     using output_t = typename datatype_t::vector_t;

@@ -81,7 +81,7 @@ int main(int argc, char ** argv)
 {
     using field_t1 = covfie::field<covfie::backend::transformer::affine<
         covfie::backend::transformer::interpolator::linear<
-            covfie::backend::builder<3, 3>>>>;
+            covfie::backend::builder<3, covfie::backend::datatype::float3>>>>;
     using field_t2 = covfie::field<covfie::backend::transformer::affine<
         covfie::backend::transformer::interpolator::linear<
             covfie::backend::cpu_array<3, covfie::backend::datatype::float3>>>>;

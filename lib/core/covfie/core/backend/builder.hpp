@@ -138,12 +138,8 @@ struct _builder {
 
 template <
     std::size_t _input_dimensions,
-    std::size_t _output_dimensions,
-    CONSTRAINT(concepts::output_scalar) _output_scalar_type = float,
+    CONSTRAINT(concepts::datatype) _datatype_t,
     CONSTRAINT(concepts::integral_input_scalar) _input_scalar_type =
         std::size_t>
-using builder = _builder<
-    _input_scalar_type,
-    _input_dimensions,
-    datatype::datatype<_output_scalar_type, _output_dimensions>>;
+using builder = _builder<_input_scalar_type, _input_dimensions, _datatype_t>;
 }

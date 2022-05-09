@@ -17,7 +17,8 @@
 
 TEST(TestFieldBuilder, ConstructSingleFloat)
 {
-    using field_t = covfie::field<covfie::backend::builder<3, 1>>;
+    using field_t = covfie::field<
+        covfie::backend::builder<3, covfie::backend::datatype::float1>>;
     field_t f(field_t::backend_t::configuration_data_t{5u, 7u, 2u});
 
     std::array<std::size_t, 3> s = f.backend().m_sizes;
@@ -29,7 +30,8 @@ TEST(TestFieldBuilder, ConstructSingleFloat)
 
 TEST(TestFieldBuilder, ConstructArrayFloat)
 {
-    using field_t = covfie::field<covfie::backend::builder<3, 3>>;
+    using field_t = covfie::field<
+        covfie::backend::builder<3, covfie::backend::datatype::float3>>;
     field_t f(field_t::backend_t::configuration_data_t{5u, 7u, 2u});
 
     std::array<std::size_t, 3> s = f.backend().m_sizes;
@@ -41,7 +43,8 @@ TEST(TestFieldBuilder, ConstructArrayFloat)
 
 TEST(TestFieldBuilder, WriteReadSingleFloat)
 {
-    using field_t = covfie::field<covfie::backend::builder<3, 1>>;
+    using field_t = covfie::field<
+        covfie::backend::builder<3, covfie::backend::datatype::float1>>;
     field_t f(field_t::backend_t::configuration_data_t{5u, 7u, 2u});
 
     field_t::view_t fv(f);
@@ -57,7 +60,8 @@ TEST(TestFieldBuilder, WriteReadSingleFloat)
 
 TEST(TestFieldBuilder, WriteReadArrayFloat)
 {
-    using field_t = covfie::field<covfie::backend::builder<3, 3>>;
+    using field_t = covfie::field<
+        covfie::backend::builder<3, covfie::backend::datatype::float3>>;
     field_t f(field_t::backend_t::configuration_data_t{5u, 7u, 2u});
 
     field_t::view_t fv(f);

@@ -25,7 +25,7 @@
 
 using cpu_field_t = covfie::field<covfie::backend::transformer::affine<
     covfie::backend::transformer::interpolator::linear<
-        covfie::backend::builder<3, 3>>>>;
+        covfie::backend::builder<3, covfie::backend::datatype::float3>>>>;
 
 using cuda_field_t = covfie::field<covfie::backend::transformer::affine<
     covfie::backend::transformer::interpolator::linear<

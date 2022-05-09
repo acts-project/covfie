@@ -18,7 +18,8 @@
 
 TEST(TestBinaryIO, WriteRead1DSingleFloatBuilder)
 {
-    using field_t = covfie::field<covfie::backend::builder<1, 1>>;
+    using field_t = covfie::field<
+        covfie::backend::builder<1, covfie::backend::datatype::float1>>;
 
     field_t f(field_t::backend_t::configuration_data_t{5u});
 
