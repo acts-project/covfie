@@ -12,23 +12,24 @@
 
 #include <array>
 
+#include <covfie/core/backend/vector/input.hpp>
 #include <covfie/core/backend/vector/output.hpp>
 #include <covfie/core/concepts.hpp>
 
 namespace covfie::backend {
 template <
-    std::size_t _input_dimensions,
-    CONSTRAINT(concepts::input_scalar) _input_scalar_type,
+    CONSTRAINT(concepts::input_vector) _input_vector_t,
     CONSTRAINT(concepts::output_vector) _output_vector_t>
 struct _constant {
+    using input_vector_t = _input_vector_t;
     using output_vector_t = _output_vector_t;
 
-    static constexpr std::size_t coordinate_dimensions = _input_dimensions;
+    static constexpr std::size_t coordinate_dimensions =
+        input_vector_t::dimensions;
 
     using index_t = std::size_t;
 
-    using coordinate_scalar_t = _input_scalar_type;
-    using coordinate_t = std::array<_input_scalar_type, coordinate_dimensions>;
+    using coordinate_t = typename input_vector_t::vector_t;
     using integral_coordinate_t =
         std::array<std::size_t, coordinate_dimensions>;
     using output_scalar_t = typename output_vector_t::output_scalar_t;
@@ -68,5 +69,6 @@ struct _constant {
 template <
     std::size_t input_dimensions,
     CONSTRAINT(concepts::output_vector) _output_vector_t>
-using constant = _constant<input_dimensions, float, _output_vector_t>;
+using constant =
+    _constant<vector::input_vector<float, input_dimensions>, _output_vector_t>;
 }

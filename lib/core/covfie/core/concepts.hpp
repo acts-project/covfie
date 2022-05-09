@@ -36,6 +36,9 @@ template <typename T>
 concept storage = true;
 
 template <typename T>
+concept input_vector = true;
+
+template <typename T>
 concept output_vector = true;
 }
 #endif

@@ -15,20 +15,22 @@
 #include <memory>
 #include <numeric>
 
+#include <covfie/core/backend/vector/input.hpp>
 #include <covfie/core/backend/vector/output.hpp>
 #include <covfie/core/concepts.hpp>
 
 namespace covfie::backend {
 template <
-    CONSTRAINT(concepts::integral_input_scalar) _input_scalar_type,
-    std::size_t _input_dimensions,
+    CONSTRAINT(concepts::input_vector) _input_vector_t,
     CONSTRAINT(concepts::output_vector) _output_vector_t>
 struct _builder {
+    using input_vector_t = _input_vector_t;
     using output_vector_t = _output_vector_t;
 
-    static constexpr std::size_t coordinate_dimensions = _input_dimensions;
+    static constexpr std::size_t coordinate_dimensions =
+        input_vector_t::dimensions;
 
-    using index_t = _input_scalar_type;
+    using index_t = typename input_vector_t::scalar_t;
     using ndsize_t = std::array<index_t, coordinate_dimensions>;
     using output_scalar_t = typename output_vector_t::output_scalar_t;
 
@@ -157,6 +159,7 @@ template <
     CONSTRAINT(concepts::output_vector) _output_vector_t,
     CONSTRAINT(concepts::integral_input_scalar) _input_scalar_type =
         std::size_t>
-using builder =
-    _builder<_input_scalar_type, _input_dimensions, _output_vector_t>;
+using builder = _builder<
+    vector::input_vector<_input_scalar_type, _input_dimensions>,
+    _output_vector_t>;
 }

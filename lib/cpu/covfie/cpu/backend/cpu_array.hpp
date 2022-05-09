@@ -11,10 +11,12 @@
 #pragma once
 
 #include <covfie/core/backend/layout/strided.hpp>
+#include <covfie/core/backend/vector/input.hpp>
 #include <covfie/cpu/backend/storage/c_array.hpp>
 
 namespace covfie::backend {
 template <std::size_t input_dimensions, typename _datatype_t>
-using cpu_array = layout::
-    strided<input_dimensions, std::size_t, storage::c_array<_datatype_t>>;
+using cpu_array = layout::strided<
+    vector::input_vector<std::size_t, input_dimensions>,
+    storage::c_array<_datatype_t>>;
 }

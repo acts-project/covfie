@@ -17,17 +17,18 @@
 
 namespace covfie::backend::layout {
 template <
-    std::size_t _dims,
-    CONSTRAINT(concepts::integral_input_scalar) _index_t,
+    CONSTRAINT(concepts::input_vector) _input_vector_t,
     CONSTRAINT(concepts::storage) _storage_t>
 struct strided {
-    static constexpr std::size_t coordinate_dimensions = _dims;
+    using input_vector_t = _input_vector_t;
+    static constexpr std::size_t coordinate_dimensions =
+        input_vector_t::dimensions;
 
     using storage_t = _storage_t;
     using output_vector_t = typename storage_t::output_vector_t;
     using output_t = typename output_vector_t::vector_t;
 
-    using index_t = _index_t;
+    using index_t = typename input_vector_t::scalar_t;
     using ndsize_t = std::array<index_t, coordinate_dimensions>;
     using coordinate_t = std::array<index_t, coordinate_dimensions>;
 
