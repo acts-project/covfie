@@ -20,6 +20,13 @@ jobs:
         CXX_STANDARD:
           - 17
           - 20
+        COMPILER:
+          - NAME: "gcc"
+            CXX: "g++"
+          - NAME: "clang"
+            CXX: "clang++"
+
+    name: "CPU/${{ matrix.BUILD }}/${{ matrix.COMPILER.NAME }}/C++${{ matrix.CXX_STANDARD }}"
 
     runs-on: "ubuntu-latest"
 
@@ -46,6 +53,7 @@ jobs:
         cmake --install gbench_build
     - name: Configure
       run: cmake
+        -DCMAKE_CXX_COMPILER=$(which ${{ matrix.COMPILER.CXX }})
         -DCMAKE_BUILD_TYPE=${{ matrix.BUILD }}
         -DCOVFIE_BUILD_TESTS=On
         -DCOVFIE_BUILD_EXAMPLES=On
