@@ -20,7 +20,8 @@
 namespace covfie::backend::transformer::interpolator {
 template <
     CONSTRAINT(concepts::field_backend) _backend_tc,
-    typename _input_scalar_type = float>
+    CONSTRAINT(concepts::floating_point_input_scalar) _input_scalar_type =
+        float>
 struct _nearest_neighbour {
     using input_scalar_type = _input_scalar_type;
     using backend_t = _backend_tc;
@@ -85,6 +86,6 @@ struct _nearest_neighbour {
     };
 };
 
-template <typename _backend_tc>
+template <CONSTRAINT(concepts::field_backend) _backend_tc>
 using nearest_neighbour = _nearest_neighbour<_backend_tc>;
 }

@@ -20,7 +20,8 @@
 namespace covfie::backend::transformer::interpolator {
 template <
     CONSTRAINT(concepts::field_backend) _backend_tc,
-    typename _input_scalar_type = float>
+    CONSTRAINT(concepts::floating_point_input_scalar) _input_scalar_type =
+        float>
 struct linear {
     using input_scalar_type = _input_scalar_type;
     using backend_t = _backend_tc;

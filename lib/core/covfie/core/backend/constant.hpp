@@ -12,12 +12,14 @@
 
 #include <array>
 
+#include <covfie/core/concepts.hpp>
+
 namespace covfie::backend {
 template <
     std::size_t _output_dimensions,
     std::size_t _input_dimensions,
-    typename _input_scalar_type = float,
-    typename _output_scalar_type = float,
+    CONSTRAINT(concepts::input_scalar) _input_scalar_type = float,
+    CONSTRAINT(concepts::output_scalar) _output_scalar_type = float,
     template <typename, std::size_t> typename _array_tc = std::array>
 struct _constant {
     static constexpr std::size_t coordinate_dimensions = _input_dimensions;

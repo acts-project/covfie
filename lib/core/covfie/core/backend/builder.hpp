@@ -15,12 +15,14 @@
 #include <memory>
 #include <numeric>
 
+#include <covfie/core/concepts.hpp>
+
 namespace covfie::backend {
 template <
-    typename _input_scalar_type,
+    CONSTRAINT(concepts::integral_input_scalar) _input_scalar_type,
     std::size_t _input_dimensions,
     std::size_t _output_dimensions,
-    typename _output_scalar_type,
+    CONSTRAINT(concepts::output_scalar) _output_scalar_type,
     template <typename, std::size_t>
     typename _array_tc>
 struct _builder {
@@ -137,8 +139,9 @@ struct _builder {
 template <
     std::size_t _input_dimensions,
     std::size_t _output_dimensions,
-    typename _output_scalar_type = float,
-    typename _input_scalar_type = std::size_t,
+    CONSTRAINT(concepts::output_scalar) _output_scalar_type = float,
+    CONSTRAINT(concepts::integral_input_scalar) _input_scalar_type =
+        std::size_t,
     template <typename, std::size_t> typename _array_tc = std::array>
 using builder = _builder<
     _input_scalar_type,

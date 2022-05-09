@@ -10,8 +10,12 @@
 
 #pragma once
 
+#include <covfie/core/concepts.hpp>
+
 namespace covfie::backend::datatype {
-template <typename _scalar_type, std::size_t _dimensions>
+template <
+    CONSTRAINT(concepts::output_scalar) _scalar_type,
+    std::size_t _dimensions>
 struct datatype {
     static constexpr std::size_t dimensions = _dimensions;
     using output_scalar_t = _scalar_type;

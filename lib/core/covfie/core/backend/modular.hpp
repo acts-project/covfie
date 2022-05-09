@@ -13,16 +13,17 @@
 #include <cmath>
 
 #include <covfie/core/backend/builder.hpp>
+#include <covfie/core/concepts.hpp>
 #include <covfie/core/utility/nd_map.hpp>
 
 namespace covfie::backend {
 template <
     template <typename, std::size_t>
     typename _array_t,
-    typename _layout_t,
+    CONSTRAINT(concepts::layout) _layout_t,
     template <typename, std::size_t, typename>
     typename _storage_tc,
-    typename _datatype_t>
+    CONSTRAINT(concepts::datatype) _datatype_t>
 struct _modular {
     using datatype_t = _datatype_t;
     static constexpr std::size_t output_dimensions = datatype_t::dimensions;
@@ -150,9 +151,9 @@ struct _modular {
 template <
     template <typename, std::size_t>
     typename _array_tc,
-    typename _layout_tc,
+    CONSTRAINT(concepts::layout) _layout_tc,
     template <typename, std::size_t, typename>
     typename _storage_tc,
-    typename _datatype_t>
+    CONSTRAINT(concepts::datatype) _datatype_t>
 using modular = _modular<_array_tc, _layout_tc, _storage_tc, _datatype_t>;
 }

@@ -12,10 +12,12 @@
 
 #include <numeric>
 
+#include <covfie/core/concepts.hpp>
+
 namespace covfie::backend::layout {
 template <
     std::size_t _dims,
-    typename _index_t = std::size_t,
+    CONSTRAINT(concepts::integral_input_scalar) _index_t = std::size_t,
     template <typename, std::size_t> typename _array_tc = std::array>
 struct strided {
     static constexpr std::size_t dims = _dims;
