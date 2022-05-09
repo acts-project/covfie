@@ -39,7 +39,7 @@ TEST(TestFieldViewCPUArrayBackend, WriteRead1DSingleFloat)
 
     for (std::size_t x = 0; x < 5; ++x) {
         for (std::size_t j = 0; j < 1; ++j) {
-            EXPECT_EQ(fv.at(x)[j], 1000. * x + 1. * j);
+            EXPECT_EQ(nfv.at(x)[j], 1000. * x + 1. * j);
         }
     }
 }
@@ -65,7 +65,7 @@ TEST(TestFieldViewCPUArrayBackend, WriteRead1DArrayFloat)
 
     for (std::size_t x = 0; x < 5; ++x) {
         for (std::size_t j = 0; j < 3; ++j) {
-            EXPECT_EQ(fv.at(x)[j], 1000. * x + 1. * j);
+            EXPECT_EQ(nfv.at(x)[j], 1000. * x + 1. * j);
         }
     }
 }
@@ -94,7 +94,7 @@ TEST(TestFieldViewCPUArrayBackend, WriteRead2DSingleFloat)
     for (std::size_t x = 0; x < 5; ++x) {
         for (std::size_t y = 0; y < 7; ++y) {
             for (std::size_t j = 0; j < 1; ++j) {
-                EXPECT_EQ(fv.at(x, y)[j], 1000. * x + 100. * y + 1. * j);
+                EXPECT_EQ(nfv.at(x, y)[j], 1000. * x + 100. * y + 1. * j);
             }
         }
     }
@@ -124,7 +124,7 @@ TEST(TestFieldViewCPUArrayBackend, WriteRead2DArrayFloat)
     for (std::size_t x = 0; x < 5; ++x) {
         for (std::size_t y = 0; y < 7; ++y) {
             for (std::size_t j = 0; j < 3; ++j) {
-                EXPECT_EQ(fv.at(x, y)[j], 1000. * x + 100. * y + 1. * j);
+                EXPECT_EQ(nfv.at(x, y)[j], 1000. * x + 100. * y + 1. * j);
             }
         }
     }
@@ -158,7 +158,7 @@ TEST(TestFieldViewCPUArrayBackend, WriteRead3DSingleFloat)
             for (std::size_t z = 0; z < 2; ++z) {
                 for (std::size_t j = 0; j < 1; ++j) {
                     EXPECT_EQ(
-                        fv.at(x, y, z)[j],
+                        nfv.at(x, y, z)[j],
                         1000. * x + 100. * y + 10. * z + 1. * j
                     );
                 }
@@ -195,7 +195,7 @@ TEST(TestFieldViewCPUArrayBackend, WriteRead3DArrayFloat)
             for (std::size_t z = 0; z < 2; ++z) {
                 for (std::size_t j = 0; j < 3; ++j) {
                     EXPECT_EQ(
-                        fv.at(x, y, z)[j],
+                        nfv.at(x, y, z)[j],
                         1000. * x + 100. * y + 10. * z + 1. * j
                     );
                 }
