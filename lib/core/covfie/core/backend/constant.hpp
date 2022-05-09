@@ -12,18 +12,21 @@
 
 #include <array>
 
+#include <covfie/core/backend/datatype/datatype.hpp>
 #include <covfie/core/concepts.hpp>
 
 namespace covfie::backend {
 template <
-    std::size_t _output_dimensions,
     std::size_t _input_dimensions,
-    CONSTRAINT(concepts::input_scalar) _input_scalar_type = float,
-    CONSTRAINT(concepts::output_scalar) _output_scalar_type = float,
-    template <typename, std::size_t> typename _array_tc = std::array>
+    CONSTRAINT(concepts::input_scalar) _input_scalar_type,
+    CONSTRAINT(concepts::datatype) _datatype_t,
+    template <typename, std::size_t>
+    typename _array_tc>
 struct _constant {
+    using datatype_t = _datatype_t;
+
     static constexpr std::size_t coordinate_dimensions = _input_dimensions;
-    static constexpr std::size_t output_dimensions = _output_dimensions;
+    static constexpr std::size_t output_dimensions = datatype_t::dimensions;
 
     static constexpr bool support_access_global = true;
     static constexpr bool support_access_integral = false;
@@ -35,7 +38,7 @@ struct _constant {
     using coordinate_scalar_t = _input_scalar_type;
     using coordinate_t = _array_tc<_input_scalar_type, coordinate_dimensions>;
     using integral_coordinate_t = _array_tc<std::size_t, coordinate_dimensions>;
-    using output_scalar_t = _output_scalar_type;
+    using output_scalar_t = datatype_t::output_scalar_t;
     using output_t = _array_tc<output_scalar_t, output_dimensions>;
 
     struct owning_data_t;
@@ -70,5 +73,9 @@ struct _constant {
 };
 
 template <std::size_t input_dimensions, std::size_t _output_dimensions>
-using constant = _constant<_output_dimensions, input_dimensions>;
+using constant = _constant<
+    input_dimensions,
+    float,
+    datatype::datatype<float, _output_dimensions>,
+    std::array>;
 }

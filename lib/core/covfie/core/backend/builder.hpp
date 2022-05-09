@@ -15,23 +15,25 @@
 #include <memory>
 #include <numeric>
 
+#include <covfie/core/backend/datatype/datatype.hpp>
 #include <covfie/core/concepts.hpp>
 
 namespace covfie::backend {
 template <
     CONSTRAINT(concepts::integral_input_scalar) _input_scalar_type,
     std::size_t _input_dimensions,
-    std::size_t _output_dimensions,
-    CONSTRAINT(concepts::output_scalar) _output_scalar_type,
+    CONSTRAINT(concepts::datatype) _datatype_t,
     template <typename, std::size_t>
     typename _array_tc>
 struct _builder {
+    using datatype_t = _datatype_t;
+
     static constexpr std::size_t coordinate_dimensions = _input_dimensions;
-    static constexpr std::size_t output_dimensions = _output_dimensions;
+    static constexpr std::size_t output_dimensions = datatype_t::dimensions;
 
     using index_t = _input_scalar_type;
     using ndsize_t = _array_tc<index_t, coordinate_dimensions>;
-    using output_scalar_t = _output_scalar_type;
+    using output_scalar_t = datatype_t::output_scalar_t;
 
     using coordinate_scalar_t = index_t;
     using value_t = output_scalar_t[output_dimensions];
@@ -146,7 +148,6 @@ template <
 using builder = _builder<
     _input_scalar_type,
     _input_dimensions,
-    _output_dimensions,
-    _output_scalar_type,
+    datatype::datatype<_output_scalar_type, _output_dimensions>,
     _array_tc>;
 }
