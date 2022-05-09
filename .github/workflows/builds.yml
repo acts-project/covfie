@@ -34,13 +34,20 @@ jobs:
         libboost-filesystem-dev
         libboost-program-options-dev
         libboost-log-dev
+    - name: Install Google Benchmark
+      run: |
+        wget https://github.com/google/benchmark/archive/refs/tags/v1.6.1.tar.gz
+        tar -xzvf v1.6.1.tar.gz
+        cmake -S benchmark-1.6.1 -B gbench_build -DCMAKE_INSTALL_PREFIX=${{ github.workspace }}/.prefixes/gbench/ -DBENCHMARK_ENABLE_TESTING=Off
+        cmake --build gbench_build
+        cmake --install gbench_build
     - name: Configure
       run: cmake
         -DCMAKE_BUILD_TYPE=${{ matrix.BUILD }}
         -DCOVFIE_BUILD_TESTS=On
         -DCOVFIE_BUILD_EXAMPLES=On
         -DCOVFIE_BUILD_BENCHMARKS=On
-        -DCMAKE_PREFIX_PATH=${{ github.workspace }}/.prefixes/gtest/
+        -DCMAKE_PREFIX_PATH="${{ github.workspace }}/.prefixes/gtest/;${{ github.workspace }}/.prefixes/gbench/"
         -S ${{ github.workspace }}
         -B build
     - name: Build
