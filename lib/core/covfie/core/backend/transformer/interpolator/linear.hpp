@@ -25,8 +25,9 @@ template <
 struct linear {
     using input_scalar_type = _input_scalar_type;
     using backend_t = _backend_tc;
+    using downstream_input_vector_t = typename backend_t::input_vector_t;
 
-    using coordinate_t = std::array<
+    using coordinate_t = typename downstream_input_vector_t::template vector_tc<
         input_scalar_type,
         std::tuple_size<typename backend_t::coordinate_t>::value>;
     using output_t = typename backend_t::output_t;

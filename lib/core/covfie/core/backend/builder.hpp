@@ -28,16 +28,18 @@ struct _builder {
     using output_vector_t = _output_vector_t;
 
     using index_t = typename input_vector_t::scalar_t;
-    using ndsize_t = std::array<index_t, input_vector_t::dimensions>;
+    using ndsize_t = typename input_vector_t::
+        template vector_tc<index_t, input_vector_t::dimensions>;
     using output_scalar_t = typename output_vector_t::output_scalar_t;
 
     using coordinate_scalar_t = index_t;
     using value_t = output_scalar_t[output_vector_t::dimensions];
 
-    using coordinate_t = std::array<index_t, input_vector_t::dimensions>;
+    using coordinate_t = typename input_vector_t::
+        template vector_tc<index_t, input_vector_t::dimensions>;
     using output_t = std::add_lvalue_reference_t<value_t>;
-    using integral_coordinate_t =
-        std::array<index_t, input_vector_t::dimensions>;
+    using integral_coordinate_t = typename input_vector_t::
+        template vector_tc<index_t, input_vector_t::dimensions>;
 
     struct configuration_data_t {
         ndsize_t m_sizes;

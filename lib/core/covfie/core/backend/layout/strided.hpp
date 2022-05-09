@@ -27,8 +27,8 @@ struct strided {
     using output_t = typename output_vector_t::vector_t;
 
     using index_t = typename input_vector_t::scalar_t;
-    using ndsize_t = std::array<index_t, input_vector_t::dimensions>;
-    using coordinate_t = std::array<index_t, input_vector_t::dimensions>;
+    using ndsize_t = typename input_vector_t::vector_t;
+    using coordinate_t = typename input_vector_t::vector_t;
 
     using array_t = storage::array<output_vector_t, std::size_t>;
 
