@@ -18,6 +18,5 @@ template <std::size_t input_dimensions, typename _datatype_t>
 using cuda_array = layout::strided<
     input_dimensions,
     std::size_t,
-    storage::cuda_device_array,
-    _datatype_t>;
+    storage::cuda_device_array<_datatype_t>>;
 }

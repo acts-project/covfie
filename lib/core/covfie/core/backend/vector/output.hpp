@@ -19,6 +19,7 @@ template <
 struct output_vector {
     static constexpr std::size_t dimensions = _dimensions;
     using output_scalar_t = _scalar_type;
+    using scalar_t = output_scalar_t;
     using vector_t = std::array<output_scalar_t, dimensions>;
 };
 

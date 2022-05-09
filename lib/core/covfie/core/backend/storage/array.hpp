@@ -13,12 +13,17 @@
 #include <memory>
 #include <utility>
 
-namespace covfie::backend::storage {
-template <typename _value_t, std::size_t _dims, typename _index_t = std::size_t>
-struct array {
-    static constexpr std::size_t dims = _dims;
+#include <covfie/core/concepts.hpp>
 
-    using value_t = _value_t[_dims];
+namespace covfie::backend::storage {
+template <
+    CONSTRAINT(concepts::output_vector) _output_vector_t,
+    typename _index_t = std::size_t>
+struct array {
+    using output_vector_t = _output_vector_t;
+    static constexpr std::size_t dimensions = output_vector_t::dimensions;
+
+    using value_t = typename output_vector_t::scalar_t[dimensions];
     using index_t = _index_t;
 
     struct owning_data_t {

@@ -16,5 +16,5 @@
 namespace covfie::backend {
 template <std::size_t input_dimensions, typename _datatype_t>
 using cpu_array = layout::
-    strided<input_dimensions, std::size_t, storage::c_array, _datatype_t>;
+    strided<input_dimensions, std::size_t, storage::c_array<_datatype_t>>;
 }

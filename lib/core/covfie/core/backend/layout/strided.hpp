@@ -19,28 +19,19 @@ namespace covfie::backend::layout {
 template <
     std::size_t _dims,
     CONSTRAINT(concepts::integral_input_scalar) _index_t,
-    template <typename, std::size_t, typename>
-    typename _storage_t,
-    CONSTRAINT(concepts::output_vector) _output_vector_t>
+    typename _storage_t>
 struct strided {
     static constexpr std::size_t coordinate_dimensions = _dims;
 
-    using output_vector_t = _output_vector_t;
+    using storage_t = _storage_t;
+    using output_vector_t = typename storage_t::output_vector_t;
     using output_t = typename output_vector_t::vector_t;
 
     using index_t = _index_t;
     using ndsize_t = std::array<index_t, coordinate_dimensions>;
     using coordinate_t = std::array<index_t, coordinate_dimensions>;
 
-    using storage_t = _storage_t<
-        typename output_vector_t::output_scalar_t,
-        output_vector_t::dimensions,
-        std::size_t>;
-
-    using array_t = storage::array<
-        typename output_vector_t::output_scalar_t,
-        output_vector_t::dimensions,
-        std::size_t>;
+    using array_t = storage::array<output_vector_t, std::size_t>;
 
     struct owning_data_t {
         template <typename T>

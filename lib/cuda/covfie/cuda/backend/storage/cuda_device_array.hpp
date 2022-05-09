@@ -13,20 +13,24 @@
 #include <memory>
 
 #include <covfie/core/backend/storage/array.hpp>
+#include <covfie/core/concepts.hpp>
 #include <covfie/cuda/error_check.hpp>
 #include <cuda_runtime.h>
 
 namespace covfie::backend::storage {
-template <typename _value_t, std::size_t _dims, typename _index_t = std::size_t>
+template <
+    CONSTRAINT(concepts::output_vector) _output_vector_t,
+    typename _index_t = std::size_t>
 struct cuda_device_array {
-    static constexpr std::size_t dims = _dims;
+    using output_vector_t = _output_vector_t;
+    static constexpr std::size_t dimensions = output_vector_t::dimensions;
 
-    using value_t = _value_t[_dims];
+    using value_t = typename output_vector_t::scalar_t[dimensions];
     using index_t = _index_t;
 
     struct owning_data_t {
         owning_data_t(
-            typename array<_value_t, _dims, _index_t>::owning_data_t && o
+            typename array<output_vector_t, index_t>::owning_data_t && o
         )
             : m_size(o.m_size)
             , m_ptr(nullptr)

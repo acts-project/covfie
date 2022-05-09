@@ -15,6 +15,8 @@
 #include <covfie/core/backend/storage/array.hpp>
 
 namespace covfie::backend::storage {
-template <typename _value_t, std::size_t _dims, typename _index_t = std::size_t>
-using c_array = array<_value_t, _dims, _index_t>;
+template <
+    CONSTRAINT(concepts::output_vector) _output_vector_t,
+    typename _index_t = std::size_t>
+using c_array = array<_output_vector_t, _index_t>;
 }
