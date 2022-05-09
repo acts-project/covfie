@@ -13,5 +13,9 @@
 #if __cpp_concepts >= 201907L
 #define CONSTRAINT(x) x
 #else
+#pragma message                                                                \
+    "C++20 concepts are not supported by the current compiler. "               \
+    "covfie will compile as normal, but compile-time guarantees will be "      \
+    "weaker. Consider upgrading to C++20."
 #define CONSTRAINT(x) typename
 #endif
