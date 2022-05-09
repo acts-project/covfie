@@ -18,8 +18,6 @@
 
 namespace covfie::backend {
 template <
-    template <typename, std::size_t>
-    typename _array_t,
     CONSTRAINT(concepts::layout) _layout_t,
     template <typename, std::size_t, typename>
     typename _storage_tc,
@@ -38,7 +36,7 @@ struct _modular {
     using builder_t = builder<coordinate_dimensions, output_dimensions>;
 
     using coordinate_t = typename layout_t::coordinate_t;
-    using output_t = _array_t<output_scalar_t, output_dimensions>;
+    using output_t = typename datatype_t::vector_t;
 
     struct owning_data_t {
         static std::unique_ptr<value_t[]> make_data(
@@ -149,11 +147,9 @@ struct _modular {
 };
 
 template <
-    template <typename, std::size_t>
-    typename _array_tc,
     CONSTRAINT(concepts::layout) _layout_tc,
     template <typename, std::size_t, typename>
     typename _storage_tc,
     CONSTRAINT(concepts::datatype) _datatype_t>
-using modular = _modular<_array_tc, _layout_tc, _storage_tc, _datatype_t>;
+using modular = _modular<_layout_tc, _storage_tc, _datatype_t>;
 }

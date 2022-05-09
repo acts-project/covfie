@@ -17,14 +17,13 @@
 namespace covfie::backend::layout {
 template <
     std::size_t _dims,
-    CONSTRAINT(concepts::integral_input_scalar) _index_t = std::size_t,
-    template <typename, std::size_t> typename _array_tc = std::array>
+    CONSTRAINT(concepts::integral_input_scalar) _index_t = std::size_t>
 struct strided {
     static constexpr std::size_t dims = _dims;
 
     using index_t = _index_t;
-    using ndsize_t = _array_tc<index_t, dims>;
-    using coordinate_t = _array_tc<index_t, dims>;
+    using ndsize_t = std::array<index_t, dims>;
+    using coordinate_t = std::array<index_t, dims>;
 
     struct owning_data_t {
         owning_data_t(ndsize_t sizes)

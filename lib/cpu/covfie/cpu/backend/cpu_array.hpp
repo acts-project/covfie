@@ -16,9 +16,6 @@
 
 namespace covfie::backend {
 template <std::size_t input_dimensions, typename _datatype_t>
-using cpu_array = _modular<
-    std::array,
-    layout::strided<input_dimensions>,
-    storage::c_array,
-    _datatype_t>;
+using cpu_array =
+    _modular<layout::strided<input_dimensions>, storage::c_array, _datatype_t>;
 }

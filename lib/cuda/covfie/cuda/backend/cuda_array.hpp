@@ -17,7 +17,6 @@
 namespace covfie::backend {
 template <std::size_t input_dimensions, typename _datatype_t>
 using cuda_array = _modular<
-    std::array,
     layout::strided<input_dimensions>,
     storage::cuda_device_array,
     _datatype_t>;
