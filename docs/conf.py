@@ -12,6 +12,7 @@ author = 'The Acts authors'
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
+    'breathe'
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -33,3 +34,10 @@ html_theme = 'alabaster'
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = []
+
+# -- Breathe options ---------------------------------------------------------
+breathe_projects = {
+    'covfie': '_build/xml'
+}
+
+breathe_default_project = "covfie"
