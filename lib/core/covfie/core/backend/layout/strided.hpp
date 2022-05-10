@@ -14,6 +14,8 @@
 
 #include <covfie/core/backend/storage/array.hpp>
 #include <covfie/core/concepts.hpp>
+#include <covfie/core/utility/nd_map.hpp>
+#include <covfie/core/utility/tuple.hpp>
 
 namespace covfie::backend::layout {
 template <
@@ -45,9 +47,14 @@ struct strided {
             ));
             typename array_t::non_owning_data_t sv(tmp);
 
-            if constexpr (input_vector_t::dimensions == 1) {
-                for (std::size_t x = 0; x < sizes[0]; ++x) {
-                    coordinate_t c{x};
+            using tuple_t = decltype(std::tuple_cat(
+                std::declval<
+                    std::array<std::size_t, input_vector_t::dimensions>>()
+            ));
+
+            utility::nd_map<tuple_t>(
+                [&sizes, &sv, &other](tuple_t t) {
+                    coordinate_t c = utility::to_array(t);
                     index_t idx = 0;
 
                     for (std::size_t k = 0; k < input_vector_t::dimensions; ++k)
@@ -66,65 +73,11 @@ struct strided {
                     for (std::size_t i = 0;
                          i < std::tuple_size<output_t>::value;
                          ++i) {
-                        sv[idx][i] = other.at({x})[i];
+                        sv[idx][i] = other.at(c)[i];
                     }
-                }
-            } else if constexpr (input_vector_t::dimensions == 2) {
-                for (std::size_t x = 0; x < sizes[0]; ++x) {
-                    for (std::size_t y = 0; y < sizes[1]; ++y) {
-                        coordinate_t c{x, y};
-                        index_t idx = 0;
-
-                        for (std::size_t k = 0; k < input_vector_t::dimensions;
-                             ++k) {
-                            index_t tmp = c[k];
-
-                            for (std::size_t l = k + 1;
-                                 l < input_vector_t::dimensions;
-                                 ++l) {
-                                tmp *= sizes[l];
-                            }
-
-                            idx += tmp;
-                        }
-
-                        for (std::size_t i = 0;
-                             i < std::tuple_size<output_t>::value;
-                             ++i) {
-                            sv[idx][i] = other.at({x, y})[i];
-                        }
-                    }
-                }
-            } else if constexpr (input_vector_t::dimensions == 3) {
-                for (std::size_t x = 0; x < sizes[0]; ++x) {
-                    for (std::size_t y = 0; y < sizes[1]; ++y) {
-                        for (std::size_t z = 0; z < sizes[2]; ++z) {
-                            coordinate_t c{x, y, z};
-                            index_t idx = 0;
-
-                            for (std::size_t k = 0;
-                                 k < input_vector_t::dimensions;
-                                 ++k) {
-                                index_t tmp = c[k];
-
-                                for (std::size_t l = k + 1;
-                                     l < input_vector_t::dimensions;
-                                     ++l) {
-                                    tmp *= sizes[l];
-                                }
-
-                                idx += tmp;
-                            }
-
-                            for (std::size_t i = 0;
-                                 i < std::tuple_size<output_t>::value;
-                                 ++i) {
-                                sv[idx][i] = other.at({x, y, z})[i];
-                            }
-                        }
-                    }
-                }
-            }
+                },
+                std::tuple_cat(sizes)
+            );
 
             return tmp;
         }
