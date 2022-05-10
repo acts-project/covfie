@@ -14,3 +14,11 @@ target_include_directories(covfie_core INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
 target_compile_options(covfie_core INTERFACE "-Wall" "-Wextra")
 
 target_compile_features(covfie_core INTERFACE cxx_std_17)
+
+if(COVFIE_REQUIRE_CXX20)
+    target_compile_definitions(
+        covfie_core
+        INTERFACE
+        COVFIE_REQUIRE_CXX20
+    )
+endif()

@@ -35,6 +35,13 @@ option(
     "Enable building of CUDA code."
 )
 
+# Additional options that may be useful in some cases, such as CI.
+option(
+    COVFIE_REQUIRE_CXX20
+    "Enforce the availability of C++20 features (especially concepts)."
+    Off
+)
+
 # The core library should always be built.
 add_subdirectory(lib)
 
