@@ -167,7 +167,7 @@ void render_bitmap(
 
         float x = c * (1 - std::abs(std::fmod(hp, 2.0) - 1.0));
 
-        float rp, gp, bp;
+        float rp = 0.f, gp = 0.f, bp = 0.f;
 
         if (hp < 1.0) {
             rp = c, gp = x, bp = 0;
