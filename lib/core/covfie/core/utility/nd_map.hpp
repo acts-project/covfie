@@ -14,19 +14,34 @@
 #include <functional>
 
 namespace covfie::utility {
-template <typename T, typename... Args>
-void nd_map(std::function<void(T, Args...)> f, T t, Args... args)
+template <std::size_t... Ns, typename... Ts>
+auto tail_impl(std::index_sequence<Ns...>, [[maybe_unused]] std::tuple<Ts...> t)
 {
-    for (T i = 0; i < t; ++i) {
-        if constexpr (sizeof...(Args) > 0) {
-            nd_map<Args...>(
-                std::function<void(Args...)>([f, i](Args... args) {
-                    f(i, args...);
-                }),
-                args...
+    return std::make_tuple(std::get<Ns + 1u>(t)...);
+}
+
+template <typename... Ts>
+auto tail(std::tuple<Ts...> t)
+{
+    return tail_impl(std::make_index_sequence<sizeof...(Ts) - 1u>(), t);
+}
+
+template <typename Tuple>
+void nd_map(std::function<void(Tuple)> f, Tuple s)
+{
+    if constexpr (std::tuple_size<Tuple>::value == 0u) {
+        f({});
+    } else {
+        using head_t = typename std::tuple_element<0u, Tuple>::type;
+        using tail_t = decltype(tail(std::declval<Tuple>()));
+
+        for (head_t i = static_cast<head_t>(0); i < std::get<0u>(s); ++i) {
+            nd_map<tail_t>(
+                [f, i](tail_t r) {
+                    f(std::tuple_cat(std::tuple<head_t>{i}, r));
+                },
+                tail(s)
             );
-        } else {
-            f(i);
         }
     }
 }
