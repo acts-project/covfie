@@ -55,6 +55,7 @@ jobs:
       run: cmake
         -DCMAKE_CXX_COMPILER=$(which ${{ matrix.COMPILER.CXX }})
         -DCMAKE_BUILD_TYPE=${{ matrix.BUILD }}
+        -DCOVFIE_REQUIRE_CXX20=On
         -DCOVFIE_BUILD_TESTS=On
         -DCOVFIE_BUILD_EXAMPLES=On
         -DCOVFIE_BUILD_BENCHMARKS=On
