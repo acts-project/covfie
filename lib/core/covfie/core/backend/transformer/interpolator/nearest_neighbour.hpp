@@ -13,6 +13,7 @@
 #include <cmath>
 #include <cstddef>
 #include <fstream>
+#include <type_traits>
 
 #include <covfie/core/backend/vector/input.hpp>
 #include <covfie/core/concepts.hpp>
@@ -43,10 +44,27 @@ struct _nearest_neighbour {
         {
         }
 
-        // TODO: This needs SFINAE guards.
-        template <typename T>
+        template <
+            typename T,
+            std::enable_if_t<
+                std::is_convertible_v<
+                    decltype(std::declval<T>().m_backend),
+                    typename backend_t::owning_data_t>,
+                bool> = true>
         owning_data_t(const T & o)
             : m_backend(o.m_backend)
+        {
+        }
+
+        template <
+            typename T,
+            std::enable_if_t<
+                std::is_convertible_v<
+                    decltype(std::declval<T>()),
+                    typename backend_t::owning_data_t>,
+                bool> = true>
+        owning_data_t(const T & o)
+            : m_backend(o)
         {
         }
 

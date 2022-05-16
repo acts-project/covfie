@@ -11,6 +11,7 @@
 #pragma once
 
 #include <numeric>
+#include <type_traits>
 
 #include <covfie/core/backend/storage/array.hpp>
 #include <covfie/core/concepts.hpp>
@@ -97,7 +98,13 @@ struct strided {
         {
         }
 
-        template <typename T>
+        template <
+            typename T,
+            std::enable_if_t<
+                std::is_convertible_v<
+                    decltype(std::declval<T>().m_sizes),
+                    ndsize_t>,
+                bool> = true>
         owning_data_t(const T & o)
             : m_sizes(o.m_sizes)
             , m_storage(make_data(m_sizes, o))
