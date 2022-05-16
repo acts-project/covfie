@@ -22,3 +22,31 @@ target_link_libraries(
     Boost::log_setup
     Boost::program_options
 )
+
+# Add the first example that can be found in the README.
+add_executable(
+    readme_example_1
+
+    readme_example_1.cpp
+)
+
+target_link_libraries(
+    readme_example_1
+
+    PRIVATE
+    covfie_core
+)
+
+# Add the second example that can be found in the README.
+add_executable(
+    readme_example_2
+
+    readme_example_2.cpp
+)
+
+target_link_libraries(
+    readme_example_2
+
+    PRIVATE
+    covfie_core
+)
