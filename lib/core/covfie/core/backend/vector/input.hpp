@@ -10,6 +10,8 @@
 
 #pragma once
 
+#include <array>
+
 #include <covfie/core/concepts.hpp>
 
 namespace covfie::backend::vector {
