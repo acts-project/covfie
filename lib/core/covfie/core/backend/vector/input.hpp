@@ -36,5 +36,9 @@ using float3 = input_vector<float, 3>;
 using unsigned1 = input_vector<unsigned, 1>;
 using unsigned2 = input_vector<unsigned, 2>;
 using unsigned3 = input_vector<unsigned, 3>;
+
+using ulong1 = input_vector<unsigned long, 1>;
+using ulong2 = input_vector<unsigned long, 2>;
+using ulong3 = input_vector<unsigned long, 3>;
 }
 }
