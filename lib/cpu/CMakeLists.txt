@@ -8,9 +8,25 @@
 
 add_library(covfie_cpu INTERFACE)
 
-target_include_directories(covfie_cpu INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(
+    covfie_cpu
+    INTERFACE
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+)
 
 # Remove this line!
 target_compile_options(covfie_cpu INTERFACE "-Wall" "-Wextra")
 
 target_compile_features(covfie_cpu INTERFACE cxx_std_17)
+
+# Logic to ensure that the CPU module can be installed properly.
+install(
+    TARGETS covfie_cpu
+    EXPORT ${PROJECT_NAME}Targets
+)
+
+install(
+    DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/covfie
+    DESTINATION include
+)

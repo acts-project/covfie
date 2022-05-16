@@ -8,7 +8,12 @@
 
 add_library(covfie_core INTERFACE)
 
-target_include_directories(covfie_core INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(
+    covfie_core
+    INTERFACE
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+)
 
 # Remove this line!
 target_compile_options(covfie_core INTERFACE "-Wall" "-Wextra")
@@ -22,3 +27,14 @@ if(COVFIE_REQUIRE_CXX20)
         COVFIE_REQUIRE_CXX20
     )
 endif()
+
+# Logic to ensure that the core module can be installed properly.
+install(
+    TARGETS covfie_core
+    EXPORT ${PROJECT_NAME}Targets
+)
+
+install(
+    DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/covfie
+    DESTINATION include
+)

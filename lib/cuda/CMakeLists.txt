@@ -8,7 +8,12 @@
 
 add_library(covfie_cuda INTERFACE)
 
-target_include_directories(covfie_cuda INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(
+    covfie_cuda
+    INTERFACE
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+)
 
 # Remove this line!
 target_compile_options(
@@ -18,6 +23,15 @@ target_compile_options(
     $<$<COMPILE_LANGUAGE:CUDA>:--expt-relaxed-constexpr>
 )
 
-
-
 target_compile_features(covfie_cuda INTERFACE cxx_std_17)
+
+# Logic to ensure that the CUDA module can be installed properly.
+install(
+    TARGETS covfie_cuda
+    EXPORT ${PROJECT_NAME}Targets
+)
+
+install(
+    DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/covfie
+    DESTINATION include
+)
