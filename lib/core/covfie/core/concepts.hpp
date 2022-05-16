@@ -15,7 +15,13 @@
 #if __cpp_concepts >= 201907L
 namespace covfie::concepts {
 template <typename T>
-concept field_backend = true;
+concept field_backend = requires
+{
+    typename T::contravariant_input_t;
+    typename T::contravariant_output_t;
+    typename T::covariant_input_t;
+    typename T::covariant_output_t;
+};
 
 template <typename T>
 concept output_scalar = true;
