@@ -25,6 +25,7 @@ add_executable(
     test_constant_field.cpp
     test_transformer_affine.cpp
     test_binary_io.cpp
+    test_identity_backend.cpp
 )
 
 # Ensure that the tests are linked against the required libraries.
