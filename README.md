@@ -1,53 +1,16 @@
-# Covfie
+# covfie
 
 ![](https://github.com/stephenswat/covfie/actions/workflows/builds.yml/badge.svg?branch=main)
 ![](https://github.com/stephenswat/covfie/actions/workflows/checks.yml/badge.svg?branch=main)
 [![Documentation Status](https://readthedocs.org/projects/covfie/badge/?version=latest)](https://covfie.readthedocs.io/en/latest/?badge=latest)
 
 **covfie** (pronounced _coffee_) is a **co**-processor **v**ector **fie**ld
-projects. Covfie consists of two main components; the first is the library
-itself, which can be used by scientific applications using CUDA or other
+library. covfie consists of two main components; the first is the header-only
+C++ library, which can be used by scientific applications using CUDA or other
 programming platforms. The second is a set of benchmarks which can be used to
 quantify the computational performance of all the different vector field
-implementations. Arguably, the test suite forms a third component. This README
-will be concerned mostly with the library part of the project.
-
-## Core ideas
-
-The library part of Covfie is a header-only C++ library. In Covfie, we aim to
-model uniformly sampled vector fields ℝ<sup>n</sup> → ℝ<sup>m</sup>. The
-problem is that the memory inside (most computers) can be described &ndash; at
-best &ndash; as an ℕ<sup>1</sup> → ℝ<sup>1</sup> mapping; we have quite a long
-way to go to get to our goal of representing more complicated vector fields.
-
-In covfie, we tackle this complexity through composition. In other words, we
-break the problem into the tiniest possible pieces and then put them together
-in a clever way, re-using pieces along the way. This allows us to minimize the
-total amount of code we need to perform the computations we want, and it means
-that you never pay (in performance) for functionality you don't need. If
-something does not benefit you, you simply do not add it to the vector field
-which you are constructing.
-
-covfie is built on the following design principles:
-
-1. Know everything at compile time
-    * Anything we can't know at compile time can come back to haunt us later
-    * The compiler is our friend, leverage it to find bugs
-    * Allow maximum optimisation by showing the compiler everything
-    * Absolutely no run-time polymorphism
-2. Composition is **the** (only) way to control complexity
-    * As Brian Beckman said: modern software is to complex by any other means
-    * Factor code into as many small pieces as possible
-    * If you're repeating yourself, you're not abstract enough
-    * Start from simple building blocks
-3. Be ergonomic at the point of use
-    * The backend may be a mess, but using covfie should be easy
-    * Assume the user has fixed most of their field parameters already
-    * Provide a comfortable, easy to remember API
-4. Extensibility is key
-    * Code should be extensible on the user's end
-    * Provide easy-to-use kinds that user types and type constructors can slot
-      into
+implementations covfie provides. Arguably, the test suite constitutes a third
+component.
 
 ## Quick start
 
@@ -55,45 +18,81 @@ All covfie vector fields are stored in the `covfie::field` type and they are
 accessed using the `covfie::field_view` type. These require a backend type
 passed as a template parameters, and their behaviour can be expanded using
 transformers. The easiest way to get started using covfie is to use a field
-builder backend, which allows you to write data to memory:
+builder backend, which allows you to write data to memory (the following
+example is included in the repository as
+[`readme_example_1`](examples/core/readme_example_1.cpp)):
 
 ```cpp
-#include <covfie/core/field.hpp>
-#include <covfie/core/field_view.hpp>
-#include <covfie/core/backend/builder.hpp>
+using field_t = covfie::field<covfie::backend::builder<
+    covfie::backend::vector::input::ulong2,
+    covfie::backend::vector::output::float2>>;
 
-using field_t = covfie::field<covfie::backend::builder<3, 3>>;
+int main(void)
+{
+    // Initialize the field as a 10x10 field, then create a view from it.
+    field_t my_field(field_t::backend_t::configuration_data_t{10ul, 10ul});
+    field_t::view_t my_view(my_field);
 
-field_t my_field(field_t::backend_t::configuration_data_t{10u, 10u, 10u});
-field_t::view_t my_view(my_field);
+    // Assign f(x, y) = (sin x, cos y)
+    for (std::size_t x = 0ul; x < 10ul; ++x) {
+        for (std::size_t y = 0ul; y < 10ul; ++y) {
+            my_view.at(x, y)[0] = std::sin(static_cast<float>(x));
+            my_view.at(x, y)[1] = std::cos(static_cast<float>(y));
+        }
+    }
 
-my_view.at(1u, 5u, 4u)[0] = 4.12f;
+    // Retrieve the vector value at (2, 3)
+    field_t::output_t v = my_view.at(2ul, 3ul);
+
+    std::cout << "Value at (2, 3) = (" << v[0] << ", " << v[1] << ")"
+              << std::endl;
+
+    return 0;
+}
 ```
 
-This code creates a three-dimensional vector field over the natural numbers,
-stretching 10 indices in each direction. If we want to use real numbers for our
-vector field, we can simply add a nearest neighbour interpolator:
+This next example ([`readme_example_2`](examples/core/readme_example_2.cpp))
+creates a two-dimensional vector field over the natural numbers, stretching 10
+indices in each direction. If we want to use real numbers for our vector field,
+we can simply add a linear interpolator:
 
 ```cpp
-#include <covfie/core/field.hpp>
-#include <covfie/core/field_view.hpp>
-#include <covfie/core/backend/builder.hpp>
-#include <covfie/core/backend/transformer/interpolator/nearest_neighbour.hpp>
+using builder_t = covfie::field<covfie::backend::builder<
+    covfie::backend::vector::input::ulong2,
+    covfie::backend::vector::output::float2>>;
 
 using field_t =
-    covfie::field<
-        covfie::backend::transformer::interpolator::nearest_neighbour<
-            covfie::backend::builder<3, 3>
-        >
-    >;
+    covfie::field<covfie::backend::transformer::interpolator::linear<
+        covfie::backend::layout::strided<
+            covfie::backend::vector::input::ulong2,
+            covfie::backend::storage::array<
+                covfie::backend::vector::output::float2>>>>;
 
-field_t my_field(
-    field_t::backend_t::configuration_data_t{}
-    field_t::backend_t::backend_t::configuration_data_t{10u, 10u, 10u},
-);
-field_t::view_t my_view(my_field);
+int main(void)
+{
+    // Initialize the field as a 10x10 field, then create a view from it.
+    builder_t my_field(builder_t::backend_t::configuration_data_t{10ul, 10ul});
+    builder_t::view_t my_view(my_field);
 
-my_view.at(4.2f, 1.2f, -11.9f)[0] = 4.12f;
+    // Assign f(x, y) = (sin x, cos y)
+    for (std::size_t x = 0ul; x < 10ul; ++x) {
+        for (std::size_t y = 0ul; y < 10ul; ++y) {
+            my_view.at(x, y)[0] = std::sin(static_cast<float>(x));
+            my_view.at(x, y)[1] = std::cos(static_cast<float>(y));
+        }
+    }
+
+    field_t new_field(my_field);
+    field_t::view_t new_view(new_field);
+
+    // Retrieve the vector value at (2.31, 3.98)
+    field_t::output_t v = new_view.at(2.31f, 3.98f);
+
+    std::cout << "Value at (2.31, 3.98) = (" << v[0] << ", " << v[1] << ")"
+              << std::endl;
+
+    return 0;
+}
 ```
 
 covfie types can seem intimidating at first, but they are quite friendly! Also,
@@ -129,3 +128,4 @@ build:
 | `COVFIE_BUILD_BENCHMARKS` | Build the benchmarks. |
 | `COVFIE_PLATFORM_CPU` | Build CPU-specific code. |
 | `COVFIE_PLATFORM_CUDA` | Build CUDA-specific code. |
+| `COVFIE_REQUIRE_CXX20` | Emit an error instead of a warning if support for C++20 concepts is missing. |
