@@ -15,6 +15,7 @@
 #include <boost/log/trivial.hpp>
 #include <boost/program_options.hpp>
 
+#include <covfie/core/backend/builder.hpp>
 #include <covfie/core/backend/transformer/affine.hpp>
 #include <covfie/core/backend/transformer/interpolator/linear.hpp>
 #include <covfie/core/backend/vector/output.hpp>

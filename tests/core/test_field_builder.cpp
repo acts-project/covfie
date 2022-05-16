@@ -12,6 +12,8 @@
 #include <cstddef>
 
 #include <covfie/core/backend/builder.hpp>
+#include <covfie/core/backend/vector/input.hpp>
+#include <covfie/core/backend/vector/output.hpp>
 #include <covfie/core/field.hpp>
 #include <gtest/gtest.h>
 

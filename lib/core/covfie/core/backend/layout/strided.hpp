@@ -14,6 +14,7 @@
 
 #include <covfie/core/backend/storage/array.hpp>
 #include <covfie/core/concepts.hpp>
+#include <covfie/core/qualifiers.hpp>
 #include <covfie/core/utility/nd_map.hpp>
 #include <covfie/core/utility/tuple.hpp>
 

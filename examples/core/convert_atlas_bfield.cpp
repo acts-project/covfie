@@ -17,6 +17,8 @@
 #include <covfie/core/backend/builder.hpp>
 #include <covfie/core/backend/transformer/affine.hpp>
 #include <covfie/core/backend/transformer/interpolator/nearest_neighbour.hpp>
+#include <covfie/core/backend/vector/input.hpp>
+#include <covfie/core/backend/vector/output.hpp>
 #include <covfie/core/field.hpp>
 
 void parse_opts(
