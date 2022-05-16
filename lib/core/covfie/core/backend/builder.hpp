@@ -171,11 +171,7 @@ struct _builder {
 };
 
 template <
-    std::size_t _input_dimensions,
-    CONSTRAINT(concepts::output_vector) _output_vector_t,
-    CONSTRAINT(concepts::integral_input_scalar) _input_scalar_type =
-        std::size_t>
-using builder = _builder<
-    vector::input_vector<_input_scalar_type, _input_dimensions>,
-    _output_vector_t>;
+    CONSTRAINT(concepts::input_vector) _input_vector_t,
+    CONSTRAINT(concepts::output_vector) _output_vector_t>
+using builder = _builder<_input_vector_t, _output_vector_t>;
 }

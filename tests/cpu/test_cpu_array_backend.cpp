@@ -21,8 +21,9 @@
 
 TEST(TestFieldViewCPUArrayBackend, WriteRead1DSingleFloat)
 {
-    using field_t1 = covfie::field<
-        covfie::backend::builder<1, covfie::backend::vector::output::float1>>;
+    using field_t1 = covfie::field<covfie::backend::builder<
+        covfie::backend::vector::input::ulong1,
+        covfie::backend::vector::output::float1>>;
     using field_t2 = covfie::field<
         covfie::backend::cpu_array<1, covfie::backend::vector::output::float1>>;
 
@@ -47,8 +48,9 @@ TEST(TestFieldViewCPUArrayBackend, WriteRead1DSingleFloat)
 
 TEST(TestFieldViewCPUArrayBackend, WriteRead1DArrayFloat)
 {
-    using field_t1 = covfie::field<
-        covfie::backend::builder<1, covfie::backend::vector::output::float3>>;
+    using field_t1 = covfie::field<covfie::backend::builder<
+        covfie::backend::vector::input::ulong1,
+        covfie::backend::vector::output::float3>>;
     using field_t2 = covfie::field<
         covfie::backend::cpu_array<1, covfie::backend::vector::output::float3>>;
 
@@ -73,8 +75,9 @@ TEST(TestFieldViewCPUArrayBackend, WriteRead1DArrayFloat)
 
 TEST(TestFieldViewCPUArrayBackend, WriteRead2DSingleFloat)
 {
-    using field_t1 = covfie::field<
-        covfie::backend::builder<2, covfie::backend::vector::output::float1>>;
+    using field_t1 = covfie::field<covfie::backend::builder<
+        covfie::backend::vector::input::ulong2,
+        covfie::backend::vector::output::float1>>;
     using field_t2 = covfie::field<
         covfie::backend::cpu_array<2, covfie::backend::vector::output::float1>>;
 
@@ -103,8 +106,9 @@ TEST(TestFieldViewCPUArrayBackend, WriteRead2DSingleFloat)
 
 TEST(TestFieldViewCPUArrayBackend, WriteRead2DArrayFloat)
 {
-    using field_t1 = covfie::field<
-        covfie::backend::builder<2, covfie::backend::vector::output::float3>>;
+    using field_t1 = covfie::field<covfie::backend::builder<
+        covfie::backend::vector::input::ulong2,
+        covfie::backend::vector::output::float3>>;
     using field_t2 = covfie::field<
         covfie::backend::cpu_array<2, covfie::backend::vector::output::float3>>;
 
@@ -133,8 +137,9 @@ TEST(TestFieldViewCPUArrayBackend, WriteRead2DArrayFloat)
 
 TEST(TestFieldViewCPUArrayBackend, WriteRead3DSingleFloat)
 {
-    using field_t1 = covfie::field<
-        covfie::backend::builder<3, covfie::backend::vector::output::float1>>;
+    using field_t1 = covfie::field<covfie::backend::builder<
+        covfie::backend::vector::input::ulong3,
+        covfie::backend::vector::output::float1>>;
     using field_t2 = covfie::field<
         covfie::backend::cpu_array<3, covfie::backend::vector::output::float1>>;
 
@@ -170,8 +175,9 @@ TEST(TestFieldViewCPUArrayBackend, WriteRead3DSingleFloat)
 
 TEST(TestFieldViewCPUArrayBackend, WriteRead3DArrayFloat)
 {
-    using field_t1 = covfie::field<
-        covfie::backend::builder<3, covfie::backend::vector::output::float3>>;
+    using field_t1 = covfie::field<covfie::backend::builder<
+        covfie::backend::vector::input::ulong3,
+        covfie::backend::vector::output::float3>>;
     using field_t2 = covfie::field<
         covfie::backend::cpu_array<3, covfie::backend::vector::output::float3>>;
 

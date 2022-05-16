@@ -20,14 +20,15 @@
 
 TEST(TestBinaryIO, WriteRead1DSingleFloatBuilder)
 {
-    using field_t = covfie::field<
-        covfie::backend::builder<1, covfie::backend::vector::output::float1>>;
+    using field_t = covfie::field<covfie::backend::builder<
+        covfie::backend::vector::input::ulong1,
+        covfie::backend::vector::output::float1>>;
 
-    field_t f(field_t::backend_t::configuration_data_t{5u});
+    field_t f(field_t::backend_t::configuration_data_t{5ul});
 
     field_t::view_t fv(f);
 
-    for (std::size_t i = 0; i < 5u; ++i) {
+    for (std::size_t i = 0ul; i < 5ul; ++i) {
         field_t::output_t & p = fv.at(i);
         p[0] = static_cast<float>(i);
     }
@@ -47,7 +48,7 @@ TEST(TestBinaryIO, WriteRead1DSingleFloatBuilder)
 
     field_t::view_t nfv(nf);
 
-    for (std::size_t i = 0; i < 5u; ++i) {
+    for (std::size_t i = 0ul; i < 5ul; ++i) {
         field_t::output_t & p = nfv.at(i);
         EXPECT_EQ(p[0], static_cast<float>(i));
     }

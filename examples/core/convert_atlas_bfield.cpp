@@ -57,7 +57,9 @@ void parse_opts(
 
 using builder_t = covfie::field<covfie::backend::transformer::affine<
     covfie::backend::transformer::interpolator::nearest_neighbour<
-        covfie::backend::builder<3, covfie::backend::vector::output::float3>>>>;
+        covfie::backend::builder<
+            covfie::backend::vector::input::ulong3,
+            covfie::backend::vector::output::float3>>>>;
 
 builder_t read_atlas_bfield(const std::string & fn)
 {

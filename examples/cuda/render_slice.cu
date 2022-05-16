@@ -25,8 +25,9 @@
 #include "bitmap.hpp"
 
 using cpu_field_t = covfie::field<covfie::backend::transformer::affine<
-    covfie::backend::transformer::interpolator::linear<
-        covfie::backend::builder<3, covfie::backend::vector::output::float3>>>>;
+    covfie::backend::transformer::interpolator::linear<covfie::backend::builder<
+        covfie::backend::vector::input::ulong3,
+        covfie::backend::vector::output::float3>>>>;
 
 using cuda_field_t = covfie::field<covfie::backend::transformer::affine<
     covfie::backend::transformer::interpolator::linear<
