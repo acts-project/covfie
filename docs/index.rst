@@ -13,7 +13,7 @@ are common, such as atmospheric sciences.
    :alt: map to buried treasure
    :align: right
 
-   The ATLAS magnetic field, rendered entirely on a GPU with *covfie*.
+   The `ATLAS <https://atlas.cern/>`_ magnetic field, rendered entirely on a GPU with *covfie*.
 
 The covfie documentation consists of three major components. The first is the
 user guide, which establishes many of the core ideas behind covfie and details
@@ -27,17 +27,39 @@ User guide
 
 The user guide is a mostly prosaic introduction to the covfie library and its
 use. The user guide describes the main design goals of the library, as well as
-a step by step introduction to using it.
+a step by step introduction to using it. If you are an end user and you are
+looking to use covfie in a wider project, this is for you.
 
 .. toctree::
    :maxdepth: 2
 
    user/design
    user/installation
+   user/integration
    user/quickstart
+   user/backend
+   user/types
+   user/ownership
+   user/conversion
+   user/io
 
-Benchmarking
-------------
+Developer guide
+---------------
+
+The developer guide is a mostly prosaic summary of the internal workings of
+covfie, which should be useful to users who want to extend covfie with their
+own backends.
+
+.. toctree::
+   :maxdepth: 2
+
+   developer/build
+   developer/backend
+   developer/concepts
+   developer/contributing
+
+Benchmarking guide
+------------------
 
 In addition to being a header-only library, covfie is also -- in part -- a
 benchmark. The modular design of covfie makes it easy to rapidly and thoroughly
@@ -47,8 +69,3 @@ API reference
 -------------
 
 Coming soon...
-
-Indices and tables
-------------------
-
-* :ref:`search`

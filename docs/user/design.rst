@@ -91,6 +91,8 @@ modeling computer memory as we will see later.
 Composition
 -----------
 
+.. _composition:
+
 As we have discussed previously, our slightly expanded definition of what a
 vector field is is given by two commutative semirings :math:`R` and :math:`S`
 as well as two numbers :math:`n` and :math:`m` such that our vector field is
