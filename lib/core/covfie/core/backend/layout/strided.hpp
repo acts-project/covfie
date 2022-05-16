@@ -22,17 +22,16 @@ template <
     CONSTRAINT(concepts::input_vector) _input_vector_t,
     CONSTRAINT(concepts::storage) _storage_t>
 struct strided {
-    using input_vector_t = _input_vector_t;
-
     using storage_t = _storage_t;
-    using output_vector_t = typename storage_t::output_vector_t;
-    using output_t = typename output_vector_t::vector_t;
 
-    using index_t = typename input_vector_t::scalar_t;
-    using ndsize_t = typename input_vector_t::vector_t;
-    using coordinate_t = typename input_vector_t::vector_t;
+    using contravariant_input_t = _input_vector_t;
+    using contravariant_output_t = typename storage_t::contravariant_input_t;
+    using covariant_input_t = typename storage_t::covariant_output_t;
+    using covariant_output_t = covariant_input_t;
 
-    using array_t = storage::array<output_vector_t, std::size_t>;
+    using ndsize_t = typename contravariant_input_t::vector_t;
+    using coordinate_t = typename contravariant_input_t::vector_t;
+    using array_t = storage::array<covariant_input_t, std::size_t>;
 
     struct owning_data_t {
         template <typename T>
@@ -49,20 +48,22 @@ struct strided {
 
             using tuple_t = decltype(std::tuple_cat(
                 std::declval<
-                    std::array<std::size_t, input_vector_t::dimensions>>()
+                    std::array<std::size_t, contravariant_input_t::dimensions>>(
+                )
             ));
 
             utility::nd_map<tuple_t>(
                 [&sizes, &sv, &other](tuple_t t) {
                     coordinate_t c = utility::to_array(t);
-                    index_t idx = 0;
+                    typename contravariant_input_t::scalar_t idx = 0;
 
-                    for (std::size_t k = 0; k < input_vector_t::dimensions; ++k)
-                    {
-                        index_t tmp = c[k];
+                    for (std::size_t k = 0;
+                         k < contravariant_input_t::dimensions;
+                         ++k) {
+                        typename contravariant_input_t::scalar_t tmp = c[k];
 
                         for (std::size_t l = k + 1;
-                             l < input_vector_t::dimensions;
+                             l < contravariant_input_t::dimensions;
                              ++l) {
                             tmp *= sizes[l];
                         }
@@ -71,8 +72,10 @@ struct strided {
                     }
 
                     for (std::size_t i = 0;
-                         i < std::tuple_size<output_t>::value;
-                         ++i) {
+                         i < std::tuple_size<
+                                 typename covariant_output_t::vector_t>::value;
+                         ++i)
+                    {
                         sv[idx][i] = other.at(c)[i];
                     }
                 },
@@ -111,15 +114,18 @@ struct strided {
         {
         }
 
-        COVFIE_DEVICE output_t at(coordinate_t c) const
+        COVFIE_DEVICE typename covariant_output_t::vector_t at(coordinate_t c
+        ) const
         {
-            index_t idx = 0;
+            typename contravariant_input_t::scalar_t idx = 0;
 
-            for (std::size_t k = 0; k < input_vector_t::dimensions; ++k) {
-                index_t tmp = c[k];
+            for (std::size_t k = 0; k < contravariant_input_t::dimensions; ++k)
+            {
+                typename contravariant_input_t::scalar_t tmp = c[k];
 
-                for (std::size_t l = k + 1; l < input_vector_t::dimensions; ++l)
-                {
+                for (std::size_t l = k + 1;
+                     l < contravariant_input_t::dimensions;
+                     ++l) {
                     tmp *= m_sizes[l];
                 }
 
@@ -127,9 +133,9 @@ struct strided {
             }
 
             typename storage_t::value_t & res = m_storage[idx];
-            output_t rv;
+            typename covariant_output_t::vector_t rv;
 
-            for (std::size_t i = 0; i < output_vector_t::dimensions; ++i) {
+            for (std::size_t i = 0; i < covariant_output_t::dimensions; ++i) {
                 rv[i] = res[i];
             }
 

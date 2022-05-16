@@ -20,18 +20,18 @@
 
 namespace covfie::backend::transformer::interpolator {
 template <
-    CONSTRAINT(concepts::field_backend) _backend_tc,
+    CONSTRAINT(concepts::field_backend) _backend_t,
     CONSTRAINT(concepts::floating_point_input_scalar) _input_scalar_type =
         float>
 struct _nearest_neighbour {
-    using input_scalar_type = _input_scalar_type;
-    using backend_t = _backend_tc;
+    using backend_t = _backend_t;
 
-    using integral_coordinate_t = typename backend_t::integral_coordinate_t;
-    using coordinate_t = std::
-        array<input_scalar_type, std::tuple_size<integral_coordinate_t>::value>;
-    using coordinate_scalar_t = typename backend_t::coordinate_scalar_t;
-    using output_t = typename backend_t::output_t;
+    using contravariant_input_t = covfie::backend::vector::input_vector<
+        _input_scalar_type,
+        backend_t::contravariant_input_t::dimensions>;
+    using contravariant_output_t = typename backend_t::contravariant_input_t;
+    using covariant_input_t = typename backend_t::covariant_output_t;
+    using covariant_output_t = covariant_input_t;
 
     struct configuration_data_t {
     };
@@ -69,12 +69,16 @@ struct _nearest_neighbour {
         {
         }
 
-        COVFIE_DEVICE output_t at(coordinate_t c) const
+        COVFIE_DEVICE typename covariant_output_t::vector_t
+        at(typename contravariant_input_t::vector_t c) const
         {
-            typename backend_t::integral_coordinate_t nc;
+            typename contravariant_output_t::vector_t nc;
 
-            for (std::size_t i = 0; i < std::tuple_size<coordinate_t>::value;
-                 ++i) {
+            for (std::size_t i = 0;
+                 i < std::tuple_size<
+                         typename contravariant_output_t::vector_t>::value;
+                 ++i)
+            {
                 nc[i] = std::lround(c[i]);
             }
 

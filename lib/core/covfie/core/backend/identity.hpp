@@ -21,21 +21,20 @@ template <
     CONSTRAINT(concepts::input_vector) _input_vector_t,
     CONSTRAINT(concepts::output_vector) _output_vector_t>
 struct _identity {
-    using input_vector_t = _input_vector_t;
-    using output_vector_t = _output_vector_t;
-
-    using coordinate_t = typename input_vector_t::vector_t;
-    using output_t = typename output_vector_t::vector_t;
+    using contravariant_input_t = _input_vector_t;
+    using contravariant_output_t = std::tuple<>;
+    using covariant_input_t = std::tuple<>;
+    using covariant_output_t = _output_vector_t;
 
     static_assert(
-        input_vector_t::dimensions == output_vector_t::dimensions,
+        contravariant_input_t::dimensions == covariant_output_t::dimensions,
         "Identity backend requires input and output to have identical "
         "dimensionality."
     );
     static_assert(
         std::is_constructible_v<
-            typename input_vector_t::scalar_t,
-            typename output_vector_t::scalar_t>,
+            typename contravariant_input_t::scalar_t,
+            typename covariant_output_t::scalar_t>,
         "Identity backend requires type of input to be convertible to type of "
         "output."
     );
@@ -57,11 +56,13 @@ struct _identity {
         {
         }
 
-        output_t at(coordinate_t c) const
+        typename covariant_output_t::vector_t
+        at(typename contravariant_input_t::vector_t c) const
         {
-            typename output_vector_t::vector_t rv;
+            typename covariant_output_t::vector_t rv;
 
-            for (std::size_t i = 0ul; i < input_vector_t::dimensions; ++i) {
+            for (std::size_t i = 0ul; i < contravariant_input_t::dimensions;
+                 ++i) {
                 rv[i] = c[i];
             }
 

@@ -26,7 +26,7 @@ TEST(TestBinaryIO, WriteRead1DSingleFloatBuilder)
     field_t::view_t fv(f);
 
     for (std::size_t i = 0; i < 5u; ++i) {
-        field_t::backend_t::output_t & p = fv.at(i);
+        field_t::output_t & p = fv.at(i);
         p[0] = static_cast<float>(i);
     }
 
@@ -46,7 +46,7 @@ TEST(TestBinaryIO, WriteRead1DSingleFloatBuilder)
     field_t::view_t nfv(nf);
 
     for (std::size_t i = 0; i < 5u; ++i) {
-        field_t::backend_t::output_t & p = nfv.at(i);
+        field_t::output_t & p = nfv.at(i);
         EXPECT_EQ(p[0], static_cast<float>(i));
     }
 }

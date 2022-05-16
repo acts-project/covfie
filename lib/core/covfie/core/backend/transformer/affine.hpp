@@ -18,19 +18,20 @@
 #include <covfie/core/utility/binary_io.hpp>
 
 namespace covfie::backend::transformer {
-template <CONSTRAINT(concepts::field_backend) _backend_tc>
+template <CONSTRAINT(concepts::field_backend) _backend_t>
 struct affine {
-    using backend_t = _backend_tc;
+    using backend_t = _backend_t;
 
-    using coordinate_t = typename backend_t::coordinate_t;
-
-    using output_t = typename backend_t::output_t;
+    using contravariant_input_t = typename backend_t::contravariant_input_t;
+    using contravariant_output_t = typename backend_t::contravariant_input_t;
+    using covariant_input_t = typename backend_t::covariant_output_t;
+    using covariant_output_t = typename backend_t::covariant_output_t;
 
     struct owning_data_t;
 
     struct configuration_data_t {
-        coordinate_t m_offsets;
-        coordinate_t m_scales;
+        typename contravariant_input_t::vector_t m_offsets;
+        typename contravariant_input_t::vector_t m_scales;
     };
 
     struct owning_data_t {
@@ -60,16 +61,22 @@ struct affine {
 
         void dump(std::ofstream & fs) const
         {
-            for (std::size_t i = 0; i < std::tuple_size<coordinate_t>::value;
-                 ++i) {
+            for (std::size_t i = 0;
+                 i < std::tuple_size<
+                         typename contravariant_input_t::vector_t>::value;
+                 ++i)
+            {
                 fs.write(
                     reinterpret_cast<const char *>(&m_offsets[i]),
                     sizeof(typename decltype(m_offsets)::value_type)
                 );
             }
 
-            for (std::size_t i = 0; i < std::tuple_size<coordinate_t>::value;
-                 ++i) {
+            for (std::size_t i = 0;
+                 i < std::tuple_size<
+                         typename contravariant_input_t::vector_t>::value;
+                 ++i)
+            {
                 fs.write(
                     reinterpret_cast<const char *>(&m_scales[i]),
                     sizeof(typename decltype(m_scales)::value_type)
@@ -79,8 +86,8 @@ struct affine {
             m_backend.dump(fs);
         }
 
-        coordinate_t m_offsets;
-        coordinate_t m_scales;
+        typename contravariant_input_t::vector_t m_offsets;
+        typename contravariant_input_t::vector_t m_scales;
         typename backend_t::owning_data_t m_backend;
     };
 
@@ -92,20 +99,24 @@ struct affine {
         {
         }
 
-        COVFIE_DEVICE output_t at(coordinate_t c) const
+        COVFIE_DEVICE typename covariant_output_t::vector_t
+        at(typename contravariant_input_t::vector_t c) const
         {
-            typename backend_t::coordinate_t nc;
+            typename contravariant_output_t::vector_t nc;
 
-            for (std::size_t i = 0; i < std::tuple_size<coordinate_t>::value;
-                 ++i) {
+            for (std::size_t i = 0;
+                 i < std::tuple_size<
+                         typename contravariant_output_t::vector_t>::value;
+                 ++i)
+            {
                 nc[i] = (c[i] - m_offsets[i]) / m_scales[i];
             }
 
             return m_backend.at(nc);
         }
 
-        coordinate_t m_offsets;
-        coordinate_t m_scales;
+        typename contravariant_input_t::vector_t m_offsets;
+        typename contravariant_input_t::vector_t m_scales;
         typename backend_t::non_owning_data_t m_backend;
     };
 };

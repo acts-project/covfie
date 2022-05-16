@@ -22,6 +22,11 @@ template <
     CONSTRAINT(concepts::output_vector) _output_vector_t,
     typename _index_t = std::size_t>
 struct cuda_device_array {
+    using contravariant_input_t = _index_t;
+    using contravariant_output_t = std::tuple<>;
+    using covariant_input_t = std::tuple<>;
+    using covariant_output_t = _output_vector_t;
+
     using output_vector_t = _output_vector_t;
     static constexpr std::size_t dimensions = output_vector_t::dimensions;
 

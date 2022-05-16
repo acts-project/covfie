@@ -24,22 +24,20 @@ template <
     CONSTRAINT(concepts::input_vector) _input_vector_t,
     CONSTRAINT(concepts::output_vector) _output_vector_t>
 struct _builder {
-    using input_vector_t = _input_vector_t;
-    using output_vector_t = _output_vector_t;
+    using contravariant_input_t = _input_vector_t;
+    using contravariant_output_t = std::tuple<>;
+    using covariant_input_t = std::tuple<>;
+    using covariant_output_t = vector::output_reference_array_vector<
+        typename _output_vector_t::scalar_t,
+        _output_vector_t::dimensions>;
 
-    using index_t = typename input_vector_t::scalar_t;
-    using ndsize_t = typename input_vector_t::
-        template vector_tc<index_t, input_vector_t::dimensions>;
-    using output_scalar_t = typename output_vector_t::output_scalar_t;
+    using index_t = typename contravariant_input_t::scalar_t;
+    using ndsize_t = typename contravariant_input_t::
+        template vector_tc<index_t, contravariant_input_t::dimensions>;
 
-    using coordinate_scalar_t = index_t;
-    using value_t = output_scalar_t[output_vector_t::dimensions];
-
-    using coordinate_t = typename input_vector_t::
-        template vector_tc<index_t, input_vector_t::dimensions>;
-    using output_t = std::add_lvalue_reference_t<value_t>;
-    using integral_coordinate_t = typename input_vector_t::
-        template vector_tc<index_t, input_vector_t::dimensions>;
+    using output_t = covariant_output_t;
+    using integral_coordinate_t = typename contravariant_input_t::
+        template vector_tc<index_t, contravariant_input_t::dimensions>;
 
     struct configuration_data_t {
         ndsize_t m_sizes;
@@ -48,19 +46,23 @@ struct _builder {
     struct owning_data_t {
         template <typename... Args>
         owning_data_t(configuration_data_t conf)
-            : m_ptr(std::make_unique<value_t[]>(std::accumulate(
-                  std::begin(conf.m_sizes),
-                  std::end(conf.m_sizes),
-                  1,
-                  std::multiplies<std::size_t>()
-              )))
+            : m_ptr(std::make_unique<std::remove_reference_t<
+                        typename covariant_output_t::vector_t>[]>(
+                  std::accumulate(
+                      std::begin(conf.m_sizes),
+                      std::end(conf.m_sizes),
+                      1,
+                      std::multiplies<std::size_t>()
+                  )
+              ))
             , m_sizes(conf.m_sizes)
         {
         }
 
         owning_data_t(std::ifstream & fs)
         {
-            for (std::size_t i = 0; i < input_vector_t::dimensions; ++i) {
+            for (std::size_t i = 0; i < contravariant_input_t::dimensions; ++i)
+            {
                 fs.read(
                     reinterpret_cast<char *>(&m_sizes[i]),
                     sizeof(typename decltype(m_sizes)::value_type)
@@ -74,23 +76,27 @@ struct _builder {
                 std::multiplies<std::size_t>()
             );
 
-            m_ptr = std::make_unique<value_t[]>(total_elements);
+            m_ptr = std::make_unique<std::remove_reference_t<
+                typename covariant_output_t::vector_t>[]>(total_elements);
 
             fs.read(
                 reinterpret_cast<char *>(m_ptr.get()),
-                total_elements * sizeof(value_t)
+                total_elements * sizeof(std::remove_reference_t<
+                                        typename covariant_output_t::vector_t>)
             );
         }
 
-        output_t at(integral_coordinate_t c) const
+        typename covariant_output_t::vector_t at(integral_coordinate_t c) const
         {
             index_t idx = 0;
 
-            for (std::size_t k = 0; k < input_vector_t::dimensions; ++k) {
+            for (std::size_t k = 0; k < contravariant_input_t::dimensions; ++k)
+            {
                 index_t tmp = c[k];
 
-                for (std::size_t l = k + 1; l < input_vector_t::dimensions; ++l)
-                {
+                for (std::size_t l = k + 1;
+                     l < contravariant_input_t::dimensions;
+                     ++l) {
                     tmp *= m_sizes[l];
                 }
 
@@ -102,7 +108,8 @@ struct _builder {
 
         void dump(std::ofstream & fs) const
         {
-            for (std::size_t i = 0; i < input_vector_t::dimensions; ++i) {
+            for (std::size_t i = 0; i < contravariant_input_t::dimensions; ++i)
+            {
                 fs.write(
                     reinterpret_cast<const char *>(&m_sizes[i]),
                     sizeof(typename decltype(m_sizes)::value_type)
@@ -118,11 +125,14 @@ struct _builder {
 
             fs.write(
                 reinterpret_cast<const char *>(m_ptr.get()),
-                total_elements * sizeof(value_t)
+                total_elements * sizeof(std::remove_reference_t<
+                                        typename covariant_output_t::vector_t>)
             );
         }
 
-        std::unique_ptr<value_t[]> m_ptr;
+        std::unique_ptr<
+            std::remove_reference_t<typename covariant_output_t::vector_t>[]>
+            m_ptr;
         ndsize_t m_sizes;
     };
 
@@ -133,22 +143,26 @@ struct _builder {
         {
         }
 
-        output_t at(integral_coordinate_t c) const
+        typename covariant_output_t::vector_t at(integral_coordinate_t c) const
         {
             index_t idx = 0;
 
-            for (std::size_t k = 0; k < input_vector_t::dimensions; ++k) {
+            for (std::size_t k = 0; k < contravariant_input_t::dimensions; ++k)
+            {
                 index_t tmp = c[k];
 
-                for (std::size_t l = k + 1; l < input_vector_t::dimensions; ++l)
-                {
+                for (std::size_t l = k + 1;
+                     l < contravariant_input_t::dimensions;
+                     ++l) {
                     tmp *= m_sizes[l];
                 }
 
                 idx += tmp;
             }
 
-            return m_ptr[idx];
+            typename covariant_output_t::vector_t r = m_ptr[idx];
+
+            return r;
         }
 
         typename decltype(owning_data_t::m_ptr)::pointer m_ptr;

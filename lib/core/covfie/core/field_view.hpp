@@ -24,12 +24,9 @@ class field_view
 {
 public:
     using backend_t = _backend_tc;
-
     using storage_t = typename backend_t::non_owning_data_t;
-    using output_t = typename backend_t::output_t;
-
-    using coordinate_t = typename backend_t::coordinate_t;
-
+    using output_t = typename backend_t::covariant_output_t::vector_t;
+    using coordinate_t = typename backend_t::contravariant_input_t::vector_t;
     using field_t = field<_backend_tc>;
 
     static_assert(sizeof(storage_t) <= 256, "Storage type is too large.");
@@ -46,7 +43,7 @@ public:
              ...),
             bool> = true,
         std::enable_if_t<
-            sizeof...(Args) == std::tuple_size<coordinate_t>::value,
+            sizeof...(Args) == backend_t::contravariant_input_t::dimensions,
             bool> = true>
     COVFIE_DEVICE output_t at(Args... c) const
     {
@@ -55,9 +52,7 @@ public:
 
     COVFIE_DEVICE output_t at(coordinate_t c) const
     {
-        typename backend_t::output_t r = m_storage.at(c);
-
-        return r;
+        return m_storage.at(c);
     }
 
 private:

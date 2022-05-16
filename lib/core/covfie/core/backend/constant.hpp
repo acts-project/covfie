@@ -21,21 +21,15 @@ template <
     CONSTRAINT(concepts::input_vector) _input_vector_t,
     CONSTRAINT(concepts::output_vector) _output_vector_t>
 struct _constant {
-    using input_vector_t = _input_vector_t;
-    using output_vector_t = _output_vector_t;
-
-    using index_t = std::size_t;
-
-    using coordinate_t = typename input_vector_t::vector_t;
-    using integral_coordinate_t = typename input_vector_t::
-        template vector_tc<std::size_t, input_vector_t::dimensions>;
-    using output_scalar_t = typename output_vector_t::output_scalar_t;
-    using output_t = typename output_vector_t::vector_t;
+    using contravariant_input_t = _input_vector_t;
+    using contravariant_output_t = std::tuple<>;
+    using covariant_input_t = std::tuple<>;
+    using covariant_output_t = _output_vector_t;
 
     struct owning_data_t;
 
     struct configuration_data_t {
-        output_t m_value;
+        typename covariant_output_t::vector_t m_value;
     };
 
     struct owning_data_t {
@@ -45,7 +39,7 @@ struct _constant {
         {
         }
 
-        output_t m_value;
+        typename covariant_output_t::vector_t m_value;
     };
 
     struct non_owning_data_t {
@@ -54,12 +48,13 @@ struct _constant {
         {
         }
 
-        output_t at(coordinate_t) const
+        typename covariant_output_t::vector_t
+            at(typename contravariant_input_t::vector_t) const
         {
             return m_value;
         }
 
-        output_t m_value;
+        typename covariant_output_t::vector_t m_value;
     };
 };
 

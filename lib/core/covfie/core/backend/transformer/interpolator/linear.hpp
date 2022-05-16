@@ -19,18 +19,19 @@
 
 namespace covfie::backend::transformer::interpolator {
 template <
-    CONSTRAINT(concepts::field_backend) _backend_tc,
+    CONSTRAINT(concepts::field_backend) _backend_t,
     CONSTRAINT(concepts::floating_point_input_scalar) _input_scalar_type =
         float>
 struct linear {
     using input_scalar_type = _input_scalar_type;
-    using backend_t = _backend_tc;
-    using downstream_input_vector_t = typename backend_t::input_vector_t;
+    using backend_t = _backend_t;
 
-    using coordinate_t = typename downstream_input_vector_t::template vector_tc<
-        input_scalar_type,
-        std::tuple_size<typename backend_t::coordinate_t>::value>;
-    using output_t = typename backend_t::output_t;
+    using contravariant_input_t = covfie::backend::vector::input_vector<
+        _input_scalar_type,
+        backend_t::contravariant_input_t::dimensions>;
+    using contravariant_output_t = typename backend_t::contravariant_input_t;
+    using covariant_input_t = typename backend_t::covariant_output_t;
+    using covariant_output_t = covariant_input_t;
 
     struct configuration_data_t {
     };
@@ -68,9 +69,11 @@ struct linear {
         {
         }
 
-        COVFIE_DEVICE output_t at(coordinate_t coord) const
+        COVFIE_DEVICE typename covariant_output_t::vector_t
+        at(typename contravariant_input_t::vector_t coord) const
         {
-            if constexpr (std::tuple_size_v<coordinate_t> == 3) {
+            if constexpr (std::tuple_size_v<typename covariant_output_t::vector_t> == 3)
+            {
                 std::size_t i = std::lround(std::floor(coord[0]));
                 std::size_t j = std::lround(std::floor(coord[1]));
                 std::size_t k = std::lround(std::floor(coord[2]));
@@ -79,10 +82,13 @@ struct linear {
                 input_scalar_type b = std::fmod(coord[1], 1.f);
                 input_scalar_type c = std::fmod(coord[2], 1.f);
 
-                output_t rv;
+                typename covariant_output_t::vector_t rv;
 
-                for (std::size_t q = 0; q < std::tuple_size<output_t>::value;
-                     ++q) {
+                for (std::size_t q = 0;
+                     q < std::tuple_size<
+                             typename covariant_output_t::vector_t>::value;
+                     ++q)
+                {
                     rv[q] =
                         (1. - a) * (1. - b) * (1. - c) *
                             m_backend.at({i, j, k})[q] +

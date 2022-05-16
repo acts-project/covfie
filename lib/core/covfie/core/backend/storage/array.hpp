@@ -11,6 +11,7 @@
 #pragma once
 
 #include <memory>
+#include <tuple>
 #include <utility>
 
 #include <covfie/core/concepts.hpp>
@@ -20,11 +21,13 @@ template <
     CONSTRAINT(concepts::output_vector) _output_vector_t,
     typename _index_t = std::size_t>
 struct array {
-    using output_vector_t = _output_vector_t;
-    static constexpr std::size_t dimensions = output_vector_t::dimensions;
+    using contravariant_input_t = _index_t;
+    using contravariant_output_t = std::tuple<>;
+    using covariant_input_t = std::tuple<>;
+    using covariant_output_t = _output_vector_t;
 
-    using value_t = typename output_vector_t::scalar_t[dimensions];
-    using index_t = _index_t;
+    using value_t =
+        typename covariant_output_t::scalar_t[covariant_output_t::dimensions];
 
     struct owning_data_t {
         owning_data_t(owning_data_t && o)
@@ -49,7 +52,7 @@ struct array {
         {
         }
 
-        value_t & operator[](index_t i) const
+        value_t & operator[](contravariant_input_t i) const
         {
             return m_ptr[i];
         }
