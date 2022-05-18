@@ -31,7 +31,7 @@ a step by step introduction to using it. If you are an end user and you are
 looking to use covfie in a wider project, this is for you.
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
 
    user/design
    user/installation
@@ -51,7 +51,7 @@ covfie, which should be useful to users who want to extend covfie with their
 own backends.
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
 
    developer/build
    developer/backend
