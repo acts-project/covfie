@@ -15,6 +15,7 @@
 #include <type_traits>
 
 #include <covfie/core/backend/vector/input.hpp>
+#include <covfie/core/backend/vector/transformer.hpp>
 #include <covfie/core/concepts.hpp>
 #include <covfie/core/qualifiers.hpp>
 
@@ -32,7 +33,13 @@ struct linear {
         backend_t::contravariant_input_t::dimensions>;
     using contravariant_output_t = typename backend_t::contravariant_input_t;
     using covariant_input_t = typename backend_t::covariant_output_t;
-    using covariant_output_t = covariant_input_t;
+    using covariant_output_t =
+        vector::remove_lvalue_reference<covariant_input_t>;
+
+    static_assert(
+        std::is_object_v<typename covariant_output_t::vector_t>,
+        "Covariant input type of linear interpolator must be an object type."
+    );
 
     struct configuration_data_t {
     };

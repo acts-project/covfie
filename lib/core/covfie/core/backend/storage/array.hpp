@@ -15,6 +15,7 @@
 #include <utility>
 
 #include <covfie/core/backend/vector/input.hpp>
+#include <covfie/core/backend/vector/transformer.hpp>
 #include <covfie/core/concepts.hpp>
 
 namespace covfie::backend::storage {
@@ -25,9 +26,9 @@ struct array {
     using contravariant_input_t = vector::input_scalar<_index_t>;
     using contravariant_output_t = std::tuple<>;
     using covariant_input_t = std::tuple<>;
-    using covariant_output_t = _output_vector_t;
+    using covariant_output_t = vector::add_lvalue_reference<_output_vector_t>;
 
-    using vector_t = typename covariant_output_t::vector_t;
+    using vector_t = std::decay_t<typename _output_vector_t::vector_t>;
 
     struct owning_data_t {
         owning_data_t(owning_data_t && o)
@@ -52,8 +53,8 @@ struct array {
         {
         }
 
-        // TODO: Remove this reference operator.
-        vector_t & operator[](typename contravariant_input_t::vector_t i) const
+        typename covariant_output_t::vector_t
+        operator[](typename contravariant_input_t::vector_t i) const
         {
             return m_ptr[i];
         }

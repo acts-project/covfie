@@ -33,7 +33,7 @@ struct strided {
 
     using ndsize_t = typename contravariant_input_t::vector_t;
     using coordinate_t = typename contravariant_input_t::vector_t;
-    using array_t = storage::array<covariant_input_t, std::size_t>;
+    using array_t = storage_t;
 
     struct owning_data_t {
         template <typename T>
