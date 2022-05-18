@@ -93,8 +93,7 @@ struct linear {
         COVFIE_DEVICE typename covariant_output_t::vector_t
         at(typename contravariant_input_t::vector_t coord) const
         {
-            if constexpr (std::tuple_size_v<typename covariant_output_t::vector_t> == 3)
-            {
+            if constexpr (covariant_output_t::dimensions == 3) {
                 std::size_t i = std::lround(std::floor(coord[0]));
                 std::size_t j = std::lround(std::floor(coord[1]));
                 std::size_t k = std::lround(std::floor(coord[2]));
@@ -105,10 +104,7 @@ struct linear {
 
                 typename covariant_output_t::vector_t rv;
 
-                for (std::size_t q = 0;
-                     q < std::tuple_size<
-                             typename covariant_output_t::vector_t>::value;
-                     ++q)
+                for (std::size_t q = 0; q < covariant_output_t::dimensions; ++q)
                 {
                     rv[q] =
                         (1. - a) * (1. - b) * (1. - c) *

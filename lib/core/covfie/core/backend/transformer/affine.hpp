@@ -61,10 +61,7 @@ struct affine {
 
         void dump(std::ofstream & fs) const
         {
-            for (std::size_t i = 0;
-                 i < std::tuple_size<
-                         typename contravariant_input_t::vector_t>::value;
-                 ++i)
+            for (std::size_t i = 0; i < contravariant_input_t::dimensions; ++i)
             {
                 fs.write(
                     reinterpret_cast<const char *>(&m_offsets[i]),
@@ -72,10 +69,7 @@ struct affine {
                 );
             }
 
-            for (std::size_t i = 0;
-                 i < std::tuple_size<
-                         typename contravariant_input_t::vector_t>::value;
-                 ++i)
+            for (std::size_t i = 0; i < contravariant_input_t::dimensions; ++i)
             {
                 fs.write(
                     reinterpret_cast<const char *>(&m_scales[i]),
@@ -104,10 +98,7 @@ struct affine {
         {
             typename contravariant_output_t::vector_t nc;
 
-            for (std::size_t i = 0;
-                 i < std::tuple_size<
-                         typename contravariant_output_t::vector_t>::value;
-                 ++i)
+            for (std::size_t i = 0; i < contravariant_output_t::dimensions; ++i)
             {
                 nc[i] = (c[i] - m_offsets[i]) / m_scales[i];
             }

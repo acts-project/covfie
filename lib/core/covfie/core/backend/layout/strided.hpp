@@ -73,11 +73,8 @@ struct strided {
                         idx += tmp;
                     }
 
-                    for (std::size_t i = 0;
-                         i < std::tuple_size<
-                                 typename covariant_output_t::vector_t>::value;
-                         ++i)
-                    {
+                    for (std::size_t i = 0; i < covariant_output_t::dimensions;
+                         ++i) {
                         sv[idx][i] = other.at(c)[i];
                     }
                 },

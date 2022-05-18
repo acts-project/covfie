@@ -92,10 +92,7 @@ struct _nearest_neighbour {
         {
             typename contravariant_output_t::vector_t nc;
 
-            for (std::size_t i = 0;
-                 i < std::tuple_size<
-                         typename contravariant_output_t::vector_t>::value;
-                 ++i)
+            for (std::size_t i = 0; i < contravariant_output_t::dimensions; ++i)
             {
                 nc[i] = std::lround(c[i]);
             }
