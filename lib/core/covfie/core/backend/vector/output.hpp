@@ -25,27 +25,28 @@ template <
     std::size_t _dimensions,
     template <typename, std::size_t> typename _vector_tc = std::array>
 struct output_vector {
-    template <typename T, std::size_t N>
-    using vector_tc = _vector_tc<T, N>;
-
     static constexpr std::size_t dimensions = _dimensions;
+
+    template <typename T>
+    using reapply = output_vector<T, dimensions>;
+
     using output_scalar_t = _scalar_type;
     using scalar_t = output_scalar_t;
-    using vector_t = vector_tc<output_scalar_t, dimensions>;
+    using vector_t = _vector_tc<output_scalar_t, dimensions>;
 };
 
 template <
     CONSTRAINT(concepts::output_scalar) _scalar_type,
     std::size_t _dimensions>
 struct output_reference_array_vector {
-    template <typename T, std::size_t N>
-    using vector_tc = array_wrapper<T, N>;
-
     static constexpr std::size_t dimensions = _dimensions;
+
+    template <typename T>
+    using reapply = output_reference_array_vector<T, dimensions>;
+
     using output_scalar_t = _scalar_type;
     using scalar_t = output_scalar_t;
-    using vector_t =
-        std::add_lvalue_reference_t<vector_tc<output_scalar_t, dimensions>>;
+    using vector_t = std::add_lvalue_reference_t<output_scalar_t[dimensions]>;
 };
 
 namespace output {

@@ -20,12 +20,13 @@ template <
     std::size_t _dimensions,
     template <typename, std::size_t> typename _vector_tc = std::array>
 struct input_vector {
-    template <typename T, std::size_t N>
-    using vector_tc = _vector_tc<T, N>;
-
     static constexpr std::size_t dimensions = _dimensions;
+
+    template <typename T>
+    using reapply = input_vector<T, dimensions>;
+
     using scalar_t = _scalar_t;
-    using vector_t = vector_tc<scalar_t, dimensions>;
+    using vector_t = _vector_tc<scalar_t, dimensions>;
 };
 
 namespace input {

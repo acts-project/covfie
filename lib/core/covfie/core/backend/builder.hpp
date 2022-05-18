@@ -32,12 +32,12 @@ struct _builder {
         _output_vector_t::dimensions>;
 
     using index_t = typename contravariant_input_t::scalar_t;
-    using ndsize_t = typename contravariant_input_t::
-        template vector_tc<index_t, contravariant_input_t::dimensions>;
+    using ndsize_t =
+        typename contravariant_input_t::template reapply<index_t>::vector_t;
 
     using output_t = covariant_output_t;
-    using integral_coordinate_t = typename contravariant_input_t::
-        template vector_tc<index_t, contravariant_input_t::dimensions>;
+    using integral_coordinate_t =
+        typename contravariant_input_t::template reapply<index_t>::vector_t;
 
     struct configuration_data_t {
         ndsize_t m_sizes;
