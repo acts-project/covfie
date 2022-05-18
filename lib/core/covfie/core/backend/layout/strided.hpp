@@ -22,7 +22,7 @@
 namespace covfie::backend::layout {
 template <
     CONSTRAINT(concepts::input_vector) _input_vector_t,
-    CONSTRAINT(concepts::storage) _storage_t>
+    CONSTRAINT(concepts::field_backend) _storage_t>
 struct strided {
     using storage_t = _storage_t;
 
