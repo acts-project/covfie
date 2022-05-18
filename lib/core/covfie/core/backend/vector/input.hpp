@@ -29,6 +29,17 @@ struct input_vector {
     using vector_t = _vector_tc<scalar_t, dimensions>;
 };
 
+template <CONSTRAINT(concepts::input_scalar) _scalar_t>
+struct input_scalar {
+    static constexpr std::size_t dimensions = 1;
+
+    template <typename T>
+    using reapply = input_scalar<T>;
+
+    using scalar_t = _scalar_t;
+    using vector_t = scalar_t;
+};
+
 namespace input {
 using float1 = input_vector<float, 1>;
 using float2 = input_vector<float, 2>;
