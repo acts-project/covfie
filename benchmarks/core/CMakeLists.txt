@@ -11,6 +11,7 @@ add_executable(
     benchmark_cpu
 
     benchmark_constant.cpp
+    benchmark_propagation.cpp
 )
 
 # Ensure that the tests are linked against the required libraries.
