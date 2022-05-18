@@ -27,6 +27,7 @@ add_executable(
     test_binary_io.cpp
     test_identity_backend.cpp
     test_nearest_neighbour_interpolator.cpp
+    test_algebra.cpp
 )
 
 # Ensure that the tests are linked against the required libraries.
