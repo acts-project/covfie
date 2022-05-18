@@ -13,6 +13,7 @@
 #include <memory>
 
 #include <covfie/core/backend/storage/array.hpp>
+#include <covfie/core/backend/vector/input.hpp>
 #include <covfie/core/concepts.hpp>
 #include <covfie/cuda/error_check.hpp>
 #include <cuda_runtime.h>
@@ -22,7 +23,7 @@ template <
     CONSTRAINT(concepts::output_vector) _output_vector_t,
     typename _index_t = std::size_t>
 struct cuda_device_array {
-    using contravariant_input_t = _index_t;
+    using contravariant_input_t = vector::input_scalar<_index_t>;
     using contravariant_output_t = std::tuple<>;
     using covariant_input_t = std::tuple<>;
     using covariant_output_t = _output_vector_t;
@@ -34,8 +35,9 @@ struct cuda_device_array {
     using vector_t = typename covariant_output_t::vector_t;
 
     struct owning_data_t {
-        owning_data_t(typename array<output_vector_t, contravariant_input_t>::
-                          owning_data_t && o)
+        owning_data_t(
+            typename array<output_vector_t, _index_t>::owning_data_t && o
+        )
             : m_size(o.m_size)
             , m_ptr(nullptr)
         {
@@ -66,7 +68,8 @@ struct cuda_device_array {
         }
 
         // TODO: Remove this reference operator.
-        COVFIE_DEVICE vector_t & operator[](contravariant_input_t i) const
+        COVFIE_DEVICE vector_t &
+        operator[](typename contravariant_input_t::vector_t i) const
         {
             return m_ptr[i];
         }

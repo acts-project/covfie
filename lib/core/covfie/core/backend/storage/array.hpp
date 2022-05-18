@@ -14,6 +14,7 @@
 #include <tuple>
 #include <utility>
 
+#include <covfie/core/backend/vector/input.hpp>
 #include <covfie/core/concepts.hpp>
 
 namespace covfie::backend::storage {
@@ -21,7 +22,7 @@ template <
     CONSTRAINT(concepts::output_vector) _output_vector_t,
     typename _index_t = std::size_t>
 struct array {
-    using contravariant_input_t = _index_t;
+    using contravariant_input_t = vector::input_scalar<_index_t>;
     using contravariant_output_t = std::tuple<>;
     using covariant_input_t = std::tuple<>;
     using covariant_output_t = _output_vector_t;
@@ -52,7 +53,7 @@ struct array {
         }
 
         // TODO: Remove this reference operator.
-        vector_t & operator[](contravariant_input_t i) const
+        vector_t & operator[](typename contravariant_input_t::vector_t i) const
         {
             return m_ptr[i];
         }
