@@ -11,6 +11,7 @@
 #pragma once
 
 #include <fstream>
+#include <memory>
 
 namespace covfie::utility {
 template <typename T>
@@ -21,5 +22,15 @@ T read_binary(std::ifstream & fs)
     fs.read(reinterpret_cast<char *>(&mem), sizeof(T));
 
     return *(reinterpret_cast<T *>(&mem));
+}
+
+template <typename T>
+std::unique_ptr<T[]> read_binary_array(std::ifstream & fs, std::size_t n)
+{
+    std::unique_ptr<T[]> r = std::make_unique<T[]>(n);
+
+    fs.read(reinterpret_cast<char *>(r.get()), n * sizeof(T));
+
+    return r;
 }
 }
