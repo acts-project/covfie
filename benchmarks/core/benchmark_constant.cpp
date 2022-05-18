@@ -74,12 +74,18 @@ void Sequential3D(benchmark::State & state)
 BENCHMARK(Sequential1D<covfie::backend::constant<
               covfie::backend::vector::input::float1,
               covfie::backend::vector::output::float1>>)
+    ->Name("Sequential/Constant/float1/float1")
+    ->ArgNames({"X"})
     ->Ranges({{1, 4096}});
 BENCHMARK(Sequential2D<covfie::backend::constant<
               covfie::backend::vector::input::float2,
               covfie::backend::vector::output::float2>>)
+    ->Name("Sequential/Constant/float2/float2")
+    ->ArgNames({"X", "Y"})
     ->Ranges({{1, 4096}, {1, 4096}});
 BENCHMARK(Sequential3D<covfie::backend::constant<
               covfie::backend::vector::input::float3,
               covfie::backend::vector::output::float3>>)
+    ->Name("Sequential/Constant/float3/float3")
+    ->ArgNames({"X", "Y", "Z"})
     ->Ranges({{1, 1024}, {1, 1024}, {1, 1024}});
