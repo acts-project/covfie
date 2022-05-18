@@ -17,6 +17,7 @@
 #include <covfie/core/backend/vector/input.hpp>
 #include <covfie/core/backend/vector/transformer.hpp>
 #include <covfie/core/concepts.hpp>
+#include <covfie/core/utility/binary_io.hpp>
 
 namespace covfie::backend::storage {
 template <
@@ -43,6 +44,25 @@ struct array {
         {
         }
 
+        owning_data_t(std::ifstream & fs)
+            : m_size(utility::read_binary<decltype(m_size)>(fs))
+            , m_ptr(utility::read_binary_array<vector_t[]>(fs, m_size))
+        {
+        }
+
+        void dump(std::ofstream & fs) const
+        {
+            fs.write(
+                reinterpret_cast<const char *>(&m_size),
+                sizeof(decltype(m_size))
+            );
+
+            fs.write(
+                reinterpret_cast<const char *>(m_ptr.get()),
+                m_size * sizeof(vector_t)
+            );
+        }
+
         std::size_t m_size;
         std::unique_ptr<vector_t[]> m_ptr;
     };
@@ -55,6 +75,12 @@ struct array {
 
         typename covariant_output_t::vector_t
         operator[](typename contravariant_input_t::vector_t i) const
+        {
+            return m_ptr[i];
+        }
+
+        typename covariant_output_t::vector_t
+        at(typename contravariant_input_t::vector_t i) const
         {
             return m_ptr[i];
         }

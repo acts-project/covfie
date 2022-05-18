@@ -15,6 +15,7 @@
 #include <covfie/core/backend/vector/input.hpp>
 #include <covfie/core/backend/vector/output.hpp>
 #include <covfie/core/concepts.hpp>
+#include <covfie/core/utility/binary_io.hpp>
 
 namespace covfie::backend {
 template <
@@ -37,6 +38,22 @@ struct _constant {
         owning_data_t(configuration_data_t conf)
             : m_value(conf.m_value)
         {
+        }
+
+        owning_data_t(std::ifstream & fs)
+            : m_value(
+                  utility::read_binary<typename covariant_output_t::vector_t>(fs
+                  )
+              )
+        {
+        }
+
+        void dump(std::ofstream & fs) const
+        {
+            fs.write(
+                reinterpret_cast<const char *>(&m_value),
+                sizeof(decltype(m_value))
+            );
         }
 
         typename covariant_output_t::vector_t m_value;

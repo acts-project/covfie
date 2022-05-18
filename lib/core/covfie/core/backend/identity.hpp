@@ -10,6 +10,7 @@
 
 #pragma once
 
+#include <fstream>
 #include <type_traits>
 
 #include <covfie/core/backend/vector/input.hpp>
@@ -47,6 +48,14 @@ struct _identity {
     struct owning_data_t {
         template <typename... Args>
         owning_data_t(configuration_data_t)
+        {
+        }
+
+        owning_data_t(std::ifstream &)
+        {
+        }
+
+        void dump(std::ofstream &) const
         {
         }
     };

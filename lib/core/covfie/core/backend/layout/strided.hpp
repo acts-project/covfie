@@ -16,6 +16,7 @@
 #include <covfie/core/backend/storage/array.hpp>
 #include <covfie/core/concepts.hpp>
 #include <covfie/core/qualifiers.hpp>
+#include <covfie/core/utility/binary_io.hpp>
 #include <covfie/core/utility/nd_map.hpp>
 #include <covfie/core/utility/tuple.hpp>
 
@@ -106,6 +107,22 @@ struct strided {
             : m_sizes(o.m_sizes)
             , m_storage(make_data(m_sizes, o))
         {
+        }
+
+        owning_data_t(std::ifstream & fs)
+            : m_sizes(utility::read_binary<decltype(m_sizes)>(fs))
+            , m_storage(fs)
+        {
+        }
+
+        void dump(std::ofstream & fs) const
+        {
+            fs.write(
+                reinterpret_cast<const char *>(&m_sizes),
+                sizeof(decltype(m_sizes))
+            );
+
+            m_storage.dump(fs);
         }
 
         ndsize_t m_sizes;
