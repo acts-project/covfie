@@ -140,14 +140,7 @@ struct strided {
                 idx += tmp;
             }
 
-            typename storage_t::value_t & res = m_storage[idx];
-            typename covariant_output_t::vector_t rv;
-
-            for (std::size_t i = 0; i < covariant_output_t::dimensions; ++i) {
-                rv[i] = res[i];
-            }
-
-            return rv;
+            return m_storage[idx];
         }
 
         ndsize_t m_sizes;

@@ -31,22 +31,21 @@ struct cuda_device_array {
     static constexpr std::size_t dimensions = output_vector_t::dimensions;
 
     using value_t = typename output_vector_t::scalar_t[dimensions];
-    using index_t = _index_t;
+    using vector_t = typename covariant_output_t::vector_t;
 
     struct owning_data_t {
-        owning_data_t(
-            typename array<output_vector_t, index_t>::owning_data_t && o
-        )
+        owning_data_t(typename array<output_vector_t, contravariant_input_t>::
+                          owning_data_t && o)
             : m_size(o.m_size)
             , m_ptr(nullptr)
         {
             cudaErrorCheck(cudaMalloc(
-                reinterpret_cast<void **>(&m_ptr), m_size * sizeof(value_t)
+                reinterpret_cast<void **>(&m_ptr), m_size * sizeof(vector_t)
             ));
             cudaErrorCheck(cudaMemcpy(
                 m_ptr,
                 o.m_ptr.get(),
-                m_size * sizeof(value_t),
+                m_size * sizeof(vector_t),
                 cudaMemcpyHostToDevice
             ));
         }
@@ -57,7 +56,7 @@ struct cuda_device_array {
         }
 
         std::size_t m_size;
-        value_t * m_ptr;
+        vector_t * m_ptr;
     };
 
     struct non_owning_data_t {
@@ -66,12 +65,13 @@ struct cuda_device_array {
         {
         }
 
-        COVFIE_DEVICE value_t & operator[](index_t i) const
+        // TODO: Remove this reference operator.
+        COVFIE_DEVICE vector_t & operator[](contravariant_input_t i) const
         {
             return m_ptr[i];
         }
 
-        value_t * m_ptr;
+        vector_t * m_ptr;
     };
 };
 }

@@ -26,8 +26,7 @@ struct array {
     using covariant_input_t = std::tuple<>;
     using covariant_output_t = _output_vector_t;
 
-    using value_t =
-        typename covariant_output_t::scalar_t[covariant_output_t::dimensions];
+    using vector_t = typename covariant_output_t::vector_t;
 
     struct owning_data_t {
         owning_data_t(owning_data_t && o)
@@ -38,12 +37,12 @@ struct array {
 
         owning_data_t(std::size_t n)
             : m_size(n)
-            , m_ptr(std::make_unique<value_t[]>(n))
+            , m_ptr(std::make_unique<vector_t[]>(n))
         {
         }
 
         std::size_t m_size;
-        std::unique_ptr<value_t[]> m_ptr;
+        std::unique_ptr<vector_t[]> m_ptr;
     };
 
     struct non_owning_data_t {
@@ -52,7 +51,8 @@ struct array {
         {
         }
 
-        value_t & operator[](contravariant_input_t i) const
+        // TODO: Remove this reference operator.
+        vector_t & operator[](contravariant_input_t i) const
         {
             return m_ptr[i];
         }
