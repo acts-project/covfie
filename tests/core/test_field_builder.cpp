@@ -44,8 +44,8 @@ TEST(TestFieldBuilder, WriteReadArrayFloat)
 
     field_t::view_t fv(f);
 
-    float(&p1)[3] = fv.at(1u, 2u, 1u);
-    float(&p2)[3] = fv.at(2u, 0u, 0u);
+    std::array<float, 3> & p1 = fv.at(1u, 2u, 1u);
+    std::array<float, 3> & p2 = fv.at(2u, 0u, 0u);
 
     p1[0] = 5.f;
     p1[1] = 6.f;

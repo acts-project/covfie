@@ -37,7 +37,8 @@ struct output_vector {
 
 template <
     CONSTRAINT(concepts::output_scalar) _scalar_type,
-    std::size_t _dimensions>
+    std::size_t _dimensions,
+    template <typename, std::size_t> typename _vector_tc = std::array>
 struct output_reference_array_vector {
     static constexpr std::size_t dimensions = _dimensions;
 
@@ -46,7 +47,8 @@ struct output_reference_array_vector {
 
     using output_scalar_t = _scalar_type;
     using scalar_t = output_scalar_t;
-    using vector_t = std::add_lvalue_reference_t<output_scalar_t[dimensions]>;
+    using vector_t =
+        std::add_lvalue_reference_t<_vector_tc<output_scalar_t, dimensions>>;
 };
 
 namespace output {
