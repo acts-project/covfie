@@ -20,7 +20,6 @@ find_package(
 add_executable(
     test_core
 
-    test_field_builder.cpp
     test_utility.cpp
     test_constant_field.cpp
     test_transformer_affine.cpp

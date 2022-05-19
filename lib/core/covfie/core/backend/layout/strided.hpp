@@ -41,10 +41,14 @@ struct strided {
     };
 
     struct owning_data_t {
+        using parent_t = strided<_input_vector_t, _storage_t>;
+
         template <typename T>
         static typename array_t::owning_data_t
         make_data(ndsize_t sizes, const T & other)
         {
+            typename T::parent_t::non_owning_data_t nother(other);
+
             typename array_t::owning_data_t tmp(std::accumulate(
                 std::begin(sizes),
                 std::end(sizes),
@@ -60,7 +64,7 @@ struct strided {
             ));
 
             utility::nd_map<tuple_t>(
-                [&sizes, &sv, &other](tuple_t t) {
+                [&sizes, &sv, &nother](tuple_t t) {
                     coordinate_t c = utility::to_array(t);
                     typename contravariant_input_t::scalar_t idx = 0;
 
@@ -80,7 +84,7 @@ struct strided {
 
                     for (std::size_t i = 0; i < covariant_output_t::dimensions;
                          ++i) {
-                        sv[idx][i] = other.at(c)[i];
+                        sv[idx][i] = nother.at(c)[i];
                     }
                 },
                 std::tuple_cat(sizes)

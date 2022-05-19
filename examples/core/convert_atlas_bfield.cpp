@@ -14,7 +14,8 @@
 #include <boost/log/trivial.hpp>
 #include <boost/program_options.hpp>
 
-#include <covfie/core/backend/builder.hpp>
+#include <covfie/core/backend/layout/strided.hpp>
+#include <covfie/core/backend/storage/array.hpp>
 #include <covfie/core/backend/transformer/affine.hpp>
 #include <covfie/core/backend/transformer/interpolator/nearest_neighbour.hpp>
 #include <covfie/core/backend/vector/input.hpp>
@@ -55,13 +56,14 @@ void parse_opts(
     }
 }
 
-using builder_t = covfie::field<covfie::backend::transformer::affine<
+using field_t = covfie::field<covfie::backend::transformer::affine<
     covfie::backend::transformer::interpolator::nearest_neighbour<
-        covfie::backend::builder<
+        covfie::backend::layout::strided<
             covfie::backend::vector::input::ulong3,
-            covfie::backend::vector::output::float3>>>>;
+            covfie::backend::storage::array<
+                covfie::backend::vector::output::float3>>>>>;
 
-builder_t read_atlas_bfield(const std::string & fn)
+field_t read_atlas_bfield(const std::string & fn)
 {
     std::ifstream f;
 
@@ -140,7 +142,7 @@ builder_t read_atlas_bfield(const std::string & fn)
     BOOST_LOG_TRIVIAL(info)
         << "Magnetic field size is " << sx << "x" << sy << "x" << sz;
 
-    BOOST_LOG_TRIVIAL(info) << "Constructing matching field builder...";
+    BOOST_LOG_TRIVIAL(info) << "Constructing matching vector field...";
 
     std::array<float, 3> offsets;
     std::array<float, 3> scales;
@@ -154,13 +156,13 @@ builder_t read_atlas_bfield(const std::string & fn)
     scales[2] = (maxz - minz) / (sz - 1);
     offsets[2] = minz;
 
-    builder_t field(
-        builder_t::backend_t::configuration_data_t{offsets, scales},
-        builder_t::backend_t::backend_t::configuration_data_t{},
-        builder_t::backend_t::backend_t::backend_t::configuration_data_t{
+    field_t field(
+        field_t::backend_t::configuration_data_t{offsets, scales},
+        field_t::backend_t::backend_t::configuration_data_t{},
+        field_t::backend_t::backend_t::backend_t::configuration_data_t{
             sx, sy, sz}
     );
-    builder_t::view_t fv(field);
+    field_t::view_t fv(field);
 
     {
         BOOST_LOG_TRIVIAL(info) << "Re-opening magnetic field to gather data";
@@ -188,7 +190,7 @@ builder_t read_atlas_bfield(const std::string & fn)
          * appropriately.
          */
         while (f >> xp >> yp >> zp >> Bx >> By >> Bz) {
-            builder_t::view_t::output_t & p = fv.at(xp, yp, zp);
+            field_t::view_t::output_t & p = fv.at(xp, yp, zp);
 
             p[0] = Bx;
             p[1] = By;
@@ -216,7 +218,7 @@ int main(int argc, char ** argv)
                             << vm["input"].as<std::string>() << "\"";
     BOOST_LOG_TRIVIAL(info) << "Starting read of input file...";
 
-    builder_t fb = read_atlas_bfield(vm["input"].as<std::string>());
+    field_t fb = read_atlas_bfield(vm["input"].as<std::string>());
 
     BOOST_LOG_TRIVIAL(info) << "Writing magnetic field to file \""
                             << vm["output"].as<std::string>() << "\"...";

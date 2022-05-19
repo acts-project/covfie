@@ -12,7 +12,7 @@
 
 #include <boost/filesystem.hpp>
 
-#include <covfie/core/backend/builder.hpp>
+#include <covfie/core/backend/storage/array.hpp>
 #include <covfie/core/backend/vector/input.hpp>
 #include <covfie/core/backend/vector/output.hpp>
 #include <covfie/core/field.hpp>
@@ -20,11 +20,10 @@
 
 TEST(TestBinaryIO, WriteRead1DSingleFloatBuilder)
 {
-    using field_t = covfie::field<covfie::backend::builder<
-        covfie::backend::vector::input::ulong1,
+    using field_t = covfie::field<covfie::backend::storage::array<
         covfie::backend::vector::output::float1>>;
 
-    field_t f(field_t::backend_t::configuration_data_t{5ul});
+    field_t f(5ul);
 
     field_t::view_t fv(f);
 

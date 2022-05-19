@@ -18,6 +18,7 @@
 #include <covfie/core/backend/vector/input.hpp>
 #include <covfie/core/backend/vector/transformer.hpp>
 #include <covfie/core/concepts.hpp>
+#include <covfie/core/qualifiers.hpp>
 #include <covfie/core/utility/binary_io.hpp>
 
 namespace covfie::backend::storage {
@@ -33,6 +34,8 @@ struct array {
     using vector_t = std::decay_t<typename _output_vector_t::vector_t>;
 
     struct owning_data_t {
+        using parent_t = array<_output_vector_t, _index_t>;
+
         owning_data_t(owning_data_t && o)
             : m_size(o.m_size)
             , m_ptr(std::move(o.m_ptr))
@@ -89,13 +92,13 @@ struct array {
         {
         }
 
-        typename covariant_output_t::vector_t
+        COVFIE_DEVICE typename covariant_output_t::vector_t
         operator[](typename contravariant_input_t::vector_t i) const
         {
             return m_ptr[i];
         }
 
-        typename covariant_output_t::vector_t
+        COVFIE_DEVICE typename covariant_output_t::vector_t
         at(typename contravariant_input_t::vector_t i) const
         {
             return m_ptr[i];

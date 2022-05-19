@@ -11,7 +11,6 @@
 #include <cmath>
 #include <iostream>
 
-#include <covfie/core/backend/builder.hpp>
 #include <covfie/core/backend/layout/strided.hpp>
 #include <covfie/core/backend/storage/array.hpp>
 #include <covfie/core/backend/transformer/interpolator/linear.hpp>
@@ -20,9 +19,9 @@
 #include <covfie/core/field.hpp>
 #include <covfie/core/field_view.hpp>
 
-using builder_t = covfie::field<covfie::backend::builder<
+using builder_t = covfie::field<covfie::backend::layout::strided<
     covfie::backend::vector::input::ulong2,
-    covfie::backend::vector::output::float2>>;
+    covfie::backend::storage::array<covfie::backend::vector::output::float2>>>;
 
 using field_t =
     covfie::field<covfie::backend::transformer::interpolator::linear<

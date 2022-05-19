@@ -39,7 +39,9 @@ public:
     template <
         typename... Args,
         std::enable_if_t<
-            (std::is_convertible_v<Args, typename coordinate_t::value_type> &&
+            (std::is_convertible_v<
+                 Args,
+                 typename backend_t::contravariant_input_t::scalar_t> &&
              ...),
             bool> = true,
         std::enable_if_t<
