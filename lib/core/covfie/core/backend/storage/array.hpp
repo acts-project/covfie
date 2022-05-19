@@ -47,7 +47,7 @@ struct array {
 
         owning_data_t(std::ifstream & fs)
             : m_size(utility::read_binary<decltype(m_size)>(fs))
-            , m_ptr(utility::read_binary_array<vector_t[]>(fs, m_size))
+            , m_ptr(utility::read_binary_array<vector_t>(fs, m_size))
         {
         }
 
