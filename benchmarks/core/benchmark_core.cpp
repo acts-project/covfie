@@ -28,6 +28,8 @@ struct object {
 template <typename backend_t>
 void PropagateWide3D(benchmark::State & state)
 {
+    std::size_t n_accesses = 0;
+
     using field_t = typename covfie::field<backend_t>;
     field_t f(typename field_t::backend_t::configuration_data_t{0.f, 0.f, 2.f});
     typename field_t::view_t fv(f);
@@ -83,12 +85,20 @@ void PropagateWide3D(benchmark::State & state)
                 o.mom[2] += f[2] * ss;
             }
         }
+
+        n_accesses += ns * np;
     }
+
+    state.counters["AccessCount"] = benchmark::Counter(n_accesses);
+    state.counters["AccessRate"] =
+        benchmark::Counter(n_accesses, benchmark::Counter::kIsRate);
 }
 
 template <typename backend_t>
 void Sequential1D(benchmark::State & state)
 {
+    std::size_t n_accesses = 0;
+
     using field_t = typename covfie::field<backend_t>;
 
     field_t f(typename field_t::backend_t::configuration_data_t{5.f});
@@ -100,12 +110,20 @@ void Sequential1D(benchmark::State & state)
         for (unsigned long x = 0; x < xr; ++x) {
             benchmark::DoNotOptimize(fv.at(static_cast<float>(x)));
         }
+
+        n_accesses += xr;
     }
+
+    state.counters["AccessCount"] = benchmark::Counter(n_accesses);
+    state.counters["AccessRate"] =
+        benchmark::Counter(n_accesses, benchmark::Counter::kIsRate);
 }
 
 template <typename backend_t>
 void Sequential2D(benchmark::State & state)
 {
+    std::size_t n_accesses = 0;
+
     using field_t = typename covfie::field<backend_t>;
 
     field_t f(typename field_t::backend_t::configuration_data_t{5.f, -2.f});
@@ -122,12 +140,20 @@ void Sequential2D(benchmark::State & state)
                 );
             }
         }
+
+        n_accesses += xr * yr;
     }
+
+    state.counters["AccessCount"] = benchmark::Counter(n_accesses);
+    state.counters["AccessRate"] =
+        benchmark::Counter(n_accesses, benchmark::Counter::kIsRate);
 }
 
 template <typename backend_t>
 void Sequential3D(benchmark::State & state)
 {
+    std::size_t n_accesses = 0;
+
     using field_t = typename covfie::field<backend_t>;
 
     field_t f(typename field_t::backend_t::configuration_data_t{5.f, -2.f, 6.f}
@@ -150,7 +176,13 @@ void Sequential3D(benchmark::State & state)
                 }
             }
         }
+
+        n_accesses += xr * yr * zr;
     }
+
+    state.counters["AccessCount"] = benchmark::Counter(n_accesses);
+    state.counters["AccessRate"] =
+        benchmark::Counter(n_accesses, benchmark::Counter::kIsRate);
 }
 
 void register_benchmarks(void)
