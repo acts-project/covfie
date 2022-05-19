@@ -8,15 +8,14 @@
 
 # Create the benchmark executable from the individual files.
 add_executable(
-    benchmark_cpu
+    benchmark_core
 
-    benchmark_constant.cpp
-    benchmark_propagation.cpp
+    benchmark_core.cpp
 )
 
 # Ensure that the tests are linked against the required libraries.
 target_link_libraries(
-    benchmark_cpu
+    benchmark_core
 
     PUBLIC
     covfie_core
