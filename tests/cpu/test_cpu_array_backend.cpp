@@ -17,7 +17,6 @@
 #include <covfie/core/backend/vector/output.hpp>
 #include <covfie/core/field.hpp>
 #include <covfie/core/field_view.hpp>
-#include <covfie/cpu/backend/cpu_array.hpp>
 #include <gtest/gtest.h>
 
 TEST(TestFieldViewCPUArrayBackend, WriteRead1DSingleFloat)
