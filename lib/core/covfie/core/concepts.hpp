@@ -71,6 +71,12 @@ concept field_backend = requires
             d.at(std::declval<typename T::contravariant_input_t::vector_t>())
             } -> std::same_as<typename T::covariant_output_t::vector_t>;
     };
+
+    /*
+     * Make sure that owning data types are copyable so we can easily copy
+     * fields.
+     */
+    requires std::copyable<typename T::owning_data_t>;
 };
 
 template <typename T>
