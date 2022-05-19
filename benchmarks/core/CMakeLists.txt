@@ -20,5 +20,4 @@ target_link_libraries(
     PUBLIC
     covfie_core
     benchmark::benchmark
-    benchmark::benchmark_main
 )
