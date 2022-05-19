@@ -36,6 +36,10 @@ struct strided {
     using coordinate_t = typename contravariant_input_t::vector_t;
     using array_t = storage_t;
 
+    struct configuration_data_t {
+        ndsize_t m_sizes;
+    };
+
     struct owning_data_t {
         template <typename T>
         static typename array_t::owning_data_t
@@ -85,8 +89,8 @@ struct strided {
             return tmp;
         }
 
-        owning_data_t(ndsize_t sizes)
-            : m_sizes(sizes)
+        owning_data_t(configuration_data_t conf)
+            : m_sizes(conf.m_sizes)
             , m_storage(std::accumulate(
                   std::begin(m_sizes),
                   std::end(m_sizes),
