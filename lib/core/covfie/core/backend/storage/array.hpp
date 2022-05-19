@@ -10,6 +10,7 @@
 
 #pragma once
 
+#include <cstring>
 #include <memory>
 #include <tuple>
 #include <utility>
@@ -48,6 +49,21 @@ struct array {
             : m_size(utility::read_binary<decltype(m_size)>(fs))
             , m_ptr(utility::read_binary_array<vector_t[]>(fs, m_size))
         {
+        }
+
+        owning_data_t(const owning_data_t & o)
+            : m_size(o.m_size)
+            , m_ptr(std::make_unique<vector_t[]>(m_size))
+        {
+            std::memcpy(m_ptr.get(), o.m_ptr.get(), m_size * sizeof(vector_t));
+        }
+
+        owning_data_t & operator=(const owning_data_t & o)
+        {
+            m_size = o.m_size;
+            m_ptr = std::make_unique<vector_t[]>(m_size);
+
+            std::memcpy(m_ptr.get(), o.m_ptr.get(), m_size * sizeof(vector_t));
         }
 
         void dump(std::ofstream & fs) const

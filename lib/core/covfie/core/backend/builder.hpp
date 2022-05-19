@@ -11,6 +11,7 @@
 #pragma once
 
 #include <array>
+#include <cstring>
 #include <fstream>
 #include <memory>
 #include <numeric>
@@ -84,6 +85,36 @@ struct _builder {
                 total_elements * sizeof(std::remove_reference_t<
                                         typename covariant_output_t::vector_t>)
             );
+        }
+
+        owning_data_t(const owning_data_t & o)
+            : m_ptr(nullptr)
+            , m_sizes(o.m_sizes)
+        {
+            this->operator=(o);
+        }
+
+        owning_data_t & operator=(const owning_data_t & o)
+        {
+            m_sizes = o.m_sizes;
+
+            std::size_t total_elements = std::accumulate(
+                std::begin(m_sizes),
+                std::end(m_sizes),
+                1,
+                std::multiplies<std::size_t>()
+            );
+
+            m_ptr = std::make_unique<std::remove_reference_t<
+                typename covariant_output_t::vector_t>[]>(total_elements);
+
+            std::memcpy(
+                m_ptr.get(),
+                o.m_ptr.get(),
+                total_elements * sizeof(typename covariant_output_t::vector_t)
+            );
+
+            return *this;
         }
 
         typename covariant_output_t::vector_t at(integral_coordinate_t c) const
