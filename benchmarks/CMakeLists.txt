@@ -9,6 +9,9 @@
 # All the tests here will require Google Test, so we will go ahead and find it.
 find_package(benchmark CONFIG REQUIRED)
 
+# Common benchmarking components must be build.
+add_subdirectory(common)
+
 # The core library tests are always built (if tests are built at all).
 add_subdirectory(core)
 
