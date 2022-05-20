@@ -136,7 +136,20 @@ this Haskell snippet:
 .. code-block:: haskell
 
     data Layer i j k l where
-        L :: Functor f => (a -> f b) -> (f c -> d) -> L a (f b) (f c) d
+        L :: Functor f
+          => (a' -> f a)
+          -> (f b -> b')
+          -> L a' (f a) (f b) b'
+
+It may be worth noting that both the contravariant and covariant parts of a
+layer can be deconstructed further using :math:`F`-(co)algebras. Indeed, the
+contravariant part can be constructed from a function :math:`f` of type
+:math:`A' \to A`, and either an :math:`F`-coalgebra carried by :math:`A` or an
+:math:`F`-coalgebra carried by :math:`A'`. In such a construction, :math:`f`
+acts as a homomorphism between the two :math:`F`-coalgebras, and all the usual
+rules for such a homomorphism apply. The covariant part of a layer can be
+constructed using the exact dual of this idea, employing :math:`F`-algebras
+instead of coalgebras.
 
 To understand how we can use such a layer to transform an existing mapping
 (such as our memory :math:`M`), we follow the principle described earlier of
@@ -305,7 +318,7 @@ because it is the first layer that does not employ the identity functor.
 Rather, the type of this layer is the following:
 
 .. math::
-    l_3 : \left(\mathbb{N}^3 \to \mathrm{Maybe}(\mathbb{N^3}), \mathrm{Maybe}(\mathbb{R}^3) \to \mathbb{R}^3\right)
+    l_3 : \left(\mathbb{N}^3 \to \mathrm{Maybe}(\mathbb{N} ^3), \mathrm{Maybe}(\mathbb{R}^3) \to \mathbb{R}^3\right)
 
 Intuitively, if the requested coordinate lies inside of our mapping, the
 contravariant side of this layer will produce an extant value, and the
