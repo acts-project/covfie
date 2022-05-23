@@ -8,10 +8,11 @@
  * obtain one at http://mozilla.org/MPL/2.0/.
  */
 
+#include <gtest/gtest.h>
+
 #include <covfie/core/algebra/affine.hpp>
 #include <covfie/core/algebra/matrix.hpp>
 #include <covfie/core/algebra/vector.hpp>
-#include <gtest/gtest.h>
 
 TEST(TestAlgebra, VectorArrayInit1F)
 {

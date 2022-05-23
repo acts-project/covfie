@@ -11,12 +11,12 @@
 #include <fstream>
 
 #include <boost/filesystem.hpp>
+#include <gtest/gtest.h>
 
 #include <covfie/core/backend/storage/array.hpp>
 #include <covfie/core/backend/vector/input.hpp>
 #include <covfie/core/backend/vector/output.hpp>
 #include <covfie/core/field.hpp>
-#include <gtest/gtest.h>
 
 TEST(TestBinaryIO, WriteRead1DSingleFloatBuilder)
 {

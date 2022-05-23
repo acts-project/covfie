@@ -10,9 +10,10 @@
 
 #include <cstddef>
 
+#include <gtest/gtest.h>
+
 #include <covfie/core/backend/constant.hpp>
 #include <covfie/core/field.hpp>
-#include <gtest/gtest.h>
 
 TEST(TestConstantField, Constant1Dto1D)
 {

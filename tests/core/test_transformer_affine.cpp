@@ -10,10 +10,11 @@
 
 #include <cstddef>
 
+#include <gtest/gtest.h>
+
 #include <covfie/core/backend/constant.hpp>
 #include <covfie/core/backend/transformer/affine.hpp>
 #include <covfie/core/field.hpp>
-#include <gtest/gtest.h>
 
 TEST(TestAffineTransformer, AffineConstant1Dto1D)
 {

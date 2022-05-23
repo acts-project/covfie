@@ -13,6 +13,7 @@
 #include <string>
 
 #include <benchmark/benchmark.h>
+
 #include <covfie/core/field.hpp>
 
 namespace covfie::benchmark {

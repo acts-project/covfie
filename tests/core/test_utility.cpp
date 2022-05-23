@@ -8,8 +8,9 @@
  * obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include <covfie/core/utility/nd_map.hpp>
 #include <gtest/gtest.h>
+
+#include <covfie/core/utility/nd_map.hpp>
 
 TEST(TestNDMap, Simple1DAdd)
 {

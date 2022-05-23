@@ -10,11 +10,12 @@
 
 #include <cstddef>
 
+#include <gtest/gtest.h>
+
 #include <covfie/core/backend/identity.hpp>
 #include <covfie/core/backend/vector/input.hpp>
 #include <covfie/core/backend/vector/output.hpp>
 #include <covfie/core/field.hpp>
-#include <gtest/gtest.h>
 
 TEST(TestIdentityBackend, 1Fto1F)
 {

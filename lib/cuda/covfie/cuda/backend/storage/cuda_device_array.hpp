@@ -12,11 +12,12 @@
 
 #include <memory>
 
+#include <cuda_runtime.h>
+
 #include <covfie/core/backend/storage/array.hpp>
 #include <covfie/core/backend/vector/input.hpp>
 #include <covfie/core/concepts.hpp>
 #include <covfie/cuda/error_check.hpp>
-#include <cuda_runtime.h>
 
 namespace covfie::backend::storage {
 template <

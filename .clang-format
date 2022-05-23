@@ -32,13 +32,10 @@ IncludeCategories:
   # standard library includes: '<...>' without any '/' or '.' in the path
   - Regex: '^<[^/.]*>'
     Priority: 0
-  # boost/test is special and must be included at the top
-  - Regex: '^<boost.*'
-    Priority: 1
-  # other system includes: '<...>' without further conditions
-  - Regex: '^<.*>'
-    Priority: 2
   # covfie headers before system headers to ensure that they include what they use
   - Regex: '^<covfie.*'
-    Priority: 3
+    Priority: 2
+  # other system includes: '<...>' without further conditions
+  - Regex: '^<.*'
+    Priority: 1
 ---

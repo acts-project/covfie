@@ -11,12 +11,13 @@
 #include <cmath>
 #include <cstddef>
 
+#include <gtest/gtest.h>
+
 #include <covfie/core/backend/identity.hpp>
 #include <covfie/core/backend/transformer/interpolator/nearest_neighbour.hpp>
 #include <covfie/core/backend/vector/input.hpp>
 #include <covfie/core/backend/vector/output.hpp>
 #include <covfie/core/field.hpp>
-#include <gtest/gtest.h>
 
 TEST(TestNearestNeighbourInterpolator, Identity1Nto1F)
 {
