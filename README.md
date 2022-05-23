@@ -1,8 +1,14 @@
 # covfie
 
-![](https://github.com/stephenswat/covfie/actions/workflows/builds.yml/badge.svg?branch=main)
-![](https://github.com/stephenswat/covfie/actions/workflows/checks.yml/badge.svg?branch=main)
+[![Build Test Status](https://github.com/acts-project/covfie/actions/workflows/builds.yml/badge.svg?branch=main)](https://github.com/acts-project/covfie/actions/workflows/builds.yml)
+[![Code Check Status](https://github.com/acts-project/covfie/actions/workflows/checks.yml/badge.svg?branch=main)](https://github.com/acts-project/covfie/actions/workflows/checks.yml)
 [![Documentation Status](https://readthedocs.org/projects/covfie/badge/?version=latest)](https://covfie.readthedocs.io/en/latest/?badge=latest)
+[![MPL-2.0 License](https://img.shields.io/github/license/acts-project/covfie)](https://www.mozilla.org/en-US/MPL/2.0/)
+[![GitHub issues](https://img.shields.io/github/issues/acts-project/covfie)](https://github.com/acts-project/covfie/issues)
+[![GitHub pull requests](https://img.shields.io/github/issues-pr/acts-project/covfie)](https://github.com/acts-project/covfie/pulls)
+[![GitHub commit activity](https://img.shields.io/github/commit-activity/w/acts-project/covfie)](https://github.com/acts-project/covfie/commits/main)
+[![GitHub contributors](https://img.shields.io/github/contributors/acts-project/covfie)](https://github.com/acts-project/covfie/graphs/contributors)
+[![GitHub last commit](https://img.shields.io/github/last-commit/acts-project/covfie)](https://github.com/acts-project/covfie/commits/main)
 
 **covfie** (pronounced _coffee_) is a **co**-processor **v**ector **fie**ld
 library. covfie consists of two main components; the first is the header-only
@@ -23,9 +29,9 @@ example is included in the repository as
 [`readme_example_1`](examples/core/readme_example_1.cpp)):
 
 ```cpp
-using field_t = covfie::field<covfie::backend::builder<
+using field_t = covfie::field<covfie::backend::layout::strided<
     covfie::backend::vector::input::ulong2,
-    covfie::backend::vector::output::float2>>;
+    covfie::backend::storage::array<covfie::backend::vector::output::float2>>>;
 
 int main(void)
 {
@@ -57,9 +63,9 @@ indices in each direction. If we want to use real numbers for our vector field,
 we can simply add a linear interpolator:
 
 ```cpp
-using builder_t = covfie::field<covfie::backend::builder<
+using builder_t = covfie::field<covfie::backend::layout::strided<
     covfie::backend::vector::input::ulong2,
-    covfie::backend::vector::output::float2>>;
+    covfie::backend::storage::array<covfie::backend::vector::output::float2>>>;
 
 using field_t =
     covfie::field<covfie::backend::transformer::interpolator::linear<
@@ -99,33 +105,7 @@ covfie types can seem intimidating at first, but they are quite friendly! Also,
 you only really need to worry about them once, and you can hide them away in a
 typedef.
 
-## Dependencies
+## Documentation
 
-covfie is light on dependencies. In fact, it doesn't have any at all. However,
-if you want to build the examples or the tests you should have `boost`
-installed. The tests are based on `googletest`, and the CUDA components require
-the NVIDIA CUDA toolkit to be available.
-
-## Building
-
-Building covfie is done using CMake. The following is an example of how you may
-choose to build the code:
-
-```bash
-$ cmake -B build -S [source] -DCOVFIE_BUILD_EXAMPLES=On -DCOVFIE_PLATFORM_CPU=On
-$ cmake --build build -- -j 4
-```
-
-Please note that &ndash; because covfie is a header only library &ndash;
-nothing actually needs to be compiled if you don't want the examples or the
-tests. The following is a list of flags that can be used to configure the
-build:
-
-| Flag | Meaning |
-| - | - |
-| `COVFIE_BUILD_EXAMPLES` | Build the examples. |
-| `COVFIE_BUILD_TESTS` | Build the test executables. |
-| `COVFIE_BUILD_BENCHMARKS` | Build the benchmarks. |
-| `COVFIE_PLATFORM_CPU` | Build CPU-specific code. |
-| `COVFIE_PLATFORM_CUDA` | Build CUDA-specific code. |
-| `COVFIE_REQUIRE_CXX20` | Emit an error instead of a warning if support for C++20 concepts is missing. |
+All documentation pertaining to covfie can be found on ReadTheDocs at the
+following URL: https://covfie.readthedocs.io/en/latest/
