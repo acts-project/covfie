@@ -21,7 +21,7 @@ namespace covfie::backend {
 template <
     CONSTRAINT(concepts::input_vector) _input_vector_t,
     CONSTRAINT(concepts::output_vector) _output_vector_t>
-struct _identity {
+struct identity {
     using contravariant_input_t = _input_vector_t;
     using contravariant_output_t = std::tuple<>;
     using covariant_input_t = std::tuple<>;
@@ -79,9 +79,4 @@ struct _identity {
         }
     };
 };
-
-template <
-    CONSTRAINT(concepts::input_vector) _input_vector_t,
-    CONSTRAINT(concepts::output_vector) _output_vector_t>
-using identity = _identity<_input_vector_t, _output_vector_t>;
 }
