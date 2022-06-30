@@ -80,18 +80,6 @@ concept field_backend = requires
 };
 
 template <typename T>
-concept output_scalar = true;
-
-template <typename T>
-concept input_scalar = true;
-
-template <typename T>
-concept integral_input_scalar = true;
-
-template <typename T>
-concept floating_point_input_scalar = true;
-
-template <typename T>
 concept vector_descriptor = true;
 }
 #endif
