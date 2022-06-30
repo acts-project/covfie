@@ -21,7 +21,7 @@
 
 namespace covfie::backend::storage {
 template <
-    CONSTRAINT(concepts::output_vector) _output_vector_t,
+    CONSTRAINT(concepts::vector_descriptor) _output_vector_t,
     typename _index_t = std::size_t>
 struct cuda_device_array {
     using contravariant_input_t =

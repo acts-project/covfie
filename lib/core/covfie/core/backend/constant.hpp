@@ -18,8 +18,8 @@
 
 namespace covfie::backend {
 template <
-    CONSTRAINT(concepts::input_vector) _input_vector_t,
-    CONSTRAINT(concepts::output_vector) _output_vector_t>
+    CONSTRAINT(concepts::vector_descriptor) _input_vector_t,
+    CONSTRAINT(concepts::vector_descriptor) _output_vector_t>
 struct constant {
     using contravariant_input_t =
         typename covfie::vector::array_vector_d<_input_vector_t>;

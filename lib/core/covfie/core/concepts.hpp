@@ -92,9 +92,6 @@ template <typename T>
 concept floating_point_input_scalar = true;
 
 template <typename T>
-concept input_vector = true;
-
-template <typename T>
-concept output_vector = true;
+concept vector_descriptor = true;
 }
 #endif
