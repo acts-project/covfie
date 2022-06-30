@@ -18,10 +18,9 @@
 
 TEST(TestAffineTransformer, AffineConstant1Dto1D)
 {
-    using field_t = covfie::field<
-        covfie::backend::transformer::affine<covfie::backend::constant<
-            covfie::backend::vector::input::float1,
-            covfie::backend::vector::output::float1>>>;
+    using field_t = covfie::field<covfie::backend::transformer::affine<
+        covfie::backend::
+            constant<covfie::vector::float1, covfie::vector::float1>>>;
 
     field_t f(
         field_t::backend_t::configuration_data_t({{5.f}, {5.f}}),

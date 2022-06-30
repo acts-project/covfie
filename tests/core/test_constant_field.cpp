@@ -18,8 +18,8 @@
 TEST(TestConstantField, Constant1Dto1D)
 {
     using field_t = covfie::field<covfie::backend::constant<
-        covfie::backend::vector::input::float1,
-        covfie::backend::vector::output::float1>>;
+        covfie::vector::float1,
+        covfie::vector::float1>>;
 
     field_t f(field_t::backend_t::configuration_data_t({5.f}));
 
@@ -33,8 +33,8 @@ TEST(TestConstantField, Constant1Dto1D)
 TEST(TestConstantField, Constant1Dto3D)
 {
     using field_t = covfie::field<covfie::backend::constant<
-        covfie::backend::vector::input::float1,
-        covfie::backend::vector::output::float3>>;
+        covfie::vector::float1,
+        covfie::vector::float3>>;
 
     field_t f(field_t::backend_t::configuration_data_t({5.f, 2.f, 8.f}));
 
@@ -50,8 +50,8 @@ TEST(TestConstantField, Constant1Dto3D)
 TEST(TestConstantField, Constant3Dto1D)
 {
     using field_t = covfie::field<covfie::backend::constant<
-        covfie::backend::vector::input::float3,
-        covfie::backend::vector::output::float1>>;
+        covfie::vector::float3,
+        covfie::vector::float1>>;
 
     field_t f(field_t::backend_t::configuration_data_t({5.f}));
 
@@ -69,8 +69,8 @@ TEST(TestConstantField, Constant3Dto1D)
 TEST(TestConstantField, Constant3Dto3D)
 {
     using field_t = covfie::field<covfie::backend::constant<
-        covfie::backend::vector::input::float3,
-        covfie::backend::vector::output::float3>>;
+        covfie::vector::float3,
+        covfie::vector::float3>>;
 
     field_t f(field_t::backend_t::configuration_data_t({5.f, 2.f, 8.f}));
 

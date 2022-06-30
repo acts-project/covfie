@@ -18,7 +18,6 @@
 #include <covfie/core/backend/layout/strided.hpp>
 #include <covfie/core/backend/transformer/affine.hpp>
 #include <covfie/core/backend/transformer/interpolator/linear.hpp>
-#include <covfie/core/backend/vector/output.hpp>
 #include <covfie/core/field.hpp>
 
 #include "bitmap.hpp"
@@ -82,15 +81,13 @@ int main(int argc, char ** argv)
     using field_t1 = covfie::field<covfie::backend::transformer::affine<
         covfie::backend::transformer::interpolator::linear<
             covfie::backend::layout::strided<
-                covfie::backend::vector::input::ulong3,
-                covfie::backend::storage::array<
-                    covfie::backend::vector::output::float3>>>>>;
+                covfie::vector::ulong3,
+                covfie::backend::storage::array<covfie::vector::float3>>>>>;
     using field_t2 = covfie::field<covfie::backend::transformer::affine<
         covfie::backend::transformer::interpolator::linear<
             covfie::backend::layout::strided<
-                covfie::backend::vector::input::ulong3,
-                covfie::backend::storage::array<
-                    covfie::backend::vector::output::float3>>>>>;
+                covfie::vector::ulong3,
+                covfie::backend::storage::array<covfie::vector::float3>>>>>;
 
     boost::program_options::variables_map vm;
     parse_opts(argc, argv, vm);

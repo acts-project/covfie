@@ -15,17 +15,14 @@
 
 #include <covfie/core/backend/identity.hpp>
 #include <covfie/core/backend/transformer/interpolator/nearest_neighbour.hpp>
-#include <covfie/core/backend/vector/input.hpp>
-#include <covfie/core/backend/vector/output.hpp>
 #include <covfie/core/field.hpp>
 
 TEST(TestNearestNeighbourInterpolator, Identity1Nto1F)
 {
-    using field_t =
-        covfie::field<covfie::backend::transformer::interpolator::
-                          nearest_neighbour<covfie::backend::identity<
-                              covfie::backend::vector::input::unsigned1,
-                              covfie::backend::vector::output::float1>>>;
+    using field_t = covfie::field<
+        covfie::backend::transformer::interpolator::nearest_neighbour<
+            covfie::backend::
+                identity<covfie::vector::uint1, covfie::vector::float1>>>;
 
     field_t f(
         field_t::backend_t::configuration_data_t({}),
@@ -45,11 +42,10 @@ TEST(TestNearestNeighbourInterpolator, Identity1Nto1F)
 
 TEST(TestNearestNeighbourInterpolator, Identity2Nto2F)
 {
-    using field_t =
-        covfie::field<covfie::backend::transformer::interpolator::
-                          nearest_neighbour<covfie::backend::identity<
-                              covfie::backend::vector::input::unsigned2,
-                              covfie::backend::vector::output::float2>>>;
+    using field_t = covfie::field<
+        covfie::backend::transformer::interpolator::nearest_neighbour<
+            covfie::backend::
+                identity<covfie::vector::uint2, covfie::vector::float2>>>;
 
     field_t f(
         field_t::backend_t::configuration_data_t({}),
@@ -67,11 +63,10 @@ TEST(TestNearestNeighbourInterpolator, Identity2Nto2F)
 
 TEST(TestNearestNeighbourInterpolator, Identity3Nto3F)
 {
-    using field_t =
-        covfie::field<covfie::backend::transformer::interpolator::
-                          nearest_neighbour<covfie::backend::identity<
-                              covfie::backend::vector::input::unsigned3,
-                              covfie::backend::vector::output::float3>>>;
+    using field_t = covfie::field<
+        covfie::backend::transformer::interpolator::nearest_neighbour<
+            covfie::backend::
+                identity<covfie::vector::uint3, covfie::vector::float3>>>;
 
     field_t f(
         field_t::backend_t::configuration_data_t({}),

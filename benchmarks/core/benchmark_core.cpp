@@ -189,7 +189,7 @@ void Sequential3D(benchmark::State & state)
 void register_benchmarks(void)
 {
     benchmark::
-        RegisterBenchmark("PropagateWide/Constant/float3/float3", PropagateWide3D<covfie::backend::constant<covfie::backend::vector::input::float3, covfie::backend::vector::output::float3>>)
+        RegisterBenchmark("PropagateWide/Constant/float3/float3", PropagateWide3D<covfie::backend::constant<covfie::vector::float3, covfie::vector::float3>>)
             ->ArgNames({"N", "S", "L"})
             ->ArgsProduct(
                 {benchmark::CreateRange(1, 65536, 8),
@@ -198,17 +198,17 @@ void register_benchmarks(void)
             );
 
     benchmark::
-        RegisterBenchmark("Sequential/Constant/float1/float1", Sequential1D<covfie::backend::constant<covfie::backend::vector::input::float1, covfie::backend::vector::output::float1>>)
+        RegisterBenchmark("Sequential/Constant/float1/float1", Sequential1D<covfie::backend::constant<covfie::vector::float1, covfie::vector::float1>>)
             ->ArgNames({"X"})
             ->Ranges({{1, 4096}});
 
     benchmark::
-        RegisterBenchmark("Sequential/Constant/float2/float2", Sequential2D<covfie::backend::constant<covfie::backend::vector::input::float2, covfie::backend::vector::output::float2>>)
+        RegisterBenchmark("Sequential/Constant/float2/float2", Sequential2D<covfie::backend::constant<covfie::vector::float2, covfie::vector::float2>>)
             ->ArgNames({"X", "Y"})
             ->Ranges({{1, 4096}, {1, 4096}});
 
     benchmark::
-        RegisterBenchmark("Sequential/Constant/float3/float3", Sequential3D<covfie::backend::constant<covfie::backend::vector::input::float3, covfie::backend::vector::output::float3>>)
+        RegisterBenchmark("Sequential/Constant/float3/float3", Sequential3D<covfie::backend::constant<covfie::vector::float3, covfie::vector::float3>>)
             ->ArgNames({"X", "Y", "Z"})
             ->Ranges({{1, 1024}, {1, 1024}, {1, 1024}});
 }

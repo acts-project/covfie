@@ -14,10 +14,9 @@
 #include <fstream>
 #include <type_traits>
 
-#include <covfie/core/backend/vector/input.hpp>
-#include <covfie/core/backend/vector/transformer.hpp>
 #include <covfie/core/concepts.hpp>
 #include <covfie/core/qualifiers.hpp>
+#include <covfie/core/vector.hpp>
 
 namespace covfie::backend::transformer::interpolator {
 template <
@@ -28,13 +27,14 @@ struct linear {
     using input_scalar_type = _input_scalar_type;
     using backend_t = _backend_t;
 
-    using contravariant_input_t = covfie::backend::vector::input_vector<
-        _input_scalar_type,
-        backend_t::contravariant_input_t::dimensions>;
+    using contravariant_input_t =
+        covfie::vector::array_vector_d<covfie::vector::vector_d<
+            _input_scalar_type,
+            backend_t::contravariant_input_t::dimensions>>;
     using contravariant_output_t = typename backend_t::contravariant_input_t;
     using covariant_input_t = typename backend_t::covariant_output_t;
     using covariant_output_t =
-        vector::remove_lvalue_reference<covariant_input_t>;
+        covfie::vector::array_vector_d<typename covariant_input_t::vector_d>;
 
     static_assert(
         std::is_object_v<typename covariant_output_t::vector_t>,

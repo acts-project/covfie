@@ -13,19 +13,19 @@
 #include <fstream>
 #include <type_traits>
 
-#include <covfie/core/backend/vector/input.hpp>
-#include <covfie/core/backend/vector/output.hpp>
 #include <covfie/core/concepts.hpp>
+#include <covfie/core/vector.hpp>
 
 namespace covfie::backend {
 template <
     CONSTRAINT(concepts::input_vector) _input_vector_t,
     CONSTRAINT(concepts::output_vector) _output_vector_t>
 struct identity {
-    using contravariant_input_t = _input_vector_t;
+    using contravariant_input_t =
+        covfie::vector::array_vector_d<_input_vector_t>;
     using contravariant_output_t = std::tuple<>;
     using covariant_input_t = std::tuple<>;
-    using covariant_output_t = _output_vector_t;
+    using covariant_output_t = covfie::vector::array_vector_d<_output_vector_t>;
 
     static_assert(
         contravariant_input_t::dimensions == covariant_output_t::dimensions,

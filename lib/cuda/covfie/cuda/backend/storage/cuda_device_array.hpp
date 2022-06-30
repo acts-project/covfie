@@ -15,8 +15,8 @@
 #include <cuda_runtime.h>
 
 #include <covfie/core/backend/storage/array.hpp>
-#include <covfie/core/backend/vector/input.hpp>
 #include <covfie/core/concepts.hpp>
+#include <covfie/core/vector.hpp>
 #include <covfie/cuda/error_check.hpp>
 
 namespace covfie::backend::storage {
@@ -24,16 +24,18 @@ template <
     CONSTRAINT(concepts::output_vector) _output_vector_t,
     typename _index_t = std::size_t>
 struct cuda_device_array {
-    using contravariant_input_t = vector::input_scalar<_index_t>;
+    using contravariant_input_t =
+        covfie::vector::scalar_d<covfie::vector::vector_d<_index_t, 1>>;
     using contravariant_output_t = std::tuple<>;
     using covariant_input_t = std::tuple<>;
-    using covariant_output_t = vector::add_lvalue_reference<_output_vector_t>;
+    using covariant_output_t =
+        covfie::vector::array_reference_vector_d<_output_vector_t>;
 
     using output_vector_t = _output_vector_t;
-    static constexpr std::size_t dimensions = output_vector_t::dimensions;
+    static constexpr std::size_t size = output_vector_t::size;
 
-    using value_t = typename output_vector_t::scalar_t[dimensions];
-    using vector_t = std::decay_t<typename _output_vector_t::vector_t>;
+    using value_t = typename output_vector_t::type[size];
+    using vector_t = std::decay_t<typename covariant_output_t::vector_t>;
 
     struct owning_data_t {
         owning_data_t(

@@ -19,6 +19,7 @@
 #include <covfie/core/utility/binary_io.hpp>
 #include <covfie/core/utility/nd_map.hpp>
 #include <covfie/core/utility/tuple.hpp>
+#include <covfie/core/vector.hpp>
 
 namespace covfie::backend::layout {
 template <
@@ -27,7 +28,8 @@ template <
 struct strided {
     using storage_t = _storage_t;
 
-    using contravariant_input_t = _input_vector_t;
+    using contravariant_input_t =
+        covfie::vector::array_vector_d<_input_vector_t>;
     using contravariant_output_t = typename storage_t::contravariant_input_t;
     using covariant_input_t = typename storage_t::covariant_output_t;
     using covariant_output_t = covariant_input_t;

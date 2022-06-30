@@ -18,8 +18,6 @@
 #include <covfie/core/backend/storage/array.hpp>
 #include <covfie/core/backend/transformer/affine.hpp>
 #include <covfie/core/backend/transformer/interpolator/nearest_neighbour.hpp>
-#include <covfie/core/backend/vector/input.hpp>
-#include <covfie/core/backend/vector/output.hpp>
 #include <covfie/core/field.hpp>
 
 void parse_opts(
@@ -59,9 +57,8 @@ void parse_opts(
 using field_t = covfie::field<covfie::backend::transformer::affine<
     covfie::backend::transformer::interpolator::nearest_neighbour<
         covfie::backend::layout::strided<
-            covfie::backend::vector::input::ulong3,
-            covfie::backend::storage::array<
-                covfie::backend::vector::output::float3>>>>>;
+            covfie::vector::ulong3,
+            covfie::backend::storage::array<covfie::vector::float3>>>>>;
 
 field_t read_atlas_bfield(const std::string & fn)
 {

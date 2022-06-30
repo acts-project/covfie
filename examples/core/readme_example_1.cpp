@@ -13,14 +13,12 @@
 
 #include <covfie/core/backend/layout/strided.hpp>
 #include <covfie/core/backend/storage/array.hpp>
-#include <covfie/core/backend/vector/input.hpp>
-#include <covfie/core/backend/vector/output.hpp>
 #include <covfie/core/field.hpp>
 #include <covfie/core/field_view.hpp>
 
 using field_t = covfie::field<covfie::backend::layout::strided<
-    covfie::backend::vector::input::ulong2,
-    covfie::backend::storage::array<covfie::backend::vector::output::float2>>>;
+    covfie::vector::ulong2,
+    covfie::backend::storage::array<covfie::vector::float2>>>;
 
 int main(void)
 {

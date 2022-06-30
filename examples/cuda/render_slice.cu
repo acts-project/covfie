@@ -17,7 +17,6 @@
 #include <covfie/core/backend/layout/strided.hpp>
 #include <covfie/core/backend/transformer/affine.hpp>
 #include <covfie/core/backend/transformer/interpolator/linear.hpp>
-#include <covfie/core/backend/vector/output.hpp>
 #include <covfie/core/field.hpp>
 #include <covfie/cuda/backend/storage/cuda_device_array.hpp>
 #include <covfie/cuda/error_check.hpp>
@@ -27,16 +26,15 @@
 using cpu_field_t = covfie::field<covfie::backend::transformer::affine<
     covfie::backend::transformer::interpolator::linear<
         covfie::backend::layout::strided<
-            covfie::backend::vector::input::ulong3,
-            covfie::backend::storage::array<
-                covfie::backend::vector::output::float3>>>>>;
+            covfie::vector::ulong3,
+            covfie::backend::storage::array<covfie::vector::float3>>>>>;
 
 using cuda_field_t = covfie::field<covfie::backend::transformer::affine<
     covfie::backend::transformer::interpolator::linear<
         covfie::backend::layout::strided<
-            covfie::backend::vector::input::ulong3,
+            covfie::vector::ulong3,
             covfie::backend::storage::cuda_device_array<
-                covfie::backend::vector::output::float3>>>>>;
+                covfie::vector::float3>>>>>;
 
 void parse_opts(
     int argc, char * argv[], boost::program_options::variables_map & vm
