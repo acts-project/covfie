@@ -26,8 +26,6 @@ concept field_backend = requires
      * the layer.
      */
     typename T::contravariant_input_t;
-    typename T::contravariant_output_t;
-    typename T::covariant_input_t;
     typename T::covariant_output_t;
 
     /*

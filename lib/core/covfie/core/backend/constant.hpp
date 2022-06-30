@@ -23,8 +23,6 @@ template <
 struct constant {
     using contravariant_input_t =
         typename covfie::vector::array_vector_d<_input_vector_t>;
-    using contravariant_output_t = std::tuple<>;
-    using covariant_input_t = std::tuple<>;
     using covariant_output_t =
         typename covfie::vector::array_vector_d<_output_vector_t>;
 

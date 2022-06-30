@@ -23,8 +23,6 @@ template <
 struct identity {
     using contravariant_input_t =
         covfie::vector::array_vector_d<_input_vector_t>;
-    using contravariant_output_t = std::tuple<>;
-    using covariant_input_t = std::tuple<>;
     using covariant_output_t = covfie::vector::array_vector_d<_output_vector_t>;
 
     static_assert(

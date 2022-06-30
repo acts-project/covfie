@@ -26,8 +26,6 @@ template <
 struct cuda_device_array {
     using contravariant_input_t =
         covfie::vector::scalar_d<covfie::vector::vector_d<_index_t, 1>>;
-    using contravariant_output_t = std::tuple<>;
-    using covariant_input_t = std::tuple<>;
     using covariant_output_t =
         covfie::vector::array_reference_vector_d<_output_vector_t>;
 
