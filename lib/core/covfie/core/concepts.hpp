@@ -35,6 +35,16 @@ concept field_backend = requires
     typename T::non_owning_data_t;
 
     /*
+     * The non-owning data which we use on the GPU must be extremely simple,
+     * because we cannot model destructors and such there properly.
+     */
+    requires std::is_trivially_destructible_v<typename T::non_owning_data_t>;
+    requires
+        std::is_trivially_copy_constructible_v<typename T::non_owning_data_t>;
+    requires
+        std::is_trivially_move_constructible_v<typename T::non_owning_data_t>;
+
+    /*
      * Check whether the owning data type can be read from a file.
      */
     requires requires(std::ifstream & fs)
