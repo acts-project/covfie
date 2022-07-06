@@ -137,6 +137,16 @@ struct strided {
             m_storage.dump(fs);
         }
 
+        typename backend_t::owning_data_t & get_backend(void)
+        {
+            return m_storage;
+        }
+
+        const typename backend_t::owning_data_t & get_backend(void) const
+        {
+            return m_storage;
+        }
+
         ndsize_t m_sizes;
         typename backend_t::owning_data_t m_storage;
     };

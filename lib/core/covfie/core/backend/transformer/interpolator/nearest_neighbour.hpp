@@ -80,6 +80,16 @@ struct _nearest_neighbour {
             m_backend.dump(fs);
         }
 
+        typename backend_t::owning_data_t & get_backend(void)
+        {
+            return m_backend;
+        }
+
+        const typename backend_t::owning_data_t & get_backend(void) const
+        {
+            return m_backend;
+        }
+
         typename backend_t::owning_data_t m_backend;
     };
 

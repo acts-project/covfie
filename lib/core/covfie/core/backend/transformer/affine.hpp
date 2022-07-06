@@ -82,6 +82,16 @@ struct affine {
             m_backend.dump(fs);
         }
 
+        typename backend_t::owning_data_t & get_backend(void)
+        {
+            return m_backend;
+        }
+
+        const typename backend_t::owning_data_t & get_backend(void) const
+        {
+            return m_backend;
+        }
+
         typename contravariant_input_t::vector_t m_offsets;
         typename contravariant_input_t::vector_t m_scales;
         typename backend_t::owning_data_t m_backend;
