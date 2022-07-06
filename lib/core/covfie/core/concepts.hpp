@@ -74,6 +74,15 @@ concept field_backend = requires
         {
             {d.dump(fs)};
         };
+
+        /*
+         * Any non-initial backend must allow an accessor method to access the
+         * non-owning data type of its innards.
+         */
+        requires T::is_initial || requires
+        {
+            typename T::backend_t;
+        };
     };
 
     /*
