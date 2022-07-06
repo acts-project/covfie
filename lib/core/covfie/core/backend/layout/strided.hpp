@@ -28,17 +28,17 @@ template <
 struct strided {
     static constexpr bool is_initial = false;
 
-    using storage_t = _storage_t;
+    using backend_t = _storage_t;
 
     using contravariant_input_t =
         covfie::vector::array_vector_d<_input_vector_t>;
-    using contravariant_output_t = typename storage_t::contravariant_input_t;
-    using covariant_input_t = typename storage_t::covariant_output_t;
+    using contravariant_output_t = typename backend_t::contravariant_input_t;
+    using covariant_input_t = typename backend_t::covariant_output_t;
     using covariant_output_t = covariant_input_t;
 
     using ndsize_t = typename contravariant_input_t::vector_t;
     using coordinate_t = typename contravariant_input_t::vector_t;
-    using array_t = storage_t;
+    using array_t = backend_t;
 
     struct configuration_data_t {
         ndsize_t m_sizes;
@@ -138,7 +138,7 @@ struct strided {
         }
 
         ndsize_t m_sizes;
-        typename storage_t::owning_data_t m_storage;
+        typename backend_t::owning_data_t m_storage;
     };
 
     struct non_owning_data_t {
@@ -170,7 +170,7 @@ struct strided {
         }
 
         ndsize_t m_sizes;
-        typename storage_t::non_owning_data_t m_storage;
+        typename backend_t::non_owning_data_t m_storage;
     };
 };
 }
