@@ -24,6 +24,8 @@ template <
     CONSTRAINT(concepts::field_backend) _backend_t,
     typename _input_scalar_type = float>
 struct _nearest_neighbour {
+    static constexpr bool is_initial = false;
+
     using backend_t = _backend_t;
 
     using contravariant_input_t =

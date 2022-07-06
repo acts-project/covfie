@@ -23,6 +23,8 @@ template <
     CONSTRAINT(concepts::field_backend) _backend_t,
     typename _input_scalar_type = float>
 struct linear {
+    static constexpr bool is_initial = false;
+
     using input_scalar_type = _input_scalar_type;
     using backend_t = _backend_t;
 

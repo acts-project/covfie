@@ -26,6 +26,8 @@ template <
     CONSTRAINT(concepts::vector_descriptor) _input_vector_t,
     CONSTRAINT(concepts::field_backend) _storage_t>
 struct strided {
+    static constexpr bool is_initial = false;
+
     using storage_t = _storage_t;
 
     using contravariant_input_t =

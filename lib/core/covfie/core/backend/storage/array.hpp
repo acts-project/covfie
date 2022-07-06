@@ -25,6 +25,8 @@ template <
     CONSTRAINT(concepts::vector_descriptor) _output_vector_t,
     typename _index_t = std::size_t>
 struct array {
+    static constexpr bool is_initial = true;
+
     using contravariant_input_t =
         covfie::vector::scalar_d<covfie::vector::vector_d<_index_t, 1>>;
     using covariant_output_t =

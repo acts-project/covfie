@@ -20,6 +20,8 @@
 namespace covfie::backend::transformer {
 template <CONSTRAINT(concepts::field_backend) _backend_t>
 struct affine {
+    static constexpr bool is_initial = false;
+
     using backend_t = _backend_t;
 
     using contravariant_input_t = typename backend_t::contravariant_input_t;

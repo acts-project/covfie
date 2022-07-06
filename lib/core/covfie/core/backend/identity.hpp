@@ -21,6 +21,8 @@ template <
     CONSTRAINT(concepts::vector_descriptor) _input_vector_t,
     CONSTRAINT(concepts::vector_descriptor) _output_vector_t>
 struct identity {
+    static constexpr bool is_initial = true;
+
     using contravariant_input_t =
         covfie::vector::array_vector_d<_input_vector_t>;
     using covariant_output_t = covfie::vector::array_vector_d<_output_vector_t>;
