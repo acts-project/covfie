@@ -14,11 +14,12 @@
 #include <boost/log/trivial.hpp>
 #include <boost/program_options.hpp>
 
-#include <covfie/core/backend/layout/strided.hpp>
 #include <covfie/core/backend/transformer/affine.hpp>
 #include <covfie/core/backend/transformer/interpolator/linear.hpp>
+#include <covfie/core/backend/transformer/layout/strided.hpp>
 #include <covfie/core/field.hpp>
 #include <covfie/cuda/backend/storage/cuda_device_array.hpp>
+#include <covfie/cuda/backend/storage/cuda_texture.hpp>
 #include <covfie/cuda/error_check.hpp>
 
 #include "bitmap.hpp"

@@ -15,9 +15,9 @@
 #include <boost/log/trivial.hpp>
 #include <boost/program_options.hpp>
 
-#include <covfie/core/backend/layout/strided.hpp>
 #include <covfie/core/backend/transformer/affine.hpp>
 #include <covfie/core/backend/transformer/interpolator/linear.hpp>
+#include <covfie/core/backend/transformer/layout/strided.hpp>
 #include <covfie/core/field.hpp>
 
 #include "bitmap.hpp"

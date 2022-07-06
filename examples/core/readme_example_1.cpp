@@ -11,8 +11,8 @@
 #include <cmath>
 #include <iostream>
 
-#include <covfie/core/backend/layout/strided.hpp>
-#include <covfie/core/backend/storage/array.hpp>
+#include <covfie/core/backend/initial/array.hpp>
+#include <covfie/core/backend/transformer/layout/strided.hpp>
 #include <covfie/core/field.hpp>
 #include <covfie/core/field_view.hpp>
 

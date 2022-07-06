@@ -12,7 +12,7 @@
 
 #include <gtest/gtest.h>
 
-#include <covfie/core/backend/constant.hpp>
+#include <covfie/core/backend/initial/constant.hpp>
 #include <covfie/core/field.hpp>
 
 TEST(TestConstantField, Constant1Dto1D)

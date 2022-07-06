@@ -13,7 +13,7 @@
 #include <numeric>
 #include <type_traits>
 
-#include <covfie/core/backend/storage/array.hpp>
+#include <covfie/core/backend/initial/array.hpp>
 #include <covfie/core/concepts.hpp>
 #include <covfie/core/qualifiers.hpp>
 #include <covfie/core/utility/binary_io.hpp>

@@ -14,10 +14,10 @@
 #include <boost/log/trivial.hpp>
 #include <boost/program_options.hpp>
 
-#include <covfie/core/backend/layout/strided.hpp>
-#include <covfie/core/backend/storage/array.hpp>
+#include <covfie/core/backend/initial/array.hpp>
 #include <covfie/core/backend/transformer/affine.hpp>
 #include <covfie/core/backend/transformer/interpolator/nearest_neighbour.hpp>
+#include <covfie/core/backend/transformer/layout/strided.hpp>
 #include <covfie/core/field.hpp>
 
 void parse_opts(

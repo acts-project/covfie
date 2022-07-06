@@ -15,7 +15,7 @@
 
 #include <benchmark/benchmark.h>
 
-#include <covfie/core/backend/constant.hpp>
+#include <covfie/core/backend/initial/constant.hpp>
 #include <covfie/core/field.hpp>
 
 namespace {
