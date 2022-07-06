@@ -37,6 +37,10 @@ using cuda_field_t = covfie::field<covfie::backend::transformer::affine<
             covfie::backend::storage::cuda_device_array<
                 covfie::vector::float3>>>>>;
 
+using cuda_texture_field_t = covfie::field<covfie::backend::transformer::affine<
+    covfie::backend::storage::
+        cuda_texture<covfie::vector::float3, covfie::vector::float3>>>;
+
 void parse_opts(
     int argc, char * argv[], boost::program_options::variables_map & vm
 )
@@ -80,8 +84,10 @@ void parse_opts(
     }
 }
 
-__global__ void
-render(cuda_field_t::view_t vf, char * out, uint width, uint height, float z)
+template <typename field_t>
+__global__ void render(
+    typename field_t::view_t vf, char * out, uint width, uint height, float z
+)
 {
     int x = blockDim.x * blockIdx.x + threadIdx.x;
     int y = blockDim.y * blockIdx.y + threadIdx.y;
@@ -90,7 +96,7 @@ render(cuda_field_t::view_t vf, char * out, uint width, uint height, float z)
         float fx = x / static_cast<float>(width);
         float fy = y / static_cast<float>(height);
 
-        cuda_field_t::output_t p =
+        typename field_t::output_t p =
             vf.at(fx * 20000.f - 10000.f, fy * 20000.f - 10000.f, z);
         out[height * x + y] = static_cast<char>(std::lround(
             255.f *
@@ -136,7 +142,7 @@ int main(int argc, char ** argv)
         height / dimBlock.y + (height % dimBlock.y != 0 ? 1 : 0)
     );
 
-    render<<<dimGrid, dimBlock>>>(
+    render<decltype(nf)><<<dimGrid, dimBlock>>>(
         nf, img_device, width, height, vm["z"].as<float>()
     );
 
