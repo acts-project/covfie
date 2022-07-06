@@ -45,6 +45,13 @@ concept field_backend = requires
         std::is_trivially_move_constructible_v<typename T::non_owning_data_t>;
 
     /*
+     * Backends must declare whether they are initial or not; this must be done
+     * through a static constexpr boolean.
+     */
+    T::is_initial;
+    requires std::is_same_v<bool, std::decay_t<decltype(T::is_initial)>>;
+
+    /*
      * Check whether the owning data type can be read from a file.
      */
     requires requires(std::ifstream & fs)
