@@ -179,6 +179,11 @@ struct strided {
             return m_storage[idx];
         }
 
+        COVFIE_DEVICE ndsize_t get_size() const
+        {
+            return m_sizes;
+        }
+
         typename backend_t::non_owning_data_t & get_backend(void)
         {
             return m_storage;
