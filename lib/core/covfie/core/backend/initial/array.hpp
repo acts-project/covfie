@@ -25,6 +25,7 @@ template <
     CONSTRAINT(concepts::vector_descriptor) _output_vector_t,
     typename _index_t = std::size_t>
 struct array {
+    using this_t = array<_output_vector_t, _index_t>;
     static constexpr bool is_initial = true;
 
     using contravariant_input_t =
@@ -35,7 +36,7 @@ struct array {
     using vector_t = std::decay_t<typename covariant_output_t::vector_t>;
 
     struct owning_data_t {
-        using parent_t = array<_output_vector_t, _index_t>;
+        using parent_t = this_t;
 
         explicit owning_data_t(owning_data_t && o)
             : m_size(o.m_size)
@@ -88,6 +89,8 @@ struct array {
     };
 
     struct non_owning_data_t {
+        using parent_t = this_t;
+
         non_owning_data_t(const owning_data_t & o)
             : m_ptr(o.m_ptr.get())
         {

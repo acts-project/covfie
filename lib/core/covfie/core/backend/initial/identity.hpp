@@ -21,6 +21,7 @@ template <
     CONSTRAINT(concepts::vector_descriptor) _input_vector_t,
     CONSTRAINT(concepts::vector_descriptor) _output_vector_t>
 struct identity {
+    using this_t = identity<_input_vector_t, _output_vector_t>;
     static constexpr bool is_initial = true;
 
     using contravariant_input_t =
@@ -46,6 +47,8 @@ struct identity {
     };
 
     struct owning_data_t {
+        using parent_t = this_t;
+
         template <typename... Args>
         explicit owning_data_t(configuration_data_t)
         {
@@ -61,6 +64,8 @@ struct identity {
     };
 
     struct non_owning_data_t {
+        using parent_t = this_t;
+
         non_owning_data_t(const owning_data_t &)
         {
         }

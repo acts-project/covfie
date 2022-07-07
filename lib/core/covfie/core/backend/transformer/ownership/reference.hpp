@@ -18,6 +18,7 @@
 namespace covfie::backend::transformer::ownership {
 template <CONSTRAINT(concepts::field_backend) _backend_t>
 struct reference {
+    using this_t = reference<_backend_t>;
     static constexpr bool is_initial = false;
 
     using backend_t = _backend_t;
@@ -26,6 +27,8 @@ struct reference {
     using covariant_output_t = typename backend_t::covariant_output_t;
 
     struct owning_data_t {
+        using parent_t = this_t;
+
         explicit owning_data_t(const typename backend_t::owning_data_t & o)
             : m_backend(o)
         {
@@ -55,6 +58,8 @@ struct reference {
     };
 
     struct non_owning_data_t {
+        using parent_t = this_t;
+
         non_owning_data_t(const owning_data_t & src)
             : m_backend(src.m_backend)
         {

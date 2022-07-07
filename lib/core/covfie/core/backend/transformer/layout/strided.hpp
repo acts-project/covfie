@@ -26,6 +26,7 @@ template <
     CONSTRAINT(concepts::vector_descriptor) _input_vector_t,
     CONSTRAINT(concepts::field_backend) _storage_t>
 struct strided {
+    using this_t = strided<_input_vector_t, _storage_t>;
     static constexpr bool is_initial = false;
 
     using backend_t = _storage_t;
@@ -45,7 +46,7 @@ struct strided {
     };
 
     struct owning_data_t {
-        using parent_t = strided<_input_vector_t, _storage_t>;
+        using parent_t = this_t;
 
         template <typename T>
         static typename array_t::owning_data_t
@@ -158,6 +159,8 @@ struct strided {
     };
 
     struct non_owning_data_t {
+        using parent_t = this_t;
+
         non_owning_data_t(const owning_data_t & o)
             : m_sizes(o.m_sizes)
             , m_storage(o.m_storage)

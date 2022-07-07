@@ -24,6 +24,7 @@ template <
     CONSTRAINT(concepts::field_backend) _backend_t,
     typename _input_scalar_type = float>
 struct _nearest_neighbour {
+    using this_t = _nearest_neighbour<_backend_t, _input_scalar_type>;
     static constexpr bool is_initial = false;
 
     using backend_t = _backend_t;
@@ -40,6 +41,8 @@ struct _nearest_neighbour {
     };
 
     struct owning_data_t {
+        using parent_t = this_t;
+
         template <typename... Args>
         explicit owning_data_t(configuration_data_t, Args... args)
             : m_backend(std::forward<Args>(args)...)
@@ -70,6 +73,8 @@ struct _nearest_neighbour {
     };
 
     struct non_owning_data_t {
+        using parent_t = this_t;
+
         non_owning_data_t(const owning_data_t & src)
             : m_backend(src.m_backend)
         {

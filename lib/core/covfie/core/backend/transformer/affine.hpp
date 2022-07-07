@@ -20,6 +20,7 @@
 namespace covfie::backend::transformer {
 template <CONSTRAINT(concepts::field_backend) _backend_t>
 struct affine {
+    using this_t = affine<_backend_t>;
     static constexpr bool is_initial = false;
 
     using backend_t = _backend_t;
@@ -37,6 +38,8 @@ struct affine {
     };
 
     struct owning_data_t {
+        using parent_t = this_t;
+
         template <typename... Args>
         explicit owning_data_t(configuration_data_t conf, Args... args)
             : m_offsets(conf.m_offsets)
@@ -98,6 +101,8 @@ struct affine {
     };
 
     struct non_owning_data_t {
+        using parent_t = this_t;
+
         non_owning_data_t(const owning_data_t & src)
             : m_offsets(src.m_offsets)
             , m_scales(src.m_scales)
