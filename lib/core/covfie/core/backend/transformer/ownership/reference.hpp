@@ -26,9 +26,12 @@ struct reference {
     using covariant_output_t = typename backend_t::covariant_output_t;
 
     struct owning_data_t {
-        template <typename... Args>
-        owning_data_t(const typename backend_t::owning_data_t & o)
+        explicit owning_data_t(const typename backend_t::owning_data_t & o)
             : m_backend(o)
+        {
+        }
+
+        explicit owning_data_t(std::ifstream &)
         {
         }
 

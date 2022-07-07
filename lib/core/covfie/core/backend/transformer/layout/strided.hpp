@@ -97,7 +97,13 @@ struct strided {
             return tmp;
         }
 
-        owning_data_t(configuration_data_t conf)
+        explicit owning_data_t(const owning_data_t & o)
+            : m_sizes(o.m_sizes)
+            , m_storage(o.m_storage)
+        {
+        }
+
+        explicit owning_data_t(configuration_data_t conf)
             : m_sizes(conf.m_sizes)
             , m_storage(std::accumulate(
                   std::begin(m_sizes),
@@ -115,13 +121,13 @@ struct strided {
                     decltype(std::declval<T>().m_sizes),
                     ndsize_t>,
                 bool> = true>
-        owning_data_t(const T & o)
+        explicit owning_data_t(const T & o)
             : m_sizes(o.m_sizes)
             , m_storage(make_data(m_sizes, o))
         {
         }
 
-        owning_data_t(std::ifstream & fs)
+        explicit owning_data_t(std::ifstream & fs)
             : m_sizes(utility::read_binary<decltype(m_sizes)>(fs))
             , m_storage(fs)
         {

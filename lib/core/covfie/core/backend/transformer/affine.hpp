@@ -38,7 +38,7 @@ struct affine {
 
     struct owning_data_t {
         template <typename... Args>
-        owning_data_t(configuration_data_t conf, Args... args)
+        explicit owning_data_t(configuration_data_t conf, Args... args)
             : m_offsets(conf.m_offsets)
             , m_scales(conf.m_scales)
             , m_backend(std::forward<Args>(args)...)
@@ -47,14 +47,14 @@ struct affine {
 
         // TODO: This needs SFINAE guards.
         template <typename T>
-        owning_data_t(const T & o)
+        explicit owning_data_t(const affine<T> & o)
             : m_offsets(o.m_offsets)
             , m_scales(o.m_scales)
             , m_backend(o.m_backend)
         {
         }
 
-        owning_data_t(std::ifstream & fs)
+        explicit owning_data_t(std::ifstream & fs)
             : m_offsets(utility::read_binary<decltype(m_offsets)>(fs))
             , m_scales(utility::read_binary<decltype(m_scales)>(fs))
             , m_backend(fs)

@@ -36,12 +36,12 @@ struct constant {
 
     struct owning_data_t {
         template <typename... Args>
-        owning_data_t(configuration_data_t conf)
+        explicit owning_data_t(configuration_data_t conf)
             : m_value(conf.m_value)
         {
         }
 
-        owning_data_t(std::ifstream & fs)
+        explicit owning_data_t(std::ifstream & fs)
             : m_value(
                   utility::read_binary<typename covariant_output_t::vector_t>(fs
                   )

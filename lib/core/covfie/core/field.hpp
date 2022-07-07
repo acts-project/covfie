@@ -27,18 +27,24 @@ public:
     using coordinate_t = typename backend_t::contravariant_input_t::vector_t;
 
     template <typename other_backend>
-    field(const field<other_backend> & other)
+    explicit field(field<other_backend> & other)
+        : m_backend(other.m_backend)
+    {
+    }
+
+    template <typename other_backend>
+    explicit field(const field<other_backend> & other)
         : m_backend(other.m_backend)
     {
     }
 
     template <typename... Args>
-    field(Args... args)
-        : m_backend(args...)
+    explicit field(Args &&... args)
+        : m_backend(std::forward<Args>(args)...)
     {
     }
 
-    field(std::ifstream & fs)
+    explicit field(std::ifstream & fs)
         : m_backend(fs)
     {
     }

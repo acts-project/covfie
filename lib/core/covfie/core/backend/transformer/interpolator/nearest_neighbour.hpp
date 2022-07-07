@@ -41,36 +41,12 @@ struct _nearest_neighbour {
 
     struct owning_data_t {
         template <typename... Args>
-        owning_data_t(configuration_data_t, Args... args)
+        explicit owning_data_t(configuration_data_t, Args... args)
             : m_backend(std::forward<Args>(args)...)
         {
         }
 
-        template <
-            typename T,
-            std::enable_if_t<
-                std::is_convertible_v<
-                    decltype(std::declval<T>().m_backend),
-                    typename backend_t::owning_data_t>,
-                bool> = true>
-        owning_data_t(const T & o)
-            : m_backend(o.m_backend)
-        {
-        }
-
-        template <
-            typename T,
-            std::enable_if_t<
-                std::is_convertible_v<
-                    decltype(std::declval<T>()),
-                    typename backend_t::owning_data_t>,
-                bool> = true>
-        owning_data_t(const T & o)
-            : m_backend(o)
-        {
-        }
-
-        owning_data_t(std::ifstream & fs)
+        explicit owning_data_t(std::ifstream & fs)
             : m_backend(fs)
         {
         }

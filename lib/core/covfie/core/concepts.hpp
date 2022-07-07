@@ -137,12 +137,6 @@ concept field_backend = requires
                     const typename T::backend_t::non_owning_data_t &>;
         };
     };
-
-    /*
-     * Make sure that owning data types are copyable so we can easily copy
-     * fields.
-     */
-    requires std::copyable<typename T::owning_data_t>;
 };
 
 template <typename T>

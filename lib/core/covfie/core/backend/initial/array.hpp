@@ -37,25 +37,25 @@ struct array {
     struct owning_data_t {
         using parent_t = array<_output_vector_t, _index_t>;
 
-        owning_data_t(owning_data_t && o)
+        explicit owning_data_t(owning_data_t && o)
             : m_size(o.m_size)
             , m_ptr(std::move(o.m_ptr))
         {
         }
 
-        owning_data_t(std::size_t n)
+        explicit owning_data_t(std::size_t n)
             : m_size(n)
             , m_ptr(std::make_unique<vector_t[]>(n))
         {
         }
 
-        owning_data_t(std::ifstream & fs)
+        explicit owning_data_t(std::ifstream & fs)
             : m_size(utility::read_binary<decltype(m_size)>(fs))
             , m_ptr(utility::read_binary_array<vector_t>(fs, m_size))
         {
         }
 
-        owning_data_t(const owning_data_t & o)
+        explicit owning_data_t(const owning_data_t & o)
             : m_size(o.m_size)
             , m_ptr(std::make_unique<vector_t[]>(m_size))
         {

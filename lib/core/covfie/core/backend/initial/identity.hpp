@@ -47,11 +47,11 @@ struct identity {
 
     struct owning_data_t {
         template <typename... Args>
-        owning_data_t(configuration_data_t)
+        explicit owning_data_t(configuration_data_t)
         {
         }
 
-        owning_data_t(std::ifstream &)
+        explicit owning_data_t(std::ifstream &)
         {
         }
 
