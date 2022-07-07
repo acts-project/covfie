@@ -112,6 +112,16 @@ struct _nearest_neighbour {
             return m_backend.at(nc);
         }
 
+        typename backend_t::non_owning_data_t & get_backend(void)
+        {
+            return m_backend;
+        }
+
+        const typename backend_t::non_owning_data_t & get_backend(void) const
+        {
+            return m_backend;
+        }
+
         typename backend_t::non_owning_data_t m_backend;
     };
 };

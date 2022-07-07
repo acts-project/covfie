@@ -179,6 +179,16 @@ struct strided {
             return m_storage[idx];
         }
 
+        typename backend_t::non_owning_data_t & get_backend(void)
+        {
+            return m_storage;
+        }
+
+        const typename backend_t::non_owning_data_t & get_backend(void) const
+        {
+            return m_storage;
+        }
+
         ndsize_t m_sizes;
         typename backend_t::non_owning_data_t m_storage;
     };
