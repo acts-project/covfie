@@ -99,6 +99,21 @@ concept field_backend = requires
         };
     };
 
+    requires requires(typename T::non_owning_data_t & d)
+    {
+        /*
+         * Just like how owning data types can spit out references to their
+         * children, so can non-owning data types.
+         */
+        requires T::is_initial || requires
+        {
+            typename T::backend_t;
+            {
+                d.get_backend()
+                } -> std::same_as<typename T::backend_t::non_owning_data_t &>;
+        };
+    };
+
     /*
      * Check whether a non-owning object allows us to look up the magnetic
      * field, and whether that operation gives the correct result.
@@ -108,6 +123,19 @@ concept field_backend = requires
         {
             d.at(std::declval<typename T::contravariant_input_t::vector_t>())
             } -> std::same_as<typename T::covariant_output_t::vector_t>;
+
+        /*
+         * Constant version of the requirement that non-owning data can be
+         * introspected.
+         */
+        requires T::is_initial || requires
+        {
+            typename T::backend_t;
+            {
+                d.get_backend()
+                } -> std::same_as<
+                    const typename T::backend_t::non_owning_data_t &>;
+        };
     };
 
     /*
