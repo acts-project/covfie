@@ -1,0 +1,111 @@
+/*
+ * This file is part of covfie, a part of the ACTS project
+ *
+ * Copyright (c) 2022 CERN
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public License,
+ * v. 2.0. If a copy of the MPL was not distributed with this file, You can
+ * obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
+#include <cstddef>
+#include <fstream>
+#include <iostream>
+
+#include <boost/log/trivial.hpp>
+#include <boost/program_options.hpp>
+
+#include <covfie/core/backend/transformer/affine.hpp>
+#include <covfie/core/backend/transformer/interpolator/linear.hpp>
+#include <covfie/core/backend/transformer/layout/strided.hpp>
+#include <covfie/core/field.hpp>
+
+#include "bitmap.hpp"
+
+void parse_opts(
+    int argc, char * argv[], boost::program_options::variables_map & vm
+)
+{
+    boost::program_options::options_description opts("general options");
+
+    opts.add_options()("help", "produce help message")(
+        "input,i",
+        boost::program_options::value<std::string>()->required(),
+        "input vector field to read"
+    )("output,o",
+      boost::program_options::value<std::string>()->required(),
+      "output bitmap image to write");
+
+    boost::program_options::parsed_options parsed =
+        boost::program_options::command_line_parser(argc, argv)
+            .options(opts)
+            .run();
+
+    boost::program_options::store(parsed, vm);
+
+    if (vm.count("help")) {
+        std::cout << opts << std::endl;
+        std::exit(0);
+    }
+
+    try {
+        boost::program_options::notify(vm);
+    } catch (boost::program_options::required_option & e) {
+        BOOST_LOG_TRIVIAL(fatal) << e.what();
+        std::exit(1);
+    }
+}
+
+int main(int argc, char ** argv)
+{
+    using field_t = covfie::field<covfie::backend::layout::strided<
+        covfie::vector::ulong2,
+        covfie::backend::storage::array<covfie::vector::float3>>>;
+
+    boost::program_options::variables_map vm;
+    parse_opts(argc, argv, vm);
+
+    BOOST_LOG_TRIVIAL(info) << "Welcome to the covfie image renderer!";
+    BOOST_LOG_TRIVIAL(info) << "Using vector field file \""
+                            << vm["input"].as<std::string>() << "\"";
+    BOOST_LOG_TRIVIAL(info) << "Starting read of input file...";
+
+    std::ifstream ifs(vm["input"].as<std::string>(), std::ifstream::binary);
+    field_t f(ifs);
+    ifs.close();
+
+    BOOST_LOG_TRIVIAL(info) << "Creating magnetic field view...";
+
+    field_t::view_t fv(f);
+
+    BOOST_LOG_TRIVIAL(info) << "Allocating memory for output image...";
+
+    field_t::backend_t::ndsize_t im_size = fv.backend().get_size();
+
+    std::unique_ptr<char[]> img =
+        std::make_unique<char[]>(im_size[1] * im_size[0]);
+
+    BOOST_LOG_TRIVIAL(info) << "Rendering vector field to image...";
+
+    for (std::size_t x = 0; x < im_size[1]; ++x) {
+        for (std::size_t y = 0; y < im_size[0]; ++y) {
+            field_t::view_t::output_t p = fv.at(x, y);
+
+            img[im_size[1] * y + x] = static_cast<char>(std::lround(
+                255.f *
+                std::min(
+                    std::sqrt(p[0] * p[0] + p[1] * p[1] + p[2] * p[2]), 1.0f
+                )
+            ));
+        }
+    }
+
+    BOOST_LOG_TRIVIAL(info) << "Saving image to file \""
+                            << vm["output"].as<std::string>() << "\"...";
+
+    render_bitmap(
+        img.get(), im_size[1], im_size[0], vm["output"].as<std::string>()
+    );
+
+    BOOST_LOG_TRIVIAL(info) << "Procedure complete, goodbye!";
+}

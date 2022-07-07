@@ -24,3 +24,21 @@ target_link_libraries(
     Boost::log_setup
     Boost::program_options
 )
+
+add_executable(
+    render_image_cpu
+
+    render_image.cpp
+)
+
+target_link_libraries(
+    render_image_cpu
+
+    PRIVATE
+    covfie_core
+    covfie_cpu
+    bitmap
+    Boost::log
+    Boost::log_setup
+    Boost::program_options
+)

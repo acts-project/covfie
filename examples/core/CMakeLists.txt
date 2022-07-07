@@ -50,3 +50,20 @@ target_link_libraries(
     PRIVATE
     covfie_core
 )
+
+# Add the an executable to create 2D slices from 3D fields.
+add_executable(
+    slice3dto2d
+
+    slice3dto2d.cpp
+)
+
+target_link_libraries(
+    slice3dto2d
+
+    PRIVATE
+    covfie_core
+    Boost::log
+    Boost::log_setup
+    Boost::program_options
+)
