@@ -36,6 +36,11 @@ public:
     {
     }
 
+    const storage_t & backend(void)
+    {
+        return m_storage;
+    }
+
     template <
         typename... Args,
         std::enable_if_t<
