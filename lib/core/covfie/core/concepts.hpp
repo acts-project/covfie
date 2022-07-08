@@ -21,6 +21,12 @@ template <typename T>
 concept field_backend = requires
 {
     /*
+     * Every backend should have an alias to itself. Not great, but sometimes
+     * C++ necessitates these things.
+     */
+    typename T::this_t;
+
+    /*
      * Check whether the backend has the required type definitions, which are
      * the input and output types of the contravariant and covariant parts of
      * the layer.
@@ -33,6 +39,13 @@ concept field_backend = requires
      */
     typename T::owning_data_t;
     typename T::non_owning_data_t;
+
+    /*
+     * Every bit of data, owning and non-owning, must make available which
+     * backend it belongs to.
+     */
+    typename T::owning_data_t::parent_t;
+    typename T::non_owning_data_t::parent_t;
 
     /*
      * The non-owning data which we use on the GPU must be extremely simple,
