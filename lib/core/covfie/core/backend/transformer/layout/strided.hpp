@@ -29,6 +29,9 @@ struct strided {
     using this_t = strided<_input_vector_t, _storage_t>;
     static constexpr bool is_initial = false;
 
+    template <typename new_backend>
+    using reapply = strided<_input_vector_t, new_backend>;
+
     using backend_t = _storage_t;
 
     using contravariant_input_t =

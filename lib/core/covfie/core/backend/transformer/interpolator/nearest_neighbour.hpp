@@ -27,6 +27,9 @@ struct _nearest_neighbour {
     using this_t = _nearest_neighbour<_backend_t, _input_scalar_type>;
     static constexpr bool is_initial = false;
 
+    template <typename new_backend>
+    using reapply = _nearest_neighbour<new_backend, _input_scalar_type>;
+
     using backend_t = _backend_t;
 
     using contravariant_input_t =

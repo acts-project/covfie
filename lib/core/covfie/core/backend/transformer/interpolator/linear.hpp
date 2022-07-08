@@ -26,6 +26,9 @@ struct linear {
     using this_t = linear<_backend_t, _input_scalar_type>;
     static constexpr bool is_initial = false;
 
+    template <typename new_backend>
+    using reapply = linear<new_backend, _input_scalar_type>;
+
     using input_scalar_type = _input_scalar_type;
     using backend_t = _backend_t;
 

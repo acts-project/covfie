@@ -23,6 +23,9 @@ struct affine {
     using this_t = affine<_backend_t>;
     static constexpr bool is_initial = false;
 
+    template <typename new_backend>
+    using reapply = affine<new_backend>;
+
     using backend_t = _backend_t;
 
     using contravariant_input_t = typename backend_t::contravariant_input_t;
