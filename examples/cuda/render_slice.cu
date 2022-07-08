@@ -19,7 +19,6 @@
 #include <covfie/core/backend/transformer/layout/strided.hpp>
 #include <covfie/core/field.hpp>
 #include <covfie/cuda/backend/storage/cuda_device_array.hpp>
-#include <covfie/cuda/backend/storage/cuda_texture.hpp>
 #include <covfie/cuda/error_check.hpp>
 
 #include "bitmap.hpp"
@@ -36,10 +35,6 @@ using cuda_field_t = covfie::field<covfie::backend::transformer::affine<
             covfie::vector::ulong3,
             covfie::backend::storage::cuda_device_array<
                 covfie::vector::float3>>>>>;
-
-using cuda_texture_field_t = covfie::field<covfie::backend::transformer::affine<
-    covfie::backend::storage::
-        cuda_texture<covfie::vector::float3, covfie::vector::float3>>>;
 
 void parse_opts(
     int argc, char * argv[], boost::program_options::variables_map & vm
