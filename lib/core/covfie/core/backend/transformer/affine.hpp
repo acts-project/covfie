@@ -51,9 +51,13 @@ struct affine {
         {
         }
 
-        // TODO: This needs SFINAE guards.
-        template <typename T>
-        explicit owning_data_t(const affine<T> & o)
+        template <
+            typename T,
+            std::enable_if_t<
+                std::
+                    is_same_v<typename T::parent_t::reapply<backend_t>, this_t>,
+                bool> = true>
+        explicit owning_data_t(const T & o)
             : m_offsets(o.m_offsets)
             , m_scales(o.m_scales)
             , m_backend(o.m_backend)

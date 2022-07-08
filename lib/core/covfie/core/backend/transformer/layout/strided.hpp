@@ -101,7 +101,13 @@ struct strided {
             return tmp;
         }
 
-        explicit owning_data_t(const owning_data_t & o)
+        template <
+            typename T,
+            std::enable_if_t<
+                std::
+                    is_same_v<typename T::parent_t::reapply<backend_t>, this_t>,
+                bool> = true>
+        explicit owning_data_t(const T & o)
             : m_sizes(o.m_sizes)
             , m_storage(o.m_storage)
         {
@@ -115,19 +121,6 @@ struct strided {
                   1,
                   std::multiplies<std::size_t>()
               ))
-        {
-        }
-
-        template <
-            typename T,
-            std::enable_if_t<
-                std::is_convertible_v<
-                    decltype(std::declval<T>().m_sizes),
-                    ndsize_t>,
-                bool> = true>
-        explicit owning_data_t(const T & o)
-            : m_sizes(o.m_sizes)
-            , m_storage(make_data(m_sizes, o))
         {
         }
 

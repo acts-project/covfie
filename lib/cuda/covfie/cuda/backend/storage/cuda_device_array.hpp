@@ -37,7 +37,7 @@ struct cuda_device_array {
 
     struct owning_data_t {
         owning_data_t(
-            typename array<output_vector_t, _index_t>::owning_data_t && o
+            const typename array<output_vector_t, _index_t>::owning_data_t & o
         )
             : m_size(o.m_size)
             , m_ptr(nullptr)
