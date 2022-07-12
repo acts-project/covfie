@@ -9,6 +9,9 @@
 # The common tools should be available for examples on all platforms.
 add_subdirectory(common)
 
+# Enable position-independent code
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
 # The Boost log and options libraries are pretty universal, so we'll load them
 # here.
 find_package(
