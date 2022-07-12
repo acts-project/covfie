@@ -8,6 +8,7 @@
  * obtain one at http://mozilla.org/MPL/2.0/.
  */
 
+#include <chrono>
 #include <cstddef>
 #include <fstream>
 #include <iostream>
@@ -117,6 +118,9 @@ int main(int argc, char ** argv)
 
     BOOST_LOG_TRIVIAL(info) << "Rendering magnetic field strength to image...";
 
+    std::chrono::high_resolution_clock::time_point t1 =
+        std::chrono::high_resolution_clock::now();
+
     for (uint x = 0; x < vm["width"].as<uint>(); ++x) {
         for (uint y = 0; y < vm["height"].as<uint>(); ++y) {
             float fx = x / static_cast<float>(vm["width"].as<uint>());
@@ -153,6 +157,14 @@ int main(int argc, char ** argv)
                 ));
         }
     }
+
+    std::chrono::high_resolution_clock::time_point t2 =
+        std::chrono::high_resolution_clock::now();
+
+    BOOST_LOG_TRIVIAL(info
+    ) << "Rendering took "
+      << std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count()
+      << "us." << std::endl;
 
     BOOST_LOG_TRIVIAL(info) << "Saving image to file \""
                             << vm["output"].as<std::string>() << "\"...";

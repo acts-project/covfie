@@ -8,6 +8,7 @@
  * obtain one at http://mozilla.org/MPL/2.0/.
  */
 
+#include <chrono>
 #include <fstream>
 #include <iostream>
 
@@ -131,6 +132,9 @@ int main(int argc, char ** argv)
 
     BOOST_LOG_TRIVIAL(info) << "Rendering magnetic field strength to image...";
 
+    std::chrono::high_resolution_clock::time_point t1 =
+        std::chrono::high_resolution_clock::now();
+
     dim3 dimBlock(32, 32);
     dim3 dimGrid(
         width / dimBlock.x + (width % dimBlock.x != 0 ? 1 : 0),
@@ -143,6 +147,14 @@ int main(int argc, char ** argv)
 
     cudaErrorCheck(cudaGetLastError());
     cudaErrorCheck(cudaDeviceSynchronize());
+
+    std::chrono::high_resolution_clock::time_point t2 =
+        std::chrono::high_resolution_clock::now();
+
+    BOOST_LOG_TRIVIAL(info
+    ) << "Rendering took "
+      << std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count()
+      << "us." << std::endl;
 
     BOOST_LOG_TRIVIAL(info) << "Allocating host memory for output image...";
 
