@@ -65,6 +65,30 @@ concept field_backend = requires
     requires std::is_same_v<bool, std::decay_t<decltype(T::is_initial)>>;
 
     /*
+     * Types must declare whether they are configuration-constructible, which
+     * is to say they can be constructed from a configuration structure. Note
+     * that the configuration is stricly for the transformer, and not for its
+     * children.
+     */
+    requires T::is_initial || requires
+    {
+        typename T::configuration_t;
+
+        requires std::is_trivially_destructible_v<typename T::configuration_t>;
+        requires
+            std::is_trivially_copy_constructible_v<typename T::configuration_t>;
+        requires
+            std::is_trivially_move_constructible_v<typename T::configuration_t>;
+
+        requires requires(const typename T::owning_data_t & o)
+        {
+            {
+                o.get_configuration()
+                } -> std::same_as<typename T::configuration_t>;
+        };
+    };
+
+    /*
      * Check whether the owning data type can be read from a file.
      */
     requires requires(std::ifstream & fs)
