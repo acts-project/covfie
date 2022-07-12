@@ -123,23 +123,29 @@ struct linear {
                 input_scalar_type b = std::fmod(coord[1], 1.f);
                 input_scalar_type c = std::fmod(coord[2], 1.f);
 
+                input_scalar_type ra = static_cast<input_scalar_type>(1.) - a;
+                input_scalar_type rb = static_cast<input_scalar_type>(1.) - b;
+                input_scalar_type rc = static_cast<input_scalar_type>(1.) - c;
+
+                std::remove_reference_t<typename covariant_input_t::vector_t>
+                    pc[8];
+
+                for (std::size_t n = 0; n < 8; ++n) {
+                    pc[n] = m_backend.at(
+                        {i + ((n & 4) ? 1 : 0),
+                         j + ((n & 2) ? 1 : 0),
+                         k + ((n & 1) ? 1 : 0)}
+                    );
+                }
+
                 typename covariant_output_t::vector_t rv;
 
                 for (std::size_t q = 0; q < covariant_output_t::dimensions; ++q)
                 {
-                    rv[q] =
-                        (1. - a) * (1. - b) * (1. - c) *
-                            m_backend.at({i, j, k})[q] +
-                        a * (1. - b) * (1. - c) *
-                            m_backend.at({i + 1, j, k})[q] +
-                        (1. - a) * (b) * (1. - c) *
-                            m_backend.at({i, j + 1, k})[q] +
-                        a * b * (1. - c) * m_backend.at({i + 1, j + 1, k})[q] +
-                        (1. - a) * (1. - b) * c *
-                            m_backend.at({i, j, k + 1})[q] +
-                        a * (1. - b) * c * m_backend.at({i + 1, j, k + 1})[q] +
-                        (1. - a) * b * c * m_backend.at({i, j + 1, k + 1})[q] +
-                        a * b * c * m_backend.at({i + 1, j + 1, k + 1})[q];
+                    rv[q] = ra * rb * rc * pc[0][q] + ra * rb * c * pc[1][q] +
+                            ra * b * rc * pc[2][q] + ra * b * c * pc[3][q] +
+                            a * rb * rc * pc[4][q] + a * rb * c * pc[5][q] +
+                            a * b * rc * pc[6][q] + a * b * c * pc[7][q];
                 }
 
                 return rv;
