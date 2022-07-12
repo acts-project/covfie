@@ -57,6 +57,11 @@ struct reference {
             return m_backend;
         }
 
+        configuration_t get_configuration(void) const
+        {
+            return {};
+        }
+
         typename std::reference_wrapper<const typename backend_t::owning_data_t>
             m_backend;
     };

@@ -151,6 +151,11 @@ struct strided {
             return m_storage;
         }
 
+        configuration_t get_configuration(void) const
+        {
+            return {m_sizes};
+        }
+
         ndsize_t m_sizes;
         typename backend_t::owning_data_t m_storage;
     };

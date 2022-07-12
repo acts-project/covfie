@@ -119,6 +119,11 @@ struct affine {
             return m_backend;
         }
 
+        configuration_t get_configuration(void) const
+        {
+            return {m_offsets, m_scales};
+        }
+
         typename contravariant_input_t::vector_t m_offsets;
         typename contravariant_input_t::vector_t m_scales;
         typename backend_t::owning_data_t m_backend;

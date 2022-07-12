@@ -95,6 +95,11 @@ struct linear {
             return m_backend;
         }
 
+        configuration_t get_configuration(void) const
+        {
+            return {};
+        }
+
         typename backend_t::owning_data_t m_backend;
     };
 
