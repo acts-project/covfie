@@ -32,7 +32,7 @@ void PropagateWide3D(benchmark::State & state)
     std::size_t n_accesses = 0;
 
     using field_t = typename covfie::field<backend_t>;
-    field_t f(typename field_t::backend_t::configuration_data_t{0.f, 0.f, 2.f});
+    field_t f(typename field_t::backend_t::configuration_t{0.f, 0.f, 2.f});
     typename field_t::view_t fv(f);
 
     std::random_device rd;
@@ -102,7 +102,7 @@ void Sequential1D(benchmark::State & state)
 
     using field_t = typename covfie::field<backend_t>;
 
-    field_t f(typename field_t::backend_t::configuration_data_t{5.f});
+    field_t f(typename field_t::backend_t::configuration_t{5.f});
     typename field_t::view_t fv(f);
 
     unsigned long xr = state.range(0);
@@ -127,7 +127,7 @@ void Sequential2D(benchmark::State & state)
 
     using field_t = typename covfie::field<backend_t>;
 
-    field_t f(typename field_t::backend_t::configuration_data_t{5.f, -2.f});
+    field_t f(typename field_t::backend_t::configuration_t{5.f, -2.f});
     typename field_t::view_t fv(f);
 
     unsigned long xr = state.range(0);
@@ -157,8 +157,7 @@ void Sequential3D(benchmark::State & state)
 
     using field_t = typename covfie::field<backend_t>;
 
-    field_t f(typename field_t::backend_t::configuration_data_t{5.f, -2.f, 6.f}
-    );
+    field_t f(typename field_t::backend_t::configuration_t{5.f, -2.f, 6.f});
     typename field_t::view_t fv(f);
 
     unsigned long xr = state.range(0);

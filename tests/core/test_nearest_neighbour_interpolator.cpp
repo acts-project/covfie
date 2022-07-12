@@ -25,8 +25,8 @@ TEST(TestNearestNeighbourInterpolator, Identity1Nto1F)
                 identity<covfie::vector::uint1, covfie::vector::float1>>>;
 
     field_t f(
-        field_t::backend_t::configuration_data_t({}),
-        field_t::backend_t::backend_t::configuration_data_t({})
+        field_t::backend_t::configuration_t({}),
+        field_t::backend_t::backend_t::configuration_t({})
     );
     field_t::view_t fv(f);
 
@@ -48,8 +48,8 @@ TEST(TestNearestNeighbourInterpolator, Identity2Nto2F)
                 identity<covfie::vector::uint2, covfie::vector::float2>>>;
 
     field_t f(
-        field_t::backend_t::configuration_data_t({}),
-        field_t::backend_t::backend_t::configuration_data_t({})
+        field_t::backend_t::configuration_t({}),
+        field_t::backend_t::backend_t::configuration_t({})
     );
     field_t::view_t fv(f);
 
@@ -69,8 +69,8 @@ TEST(TestNearestNeighbourInterpolator, Identity3Nto3F)
                 identity<covfie::vector::uint3, covfie::vector::float3>>>;
 
     field_t f(
-        field_t::backend_t::configuration_data_t({}),
-        field_t::backend_t::backend_t::configuration_data_t({})
+        field_t::backend_t::configuration_t({}),
+        field_t::backend_t::backend_t::configuration_t({})
     );
     field_t::view_t fv(f);
 

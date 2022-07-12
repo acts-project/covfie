@@ -154,10 +154,9 @@ field_t read_atlas_bfield(const std::string & fn)
     offsets[2] = minz;
 
     field_t field(
-        field_t::backend_t::configuration_data_t{offsets, scales},
-        field_t::backend_t::backend_t::configuration_data_t{},
-        field_t::backend_t::backend_t::backend_t::configuration_data_t{
-            sx, sy, sz}
+        field_t::backend_t::configuration_t{offsets, scales},
+        field_t::backend_t::backend_t::configuration_t{},
+        field_t::backend_t::backend_t::backend_t::configuration_t{sx, sy, sz}
     );
     field_t::view_t fv(field);
 

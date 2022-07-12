@@ -25,7 +25,7 @@ TEST(TestFieldViewCPUArrayBackend, WriteRead1DSingleFloat)
         covfie::vector::ulong1,
         covfie::backend::storage::array<covfie::vector::float1>>>;
 
-    field_t f(field_t::backend_t::configuration_data_t{5u});
+    field_t f(field_t::backend_t::configuration_t{5u});
     field_t::view_t fv(f);
 
     for (std::size_t x = 0; x < 5; ++x) {
@@ -47,7 +47,7 @@ TEST(TestFieldViewCPUArrayBackend, WriteRead1DArrayFloat)
         covfie::vector::ulong1,
         covfie::backend::storage::array<covfie::vector::float3>>>;
 
-    field_t f(field_t::backend_t::configuration_data_t{5u});
+    field_t f(field_t::backend_t::configuration_t{5u});
     field_t::view_t fv(f);
 
     for (std::size_t x = 0; x < 5; ++x) {
@@ -69,7 +69,7 @@ TEST(TestFieldViewCPUArrayBackend, WriteRead2DSingleFloat)
         covfie::vector::ulong2,
         covfie::backend::storage::array<covfie::vector::float1>>>;
 
-    field_t f(field_t::backend_t::configuration_data_t{5u, 7u});
+    field_t f(field_t::backend_t::configuration_t{5u, 7u});
     field_t::view_t fv(f);
 
     for (std::size_t x = 0; x < 5; ++x) {
@@ -95,7 +95,7 @@ TEST(TestFieldViewCPUArrayBackend, WriteRead2DArrayFloat)
         covfie::vector::ulong2,
         covfie::backend::storage::array<covfie::vector::float3>>>;
 
-    field_t f(field_t::backend_t::configuration_data_t{5u, 7u});
+    field_t f(field_t::backend_t::configuration_t{5u, 7u});
     field_t::view_t fv(f);
 
     for (std::size_t x = 0; x < 5; ++x) {
@@ -121,7 +121,7 @@ TEST(TestFieldViewCPUArrayBackend, WriteRead3DSingleFloat)
         covfie::vector::ulong3,
         covfie::backend::storage::array<covfie::vector::float1>>>;
 
-    field_t f(field_t::backend_t::configuration_data_t{5u, 7u, 2u});
+    field_t f(field_t::backend_t::configuration_t{5u, 7u, 2u});
     field_t::view_t fv(f);
 
     for (std::size_t x = 0; x < 5; ++x) {
@@ -154,7 +154,7 @@ TEST(TestFieldViewCPUArrayBackend, WriteRead3DArrayFloat)
         covfie::vector::ulong3,
         covfie::backend::storage::array<covfie::vector::float3>>>;
 
-    field_t f(field_t::backend_t::configuration_data_t{5u, 7u, 2u});
+    field_t f(field_t::backend_t::configuration_t{5u, 7u, 2u});
     field_t::view_t fv(f);
 
     for (std::size_t x = 0; x < 5; ++x) {

@@ -43,14 +43,14 @@ struct identity {
 
     struct owning_data_t;
 
-    struct configuration_data_t {
+    struct configuration_t {
     };
 
     struct owning_data_t {
         using parent_t = this_t;
 
         template <typename... Args>
-        explicit owning_data_t(configuration_data_t)
+        explicit owning_data_t(configuration_t)
         {
         }
 

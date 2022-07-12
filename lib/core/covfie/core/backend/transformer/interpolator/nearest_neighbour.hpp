@@ -40,14 +40,14 @@ struct _nearest_neighbour {
     using covariant_input_t = typename backend_t::covariant_output_t;
     using covariant_output_t = covariant_input_t;
 
-    struct configuration_data_t {
+    struct configuration_t {
     };
 
     struct owning_data_t {
         using parent_t = this_t;
 
         template <typename... Args>
-        explicit owning_data_t(configuration_data_t, Args... args)
+        explicit owning_data_t(configuration_t, Args... args)
             : m_backend(std::forward<Args>(args)...)
         {
         }

@@ -31,7 +31,7 @@ struct constant {
 
     struct owning_data_t;
 
-    struct configuration_data_t {
+    struct configuration_t {
         typename covariant_output_t::vector_t m_value;
     };
 
@@ -39,7 +39,7 @@ struct constant {
         using parent_t = this_t;
 
         template <typename... Args>
-        explicit owning_data_t(configuration_data_t conf)
+        explicit owning_data_t(configuration_t conf)
             : m_value(conf.m_value)
         {
         }

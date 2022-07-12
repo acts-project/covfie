@@ -35,7 +35,23 @@ struct affine {
 
     struct owning_data_t;
 
-    struct configuration_data_t {
+    struct configuration_t {
+        configuration_t(
+            const typename contravariant_input_t::vector_t & offsets,
+            const typename contravariant_input_t::vector_t & scales
+        )
+            : m_offsets(offsets)
+            , m_scales(scales)
+        {
+        }
+
+        template <typename T>
+        configuration_t(const T & o)
+            : m_offsets(o.m_offsets)
+            , m_scales(o.m_scales)
+        {
+        }
+
         typename contravariant_input_t::vector_t m_offsets;
         typename contravariant_input_t::vector_t m_scales;
     };
@@ -44,7 +60,7 @@ struct affine {
         using parent_t = this_t;
 
         template <typename... Args>
-        explicit owning_data_t(configuration_data_t conf, Args... args)
+        explicit owning_data_t(configuration_t conf, Args... args)
             : m_offsets(conf.m_offsets)
             , m_scales(conf.m_scales)
             , m_backend(std::forward<Args>(args)...)

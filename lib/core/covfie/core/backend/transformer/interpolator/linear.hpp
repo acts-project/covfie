@@ -46,14 +46,14 @@ struct linear {
         "Covariant input type of linear interpolator must be an object type."
     );
 
-    struct configuration_data_t {
+    struct configuration_t {
     };
 
     struct owning_data_t {
         using parent_t = this_t;
 
         template <typename... Args>
-        explicit owning_data_t(configuration_data_t, Args... args)
+        explicit owning_data_t(configuration_t, Args... args)
             : m_backend(std::forward<Args>(args)...)
         {
         }

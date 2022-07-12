@@ -44,7 +44,7 @@ struct strided {
     using coordinate_t = typename contravariant_input_t::vector_t;
     using array_t = backend_t;
 
-    struct configuration_data_t {
+    struct configuration_t {
         ndsize_t m_sizes;
     };
 
@@ -114,7 +114,7 @@ struct strided {
         {
         }
 
-        explicit owning_data_t(configuration_data_t conf)
+        explicit owning_data_t(configuration_t conf)
             : m_sizes(conf.m_sizes)
             , m_storage(std::accumulate(
                   std::begin(m_sizes),

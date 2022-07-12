@@ -21,7 +21,7 @@ TEST(TestIdentityBackend, 1Fto1F)
         covfie::vector::float1,
         covfie::vector::float1>>;
 
-    field_t f(field_t::backend_t::configuration_data_t({}));
+    field_t f(field_t::backend_t::configuration_t({}));
 
     field_t::view_t fv(f);
 
@@ -36,7 +36,7 @@ TEST(TestIdentityBackend, 2Fto2F)
         covfie::vector::float2,
         covfie::vector::float2>>;
 
-    field_t f(field_t::backend_t::configuration_data_t({}));
+    field_t f(field_t::backend_t::configuration_t({}));
 
     field_t::view_t fv(f);
 
@@ -54,7 +54,7 @@ TEST(TestIdentityBackend, 3Fto3F)
         covfie::vector::float3,
         covfie::vector::float3>>;
 
-    field_t f(field_t::backend_t::configuration_data_t({}));
+    field_t f(field_t::backend_t::configuration_t({}));
 
     field_t::view_t fv(f);
 

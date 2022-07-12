@@ -129,7 +129,7 @@ int main(int argc, char ** argv)
         out_size = {in_size[0], in_size[1]};
     }
 
-    field_t3 of(field_t3::backend_t::configuration_data_t{out_size});
+    field_t3 of(field_t3::backend_t::configuration_t{out_size});
 
     BOOST_LOG_TRIVIAL(info) << "Creating vector field views...";
 

@@ -30,7 +30,7 @@ using field_t =
 int main(void)
 {
     // Initialize the field as a 10x10 field, then create a view from it.
-    builder_t my_field(builder_t::backend_t::configuration_data_t{10ul, 10ul});
+    builder_t my_field(builder_t::backend_t::configuration_t{10ul, 10ul});
     builder_t::view_t my_view(my_field);
 
     // Assign f(x, y) = (sin x, cos y)
