@@ -44,9 +44,7 @@ struct strided {
     using coordinate_t = typename contravariant_input_t::vector_t;
     using array_t = backend_t;
 
-    struct configuration_t {
-        ndsize_t m_sizes;
-    };
+    using configuration_t = ndsize_t;
 
     struct owning_data_t {
         using parent_t = this_t;
@@ -115,7 +113,7 @@ struct strided {
         }
 
         explicit owning_data_t(configuration_t conf)
-            : m_sizes(conf.m_sizes)
+            : m_sizes(conf)
             , m_storage(std::accumulate(
                   std::begin(m_sizes),
                   std::end(m_sizes),

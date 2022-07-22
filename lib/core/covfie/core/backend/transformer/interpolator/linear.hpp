@@ -13,6 +13,7 @@
 #include <cstddef>
 #include <fstream>
 #include <type_traits>
+#include <variant>
 
 #include <covfie/core/concepts.hpp>
 #include <covfie/core/qualifiers.hpp>
@@ -46,8 +47,7 @@ struct linear {
         "Covariant input type of linear interpolator must be an object type."
     );
 
-    struct configuration_t {
-    };
+    using configuration_t = std::monostate;
 
     struct owning_data_t {
         using parent_t = this_t;

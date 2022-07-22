@@ -41,27 +41,14 @@ struct affine {
 
     struct owning_data_t;
 
-    struct configuration_t {
-        configuration_t(const matrix_t & m)
-            : m_transform(m)
-        {
-        }
-
-        template <typename T>
-        configuration_t(const T & o)
-            : m_transform(o.m_transform)
-        {
-        }
-
-        matrix_t m_transform;
-    };
+    using configuration_t = matrix_t;
 
     struct owning_data_t {
         using parent_t = this_t;
 
         template <typename... Args>
         explicit owning_data_t(configuration_t conf, Args... args)
-            : m_transform(conf.m_transform)
+            : m_transform(conf)
             , m_backend(std::forward<Args>(args)...)
         {
         }
@@ -107,7 +94,7 @@ struct affine {
 
         configuration_t get_configuration(void) const
         {
-            return {m_transform};
+            return m_transform;
         }
 
         matrix_t m_transform;

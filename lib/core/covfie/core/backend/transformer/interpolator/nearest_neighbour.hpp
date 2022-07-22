@@ -14,6 +14,7 @@
 #include <cstddef>
 #include <fstream>
 #include <type_traits>
+#include <variant>
 
 #include <covfie/core/concepts.hpp>
 #include <covfie/core/qualifiers.hpp>
@@ -40,8 +41,7 @@ struct _nearest_neighbour {
     using covariant_input_t = typename backend_t::covariant_output_t;
     using covariant_output_t = covariant_input_t;
 
-    struct configuration_t {
-    };
+    using configuration_t = std::monostate;
 
     struct owning_data_t {
         using parent_t = this_t;

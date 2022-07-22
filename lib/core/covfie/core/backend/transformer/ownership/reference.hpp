@@ -12,6 +12,7 @@
 
 #include <cstddef>
 #include <fstream>
+#include <variant>
 
 #include <covfie/core/concepts.hpp>
 #include <covfie/core/qualifiers.hpp>
@@ -27,8 +28,7 @@ struct reference {
     using contravariant_input_t = typename backend_t::contravariant_input_t;
     using covariant_output_t = typename backend_t::covariant_output_t;
 
-    struct configuration_t {
-    };
+    using configuration_t = std::monostate;
 
     struct owning_data_t {
         using parent_t = this_t;
