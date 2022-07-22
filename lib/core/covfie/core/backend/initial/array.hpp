@@ -18,6 +18,7 @@
 #include <covfie/core/concepts.hpp>
 #include <covfie/core/qualifiers.hpp>
 #include <covfie/core/utility/binary_io.hpp>
+#include <covfie/core/utility/nd_size.hpp>
 #include <covfie/core/vector.hpp>
 
 namespace covfie::backend::storage {
@@ -34,6 +35,8 @@ struct array {
         covfie::vector::array_reference_vector_d<_output_vector_t>;
 
     using vector_t = std::decay_t<typename covariant_output_t::vector_t>;
+
+    using configuration_t = utility::nd_size<contravariant_input_t::dimensions>;
 
     struct owning_data_t {
         using parent_t = this_t;
@@ -69,6 +72,11 @@ struct array {
             m_ptr = std::make_unique<vector_t[]>(m_size);
 
             std::memcpy(m_ptr.get(), o.m_ptr.get(), m_size * sizeof(vector_t));
+        }
+
+        configuration_t get_configuration() const
+        {
+            return {m_size};
         }
 
         void dump(std::ofstream & fs) const

@@ -58,6 +58,11 @@ struct identity {
         {
         }
 
+        configuration_t get_configuration() const
+        {
+            return {};
+        }
+
         void dump(std::ofstream &) const
         {
         }
