@@ -13,6 +13,8 @@
 #include <cstddef>
 #include <fstream>
 
+#include <covfie/core/algebra/affine.hpp>
+#include <covfie/core/algebra/vector.hpp>
 #include <covfie/core/concepts.hpp>
 #include <covfie/core/qualifiers.hpp>
 #include <covfie/core/utility/binary_io.hpp>
@@ -33,27 +35,25 @@ struct affine {
     using covariant_input_t = typename backend_t::covariant_output_t;
     using covariant_output_t = typename backend_t::covariant_output_t;
 
+    using matrix_t = algebra::affine<
+        contravariant_input_t::dimensions,
+        typename contravariant_input_t::scalar_t>;
+
     struct owning_data_t;
 
     struct configuration_t {
-        configuration_t(
-            const typename contravariant_input_t::vector_t & offsets,
-            const typename contravariant_input_t::vector_t & scales
-        )
-            : m_offsets(offsets)
-            , m_scales(scales)
+        configuration_t(const matrix_t & m)
+            : m_transform(m)
         {
         }
 
         template <typename T>
         configuration_t(const T & o)
-            : m_offsets(o.m_offsets)
-            , m_scales(o.m_scales)
+            : m_transform(o.m_transform)
         {
         }
 
-        typename contravariant_input_t::vector_t m_offsets;
-        typename contravariant_input_t::vector_t m_scales;
+        matrix_t m_transform;
     };
 
     struct owning_data_t {
@@ -61,8 +61,7 @@ struct affine {
 
         template <typename... Args>
         explicit owning_data_t(configuration_t conf, Args... args)
-            : m_offsets(conf.m_offsets)
-            , m_scales(conf.m_scales)
+            : m_transform(conf.m_transform)
             , m_backend(std::forward<Args>(args)...)
         {
         }
@@ -75,36 +74,23 @@ struct affine {
                     this_t>,
                 bool> = true>
         explicit owning_data_t(const T & o)
-            : m_offsets(o.m_offsets)
-            , m_scales(o.m_scales)
+            : m_transform(o.m_transform)
             , m_backend(o.m_backend)
         {
         }
 
         explicit owning_data_t(std::ifstream & fs)
-            : m_offsets(utility::read_binary<decltype(m_offsets)>(fs))
-            , m_scales(utility::read_binary<decltype(m_scales)>(fs))
+            : m_transform(utility::read_binary<decltype(m_transform)>(fs))
             , m_backend(fs)
         {
         }
 
         void dump(std::ofstream & fs) const
         {
-            for (std::size_t i = 0; i < contravariant_input_t::dimensions; ++i)
-            {
-                fs.write(
-                    reinterpret_cast<const char *>(&m_offsets[i]),
-                    sizeof(typename decltype(m_offsets)::value_type)
-                );
-            }
-
-            for (std::size_t i = 0; i < contravariant_input_t::dimensions; ++i)
-            {
-                fs.write(
-                    reinterpret_cast<const char *>(&m_scales[i]),
-                    sizeof(typename decltype(m_scales)::value_type)
-                );
-            }
+            fs.write(
+                reinterpret_cast<const char *>(&m_transform),
+                sizeof(decltype(m_transform))
+            );
 
             m_backend.dump(fs);
         }
@@ -121,11 +107,10 @@ struct affine {
 
         configuration_t get_configuration(void) const
         {
-            return {m_offsets, m_scales};
+            return {m_transform};
         }
 
-        typename contravariant_input_t::vector_t m_offsets;
-        typename contravariant_input_t::vector_t m_scales;
+        matrix_t m_transform;
         typename backend_t::owning_data_t m_backend;
     };
 
@@ -133,8 +118,7 @@ struct affine {
         using parent_t = this_t;
 
         non_owning_data_t(const owning_data_t & src)
-            : m_offsets(src.m_offsets)
-            , m_scales(src.m_scales)
+            : m_transform(src.m_transform)
             , m_backend(src.m_backend)
         {
         }
@@ -142,11 +126,26 @@ struct affine {
         COVFIE_DEVICE typename covariant_output_t::vector_t
         at(typename contravariant_input_t::vector_t c) const
         {
+            covfie::algebra::vector<
+                contravariant_input_t::dimensions,
+                typename contravariant_input_t::scalar_t>
+                v;
+
+            for (std::size_t i = 0; i < contravariant_output_t::dimensions; ++i)
+            {
+                v(i) = c[i];
+            }
+
+            covfie::algebra::vector<
+                contravariant_input_t::dimensions,
+                typename contravariant_input_t::scalar_t>
+                nv = m_transform * v;
+
             typename contravariant_output_t::vector_t nc;
 
             for (std::size_t i = 0; i < contravariant_output_t::dimensions; ++i)
             {
-                nc[i] = (c[i] - m_offsets[i]) / m_scales[i];
+                nc[i] = nv(i);
             }
 
             return m_backend.at(nc);
@@ -162,8 +161,7 @@ struct affine {
             return m_backend;
         }
 
-        typename contravariant_input_t::vector_t m_offsets;
-        typename contravariant_input_t::vector_t m_scales;
+        matrix_t m_transform;
         typename backend_t::non_owning_data_t m_backend;
     };
 };

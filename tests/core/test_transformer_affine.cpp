@@ -23,7 +23,9 @@ TEST(TestAffineTransformer, AffineConstant1Dto1D)
             constant<covfie::vector::float1, covfie::vector::float1>>>;
 
     field_t f(
-        field_t::backend_t::configuration_t({{5.f}, {5.f}}),
+        field_t::backend_t::configuration_t(covfie::algebra::affine<1>(
+            std::array<std::array<float, 2>, 1>({{{0.f, 5.f}}})
+        )),
         field_t::backend_t::backend_t::configuration_t({5.f})
     );
 

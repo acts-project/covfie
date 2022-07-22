@@ -14,6 +14,7 @@
 #include <boost/log/trivial.hpp>
 #include <boost/program_options.hpp>
 
+#include <covfie/core/algebra/affine.hpp>
 #include <covfie/core/backend/initial/array.hpp>
 #include <covfie/core/backend/transformer/affine.hpp>
 #include <covfie/core/backend/transformer/interpolator/nearest_neighbour.hpp>
@@ -141,20 +142,16 @@ field_t read_atlas_bfield(const std::string & fn)
 
     BOOST_LOG_TRIVIAL(info) << "Constructing matching vector field...";
 
-    std::array<float, 3> offsets;
-    std::array<float, 3> scales;
-
-    scales[0] = (maxx - minx) / (sx - 1);
-    offsets[0] = minx;
-
-    scales[1] = (maxy - miny) / (sy - 1);
-    offsets[1] = miny;
-
-    scales[2] = (maxz - minz) / (sz - 1);
-    offsets[2] = minz;
+    covfie::algebra::affine<3> translation =
+        covfie::algebra::affine<3>::translation(-minx, -miny, -minz);
+    covfie::algebra::affine<3> scaling = covfie::algebra::affine<3>::scaling(
+        (sx - 1) / (maxx - minx),
+        (sy - 1) / (maxy - miny),
+        (sz - 1) / (maxz - minz)
+    );
 
     field_t field(
-        field_t::backend_t::configuration_t{offsets, scales},
+        field_t::backend_t::configuration_t(scaling * translation),
         field_t::backend_t::backend_t::configuration_t{},
         field_t::backend_t::backend_t::backend_t::configuration_t{sx, sy, sz}
     );
