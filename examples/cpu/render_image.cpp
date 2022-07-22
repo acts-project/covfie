@@ -19,6 +19,7 @@
 #include <covfie/core/backend/transformer/interpolator/linear.hpp>
 #include <covfie/core/backend/transformer/layout/strided.hpp>
 #include <covfie/core/field.hpp>
+#include <covfie/core/utility/nd_size.hpp>
 
 #include "bitmap.hpp"
 
@@ -80,7 +81,7 @@ int main(int argc, char ** argv)
 
     BOOST_LOG_TRIVIAL(info) << "Allocating memory for output image...";
 
-    field_t::backend_t::ndsize_t im_size = fv.backend().get_size();
+    covfie::utility::nd_size<2> im_size = f.backend().get_configuration();
 
     std::unique_ptr<char[]> img =
         std::make_unique<char[]>(im_size[1] * im_size[0]);

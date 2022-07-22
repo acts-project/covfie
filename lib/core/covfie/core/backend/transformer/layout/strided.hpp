@@ -18,6 +18,7 @@
 #include <covfie/core/qualifiers.hpp>
 #include <covfie/core/utility/binary_io.hpp>
 #include <covfie/core/utility/nd_map.hpp>
+#include <covfie/core/utility/nd_size.hpp>
 #include <covfie/core/utility/tuple.hpp>
 #include <covfie/core/vector.hpp>
 
@@ -40,18 +41,17 @@ struct strided {
     using covariant_input_t = typename backend_t::covariant_output_t;
     using covariant_output_t = covariant_input_t;
 
-    using ndsize_t = typename contravariant_input_t::vector_t;
     using coordinate_t = typename contravariant_input_t::vector_t;
     using array_t = backend_t;
 
-    using configuration_t = ndsize_t;
+    using configuration_t = utility::nd_size<contravariant_input_t::dimensions>;
 
     struct owning_data_t {
         using parent_t = this_t;
 
         template <typename T>
         static typename array_t::owning_data_t
-        make_data(ndsize_t sizes, const T & other)
+        make_data(configuration_t sizes, const T & other)
         {
             typename T::parent_t::non_owning_data_t nother(other);
 
@@ -151,15 +151,10 @@ struct strided {
 
         configuration_t get_configuration(void) const
         {
-            return {m_sizes};
-        }
-
-        ndsize_t get_size() const
-        {
             return m_sizes;
         }
 
-        ndsize_t m_sizes;
+        configuration_t m_sizes;
         typename backend_t::owning_data_t m_storage;
     };
 
@@ -193,11 +188,6 @@ struct strided {
             return m_storage[idx];
         }
 
-        COVFIE_DEVICE ndsize_t get_size() const
-        {
-            return m_sizes;
-        }
-
         typename backend_t::non_owning_data_t & get_backend(void)
         {
             return m_storage;
@@ -208,7 +198,7 @@ struct strided {
             return m_storage;
         }
 
-        ndsize_t m_sizes;
+        configuration_t m_sizes;
         typename backend_t::non_owning_data_t m_storage;
     };
 };

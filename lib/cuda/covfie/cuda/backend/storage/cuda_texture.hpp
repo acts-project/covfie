@@ -56,7 +56,8 @@ struct cuda_texture {
 
             typename T::parent_t::non_owning_data_t no(o);
 
-            typename T::parent_t::ndsize_t srcSize = o.get_size();
+            typename T::parent_t::configuration_t srcSize =
+                o.get_configuration();
 
             cudaExtent extent = make_cudaExtent(
                 _input_vector_t::size >= 1 ? srcSize[0] : 0,

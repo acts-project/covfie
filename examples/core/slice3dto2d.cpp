@@ -33,6 +33,7 @@
 #include <covfie/core/backend/transformer/layout/strided.hpp>
 #include <covfie/core/backend/transformer/ownership/reference.hpp>
 #include <covfie/core/field.hpp>
+#include <covfie/core/utility/nd_size.hpp>
 
 void parse_opts(
     int argc, char * argv[], boost::program_options::variables_map & vm
@@ -117,9 +118,9 @@ int main(int argc, char ** argv)
 
     BOOST_LOG_TRIVIAL(info) << "Building new output vector field...";
 
-    field_t2::backend_t::backend_t::ndsize_t in_size =
-        ifv.backend().get_backend().get_size();
-    field_t3::backend_t::ndsize_t out_size;
+    covfie::utility::nd_size<3> in_size =
+        nf.backend().get_backend().get_configuration();
+    covfie::utility::nd_size<2> out_size;
 
     if (vm["axis"].as<std::string>() == "x") {
         out_size = {in_size[1], in_size[2]};
