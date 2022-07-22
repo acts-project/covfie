@@ -70,22 +70,19 @@ concept field_backend = requires
      * that the configuration is stricly for the transformer, and not for its
      * children.
      */
-    requires T::is_initial || requires
+    typename T::configuration_t;
+
+    requires std::is_trivially_destructible_v<typename T::configuration_t>;
+    requires
+        std::is_trivially_copy_constructible_v<typename T::configuration_t>;
+    requires
+        std::is_trivially_move_constructible_v<typename T::configuration_t>;
+
+    requires requires(const typename T::owning_data_t & o)
     {
-        typename T::configuration_t;
-
-        requires std::is_trivially_destructible_v<typename T::configuration_t>;
-        requires
-            std::is_trivially_copy_constructible_v<typename T::configuration_t>;
-        requires
-            std::is_trivially_move_constructible_v<typename T::configuration_t>;
-
-        requires requires(const typename T::owning_data_t & o)
         {
-            {
-                o.get_configuration()
-                } -> std::same_as<typename T::configuration_t>;
-        };
+            o.get_configuration()
+            } -> std::same_as<typename T::configuration_t>;
     };
 
     /*
