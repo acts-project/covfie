@@ -13,6 +13,8 @@
 #include <array>
 #include <cstddef>
 
+#include <covfie/core/qualifiers.hpp>
+
 namespace covfie::algebra {
 template <
     std::size_t N,
@@ -20,11 +22,11 @@ template <
     typename T = float,
     typename I = std::size_t>
 struct matrix {
-    matrix()
+    COVFIE_DEVICE matrix()
     {
     }
 
-    matrix(std::array<std::array<T, M>, N> l)
+    COVFIE_DEVICE matrix(std::array<std::array<T, M>, N> l)
     {
         for (I i = 0; i < l.size(); ++i) {
             for (I j = 0; j < l[i].size(); ++j) {
@@ -33,18 +35,21 @@ struct matrix {
         }
     }
 
-    T operator()(const I i, const I j) const
+    COVFIE_DEVICE matrix(const matrix<N, M, T, I> &) = default;
+
+    COVFIE_DEVICE T operator()(const I i, const I j) const
     {
         return m_elems[i][j];
     }
 
-    T & operator()(const I i, const I j)
+    COVFIE_DEVICE T & operator()(const I i, const I j)
     {
         return m_elems[i][j];
     }
 
     template <std::size_t P>
-    matrix<N, P, T, I> operator*(const matrix<M, P, T, I> & o)
+    COVFIE_DEVICE matrix<N, P, T, I> operator*(const matrix<M, P, T, I> & o
+    ) const
     {
         matrix<N, P, T, I> r;
 
@@ -61,6 +66,19 @@ struct matrix {
         }
 
         return r;
+    }
+
+    COVFIE_DEVICE static matrix<N, M, T, I> identity()
+    {
+        matrix<N, M, T, I> result;
+
+        for (I i = 0; i < N; ++i) {
+            for (I j = 0; j < M; ++j) {
+                result(i, j) = (i == j) ? static_cast<T>(1) : static_cast<T>(0);
+            }
+        }
+
+        return result;
     }
 
 private:

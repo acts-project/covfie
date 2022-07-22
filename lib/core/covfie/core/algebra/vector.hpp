@@ -16,16 +16,17 @@
 #include <utility>
 
 #include <covfie/core/algebra/matrix.hpp>
+#include <covfie/core/qualifiers.hpp>
 
 namespace covfie::algebra {
 template <std::size_t N, typename T = float, typename I = std::size_t>
 struct vector : public matrix<N, 1, T, I> {
-    vector()
+    COVFIE_DEVICE vector()
         : matrix<N, 1, T, I>()
     {
     }
 
-    vector(std::array<T, N> l)
+    COVFIE_DEVICE vector(std::array<T, N> l)
         : matrix<N, 1, T, I>()
     {
         for (I i = 0; i < N; ++i) {
@@ -33,7 +34,7 @@ struct vector : public matrix<N, 1, T, I> {
         }
     }
 
-    vector(const matrix<N, 1, T, I> & o)
+    COVFIE_DEVICE vector(const matrix<N, 1, T, I> & o)
         : matrix<N, 1, T, I>(o)
     {
     }
@@ -44,17 +45,17 @@ struct vector : public matrix<N, 1, T, I> {
             (std::is_scalar_v<Args> && ...) &&
                 (std::is_convertible_v<Args, T> && ...) && sizeof...(Args) == N,
             bool> = true>
-    vector(Args... args)
+    COVFIE_DEVICE vector(Args... args)
         : vector(std::array<T, N>{std::forward<Args>(args)...})
     {
     }
 
-    T operator()(const I & i) const
+    COVFIE_DEVICE T operator()(const I & i) const
     {
         return matrix<N, 1, T, I>::operator()(i, 0);
     }
 
-    T & operator()(const I & i)
+    COVFIE_DEVICE T & operator()(const I & i)
     {
         return matrix<N, 1, T, I>::operator()(i, 0);
     }
