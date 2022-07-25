@@ -9,11 +9,15 @@
 # All the tests here will require Google Test, so we will go ahead and find it.
 find_package(benchmark CONFIG REQUIRED)
 
+# All of these benchmarks rely on the Boost MP11 library.
+find_package(
+    Boost
+    1.71.0
+    REQUIRED
+)
+
 # Common benchmarking components must be build.
 add_subdirectory(common)
-
-# The core library tests are always built (if tests are built at all).
-add_subdirectory(core)
 
 # The CPU tests are only built if requested.
 if(COVFIE_PLATFORM_CPU)
