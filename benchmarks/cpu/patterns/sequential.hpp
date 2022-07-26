@@ -18,7 +18,6 @@ struct Sequential1D : covfie::benchmark::AccessPattern<Sequential1D> {
     };
 
     static constexpr std::array<std::string_view, 1> parameter_names = {"X"};
-    static constexpr std::string_view name = "Sequential1D";
 
     template <typename backend_t>
     static void
@@ -53,7 +52,6 @@ struct Sequential2D : covfie::benchmark::AccessPattern<Sequential2D> {
 
     static constexpr std::array<std::string_view, 2> parameter_names = {
         "X", "Y"};
-    static constexpr std::string_view name = "Sequential2D";
 
     template <typename backend_t>
     static void

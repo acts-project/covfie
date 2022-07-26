@@ -20,7 +20,6 @@ struct LorentzEulerWide : covfie::benchmark::AccessPattern<LorentzEulerWide> {
 
     static constexpr std::array<std::string_view, 2> parameter_names = {
         "N", "S"};
-    static constexpr std::string_view name = "LorentzEulerWide";
 
     template <typename backend_t>
     static void iteration(
@@ -106,7 +105,6 @@ struct LorentzEulerDeep : covfie::benchmark::AccessPattern<LorentzEulerDeep> {
 
     static constexpr std::array<std::string_view, 2> parameter_names = {
         "N", "S"};
-    static constexpr std::string_view name = "LorentzEulerDeep";
 
     template <typename backend_t>
     static void iteration(

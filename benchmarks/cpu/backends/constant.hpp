@@ -23,10 +23,4 @@ struct Constant {
         return covfie::field<backend_t>(typename backend_t::configuration_t{0.f}
         );
     }
-
-    static std::string get_name()
-    {
-        return "Constant<float" + std::to_string(N) + ", float" +
-               std::to_string(M) + ">";
-    }
 };

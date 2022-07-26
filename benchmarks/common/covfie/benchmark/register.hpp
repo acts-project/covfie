@@ -11,6 +11,7 @@
 #pragma once
 
 #include <benchmark/benchmark.h>
+#include <boost/core/demangle.hpp>
 
 namespace covfie::benchmark {
 template <typename Pattern, typename Backend>
@@ -23,7 +24,8 @@ void register_bm()
         Pattern::get_parameter_ranges();
 
     ::benchmark::RegisterBenchmark(
-        (std::string(Pattern::name) + "/" + std::string(Backend::get_name()))
+        (boost::core::demangle(typeid(Pattern).name()) + "/" +
+         std::string(boost::core::demangle(typeid(Backend).name())))
             .c_str(),
         [](::benchmark::State & state) {
             Benchmark::execute(state, Backend::get_field());

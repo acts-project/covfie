@@ -20,9 +20,4 @@ struct AtlasBase {
     {
         return atlas_field_t(get_atlas_field());
     }
-
-    static std::string get_name()
-    {
-        return "AtlasBase";
-    }
 };
