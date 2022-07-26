@@ -28,6 +28,7 @@ add_executable(
     test_nearest_neighbour_interpolator.cpp
     test_algebra.cpp
     test_static_permutation.cpp
+    test_utility_numeric.cpp
 )
 
 # Ensure that the tests are linked against the required libraries.
