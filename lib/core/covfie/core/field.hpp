@@ -49,7 +49,7 @@ public:
     {
     }
 
-    const storage_t & backend(void)
+    const storage_t & backend(void) const
     {
         return m_backend;
     }
