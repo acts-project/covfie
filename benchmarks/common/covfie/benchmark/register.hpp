@@ -12,6 +12,7 @@
 
 #include <benchmark/benchmark.h>
 #include <boost/core/demangle.hpp>
+#include <boost/mp11.hpp>
 
 namespace covfie::benchmark {
 template <typename Pattern, typename Backend>
@@ -35,5 +36,36 @@ void register_bm()
             {Pattern::parameter_names.begin(), Pattern::parameter_names.end()}
         )
         ->ArgsProduct({parameter_ranges.begin(), parameter_ranges.end()});
+}
+
+template <typename>
+struct register_product_bm_helper_helper {
+};
+
+template <typename Pattern, typename Backend>
+struct register_product_bm_helper_helper<std::pair<Pattern, Backend>> {
+    static void reg()
+    {
+        register_bm<Pattern, Backend>();
+    }
+};
+
+template <typename>
+struct register_product_bm_helper {
+};
+
+template <typename... Pairs>
+struct register_product_bm_helper<boost::mp11::mp_list<Pairs...>> {
+    static void reg()
+    {
+        (register_product_bm_helper_helper<Pairs>::reg(), ...);
+    }
+};
+
+template <typename PatternList, typename BackendList>
+void register_product_bm()
+{
+    register_product_bm_helper<
+        boost::mp11::mp_product<std::pair, PatternList, BackendList>>::reg();
 }
 }
