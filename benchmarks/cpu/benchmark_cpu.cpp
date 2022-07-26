@@ -12,6 +12,7 @@
 
 #include <covfie/benchmark/register.hpp>
 
+#include "backends/atlas.hpp"
 #include "backends/constant.hpp"
 #include "patterns/lorentz_euler.hpp"
 #include "patterns/sequential.hpp"
@@ -21,7 +22,10 @@ void register_benchmarks(void)
     covfie::benchmark::register_bm<Sequential1D, Constant<float, 1, 1>>();
     covfie::benchmark::register_bm<Sequential2D, Constant<float, 2, 1>>();
     covfie::benchmark::register_bm<Sequential2D, Constant<float, 2, 2>>();
+    covfie::benchmark::register_bm<LorentzEulerDeep, Constant<float, 3, 3>>();
+    covfie::benchmark::register_bm<LorentzEulerDeep, AtlasBase>();
     covfie::benchmark::register_bm<LorentzEulerWide, Constant<float, 3, 3>>();
+    covfie::benchmark::register_bm<LorentzEulerWide, AtlasBase>();
 }
 
 int main(int argc, char ** argv)
