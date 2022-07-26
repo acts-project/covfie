@@ -206,7 +206,7 @@ struct strided {
                 idx += tmp;
             }
 
-            return m_storage[idx];
+            return m_storage.at({idx});
         }
 
         typename backend_t::non_owning_data_t & get_backend(void)

@@ -184,7 +184,7 @@ struct cuda_texture {
         }
 
         COVFIE_DEVICE typename covariant_output_t::vector_t
-        operator[](typename contravariant_input_t::vector_t i) const
+        at(typename contravariant_input_t::vector_t i) const
         {
             channel_t r;
 
@@ -207,12 +207,6 @@ struct cuda_texture {
             }
 
             return {};
-        }
-
-        COVFIE_DEVICE typename covariant_output_t::vector_t
-        at(typename contravariant_input_t::vector_t i) const
-        {
-            return operator[](i);
         }
 
         cudaTextureObject_t m_tex;
