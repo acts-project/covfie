@@ -92,7 +92,7 @@ struct _nearest_neighbour {
 
             for (std::size_t i = 0; i < contravariant_output_t::dimensions; ++i)
             {
-                nc[i] = std::lround(c[i]);
+                nc[i] = std::nearbyint(c[i]);
             }
 
             return m_backend.at(nc);
