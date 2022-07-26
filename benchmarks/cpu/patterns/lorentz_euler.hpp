@@ -37,7 +37,7 @@ struct LorentzEulerWide : covfie::benchmark::AccessPattern<LorentzEulerWide> {
         std::uniform_real_distribution<> phi_dist(0.f, 2.f * 3.1415927f);
         std::uniform_real_distribution<> costheta_dist(-1.f, 1.f);
 
-        float ss = 1.f / 1000000.f;
+        float ss = 0.001f;
 
         std::vector<covfie::benchmark::lorentz_agent<3>> objs(p.particles);
 
@@ -49,9 +49,9 @@ struct LorentzEulerWide : covfie::benchmark::AccessPattern<LorentzEulerWide> {
             objs[i].pos[1] = 0.f;
             objs[i].pos[2] = 0.f;
 
-            objs[i].mom[0] = std::sin(theta) * std::cos(phi);
-            objs[i].mom[1] = std::sin(theta) * std::sin(phi);
-            objs[i].mom[2] = std::cos(theta);
+            objs[i].mom[0] = 100.f * std::sin(theta) * std::cos(phi);
+            objs[i].mom[1] = 100.f * std::sin(theta) * std::sin(phi);
+            objs[i].mom[2] = 100.f * std::cos(theta);
         }
 
         state.ResumeTiming();
