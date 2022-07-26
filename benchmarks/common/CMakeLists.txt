@@ -6,16 +6,20 @@
 # v. 2.0. If a copy of the MPL was not distributed with this file, You can
 # obtain one at http://mozilla.org/MPL/2.0/.
 
-add_library(covfie_benchmark INTERFACE)
+add_library(
+    covfie_benchmark
+    SHARED
+    atlas.cpp
+)
 
 target_include_directories(
     covfie_benchmark
-    INTERFACE
+    PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
 target_link_libraries(
     covfie_benchmark
-    INTERFACE
+    PUBLIC
     covfie_core
 )
