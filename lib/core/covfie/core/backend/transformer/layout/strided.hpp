@@ -10,6 +10,7 @@
 
 #pragma once
 
+#include <memory>
 #include <numeric>
 #include <type_traits>
 
@@ -46,72 +47,95 @@ struct strided {
 
     using configuration_t = utility::nd_size<contravariant_input_t::dimensions>;
 
+    template <typename T>
+    static std::unique_ptr<
+        std::decay_t<typename backend_t::covariant_output_t::vector_t>[]>
+    make_strided_copy(const T & other) {
+        configuration_t sizes = other.get_configuration();
+        std::unique_ptr<
+            std::decay_t<typename backend_t::covariant_output_t::vector_t>[]>
+            res = std::make_unique<std::decay_t<
+                typename backend_t::covariant_output_t::vector_t>[]>(
+                std::accumulate(
+                    std::begin(sizes),
+                    std::end(sizes),
+                    1,
+                    std::multiplies<std::size_t>()
+                )
+            );
+        typename T::parent_t::non_owning_data_t nother(other);
+
+        using tuple_t = decltype(std::tuple_cat(
+            std::declval<
+                std::array<std::size_t, contravariant_input_t::dimensions>>()
+        ));
+
+        utility::nd_map<tuple_t>(
+            [&sizes, &nother, &res](tuple_t t) {
+                coordinate_t c = utility::to_array(t);
+                typename contravariant_input_t::scalar_t idx = 0;
+
+                for (std::size_t k = 0; k < contravariant_input_t::dimensions;
+                     ++k) {
+                    typename contravariant_input_t::scalar_t tmp = c[k];
+
+                    for (std::size_t l = k + 1;
+                         l < contravariant_input_t::dimensions;
+                         ++l) {
+                        tmp *= sizes[l];
+                    }
+
+                    idx += tmp;
+                }
+
+                for (std::size_t i = 0; i < covariant_output_t::dimensions; ++i)
+                {
+                    res[idx][i] = nother.at(c)[i];
+                }
+            },
+            std::tuple_cat(sizes)
+        );
+
+        return res;
+    }
+
     struct owning_data_t {
         using parent_t = this_t;
 
-        template <typename T>
-        static typename array_t::owning_data_t
-        make_data(configuration_t sizes, const T & other)
+        template <
+            typename T,
+            typename B = backend_t,
+            std::enable_if_t<
+                std::is_same_v<
+                    typename T::parent_t::configuration_t,
+                    configuration_t>,
+                bool> = true,
+            std::enable_if_t<
+                std::is_constructible_v<
+                    typename B::owning_data_t,
+                    std::size_t,
+                    std::add_rvalue_reference_t<std::unique_ptr<std::decay_t<
+                        typename B::covariant_output_t::vector_t>[]>>>,
+                bool> = true>
+        explicit owning_data_t(const T & o)
+            : m_sizes(o.get_configuration())
+            , m_storage(
+                  std::accumulate(
+                      std::begin(m_sizes),
+                      std::end(m_sizes),
+                      1,
+                      std::multiplies<std::size_t>()
+                  ),
+                  make_strided_copy(o)
+              )
         {
-            typename T::parent_t::non_owning_data_t nother(other);
-
-            typename array_t::owning_data_t tmp(std::accumulate(
-                std::begin(sizes),
-                std::end(sizes),
-                1,
-                std::multiplies<std::size_t>()
-            ));
-            typename array_t::non_owning_data_t sv(tmp);
-
-            using tuple_t = decltype(std::tuple_cat(
-                std::declval<
-                    std::array<std::size_t, contravariant_input_t::dimensions>>(
-                )
-            ));
-
-            utility::nd_map<tuple_t>(
-                [&sizes, &sv, &nother](tuple_t t) {
-                    coordinate_t c = utility::to_array(t);
-                    typename contravariant_input_t::scalar_t idx = 0;
-
-                    for (std::size_t k = 0;
-                         k < contravariant_input_t::dimensions;
-                         ++k) {
-                        typename contravariant_input_t::scalar_t tmp = c[k];
-
-                        for (std::size_t l = k + 1;
-                             l < contravariant_input_t::dimensions;
-                             ++l) {
-                            tmp *= sizes[l];
-                        }
-
-                        idx += tmp;
-                    }
-
-                    for (std::size_t i = 0; i < covariant_output_t::dimensions;
-                         ++i) {
-                        sv[idx][i] = nother.at(c)[i];
-                    }
-                },
-                std::tuple_cat(sizes)
-            );
-
-            return tmp;
         }
 
         template <
-            typename T,
+            typename B = backend_t,
             std::enable_if_t<
-                std::is_same_v<
-                    typename T::parent_t::template reapply<backend_t>,
-                    this_t>,
+                std::is_constructible_v<typename B::owning_data_t, std::size_t>,
                 bool> = true>
-        explicit owning_data_t(const T & o)
-            : m_sizes(o.m_sizes)
-            , m_storage(o.m_storage)
-        {
-        }
-
         explicit owning_data_t(configuration_t conf)
             : m_sizes(conf)
             , m_storage(std::accumulate(

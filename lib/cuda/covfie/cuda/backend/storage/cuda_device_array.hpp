@@ -35,11 +35,13 @@ struct cuda_device_array {
     using value_t = typename output_vector_t::type[size];
     using vector_t = std::decay_t<typename covariant_output_t::vector_t>;
 
+    using configuration_t = utility::nd_size<1>;
+
     struct owning_data_t {
-        owning_data_t(
-            const typename array<output_vector_t, _index_t>::owning_data_t & o
+        explicit owning_data_t(
+            std::size_t size, std::unique_ptr<vector_t[]> && ptr
         )
-            : m_size(o.m_size)
+            : m_size(size)
             , m_ptr(nullptr)
         {
             cudaErrorCheck(cudaMalloc(
@@ -47,7 +49,7 @@ struct cuda_device_array {
             ));
             cudaErrorCheck(cudaMemcpy(
                 m_ptr,
-                o.m_ptr.get(),
+                ptr.get(),
                 m_size * sizeof(vector_t),
                 cudaMemcpyHostToDevice
             ));

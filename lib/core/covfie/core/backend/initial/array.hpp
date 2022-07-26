@@ -53,6 +53,14 @@ struct array {
         {
         }
 
+        explicit owning_data_t(
+            std::size_t size, std::unique_ptr<vector_t[]> && ptr
+        )
+            : m_size(size)
+            , m_ptr(std::forward(ptr))
+        {
+        }
+
         explicit owning_data_t(std::ifstream & fs)
             : m_size(utility::read_binary<decltype(m_size)>(fs))
             , m_ptr(utility::read_binary_array<vector_t>(fs, m_size))
