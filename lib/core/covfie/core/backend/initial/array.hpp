@@ -57,7 +57,7 @@ struct array {
             std::size_t size, std::unique_ptr<vector_t[]> && ptr
         )
             : m_size(size)
-            , m_ptr(std::forward(ptr))
+            , m_ptr(std::move(ptr))
         {
         }
 
