@@ -24,4 +24,9 @@ struct lorentz_agent {
     float pos[N];
     float mom[N];
 };
+
+template <typename T, std::size_t N>
+struct random_agent {
+    T pos[N];
+};
 }

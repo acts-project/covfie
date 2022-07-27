@@ -78,7 +78,7 @@ struct LorentzEulerWide : covfie::benchmark::AccessPattern<LorentzEulerWide> {
 
     static std::vector<std::vector<int64_t>> get_parameter_ranges()
     {
-        return {{1, 8, 64, 512, 4096}, {1, 8, 64, 512, 4096}};
+        return {{1024, 2048, 4096, 8192}, {1024, 2048, 4096}};
     }
 
     static parameters get_parameters(benchmark::State & state)
@@ -163,7 +163,7 @@ struct LorentzEulerDeep : covfie::benchmark::AccessPattern<LorentzEulerDeep> {
 
     static std::vector<std::vector<int64_t>> get_parameter_ranges()
     {
-        return {{1, 8, 64, 512, 4096}, {1, 8, 64, 512, 4096}};
+        return {{1024, 2048, 4096, 8192}, {1024, 2048, 4096}};
     }
 
     static parameters get_parameters(benchmark::State & state)

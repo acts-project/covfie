@@ -9,12 +9,14 @@
  */
 
 #include <benchmark/benchmark.h>
+#include <boost/mp11.hpp>
 
 #include <covfie/benchmark/register.hpp>
 
 #include "backends/atlas.hpp"
 #include "backends/constant.hpp"
 #include "patterns/lorentz_euler.hpp"
+#include "patterns/random.hpp"
 #include "patterns/sequential.hpp"
 
 void register_benchmarks(void)
@@ -22,10 +24,19 @@ void register_benchmarks(void)
     covfie::benchmark::register_bm<Sequential1D, Constant<float, 1, 1>>();
     covfie::benchmark::register_bm<Sequential2D, Constant<float, 2, 1>>();
     covfie::benchmark::register_bm<Sequential2D, Constant<float, 2, 2>>();
-    covfie::benchmark::register_bm<LorentzEulerDeep, Constant<float, 3, 3>>();
-    covfie::benchmark::register_bm<LorentzEulerDeep, AtlasBase>();
-    covfie::benchmark::register_bm<LorentzEulerWide, Constant<float, 3, 3>>();
-    covfie::benchmark::register_bm<LorentzEulerWide, AtlasBase>();
+    covfie::benchmark::register_product_bm<
+        boost::mp11::mp_list<LorentzEulerDeep, LorentzEulerWide, RandomFloat>,
+        boost::mp11::mp_list<
+            Constant<float, 3, 3>,
+            AtlasBaseNN,
+            AtlasApproxNN,
+            AtlasMortonNN,
+            AtlasBaseLin,
+            AtlasApproxLin,
+            AtlasMortonLin>>();
+    covfie::benchmark::register_product_bm<
+        boost::mp11::mp_list<RandomIntegral>,
+        boost::mp11::mp_list<AtlasIntBase, AtlasIntMorton>>();
 }
 
 int main(int argc, char ** argv)
