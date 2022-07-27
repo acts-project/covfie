@@ -35,7 +35,7 @@ void register_benchmarks(void)
             AtlasApproxLin,
             AtlasMortonLin>>();
     covfie::benchmark::register_product_bm<
-        boost::mp11::mp_list<RandomIntegral>,
+        boost::mp11::mp_list<RandomIntegral, Sequential3D, Sequential3DZYX>,
         boost::mp11::mp_list<AtlasIntBase, AtlasIntMorton>>();
 }
 
