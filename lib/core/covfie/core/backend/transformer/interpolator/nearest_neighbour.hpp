@@ -49,6 +49,19 @@ struct _nearest_neighbour {
         {
         }
 
+        template <
+            typename T,
+            typename... Args,
+            std::enable_if_t<
+                std::is_same_v<
+                    typename T::parent_t::configuration_t,
+                    std::monostate>,
+                bool> = true>
+        explicit owning_data_t(const T & o)
+            : m_backend(o.get_backend())
+        {
+        }
+
         explicit owning_data_t(std::ifstream & fs)
             : m_backend(fs)
         {
