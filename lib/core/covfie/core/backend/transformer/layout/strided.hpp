@@ -144,6 +144,19 @@ struct strided {
         {
         }
 
+        template <
+            typename... Args,
+            typename B = backend_t,
+            std::enable_if_t<
+                !std::
+                    is_constructible_v<typename B::owning_data_t, std::size_t>,
+                bool> = true>
+        explicit owning_data_t(configuration_t conf, Args... args)
+            : m_sizes(conf)
+            , m_storage(std::forward<Args>(args)...)
+        {
+        }
+
         explicit owning_data_t(std::ifstream & fs)
             : m_sizes(utility::read_binary<decltype(m_sizes)>(fs))
             , m_storage(fs)
