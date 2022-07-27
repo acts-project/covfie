@@ -8,6 +8,7 @@
  * obtain one at http://mozilla.org/MPL/2.0/.
  */
 
+#include <iostream>
 #include <random>
 
 #include <covfie/benchmark/pattern.hpp>
@@ -100,11 +101,11 @@ struct LorentzEulerWide : covfie::benchmark::AccessPattern<LorentzEulerWide> {
 
 struct LorentzEulerDeep : covfie::benchmark::AccessPattern<LorentzEulerDeep> {
     struct parameters {
-        std::size_t particles, steps;
+        std::size_t particles, steps, imom;
     };
 
-    static constexpr std::array<std::string_view, 2> parameter_names = {
-        "N", "S"};
+    static constexpr std::array<std::string_view, 3> parameter_names = {
+        "N", "S", "I"};
 
     template <typename backend_t>
     static void iteration(
@@ -133,9 +134,11 @@ struct LorentzEulerDeep : covfie::benchmark::AccessPattern<LorentzEulerDeep> {
             objs[i].pos[1] = 0.f;
             objs[i].pos[2] = 0.f;
 
-            objs[i].mom[0] = 100 * std::sin(theta) * std::cos(phi);
-            objs[i].mom[1] = 100 * std::sin(theta) * std::sin(phi);
-            objs[i].mom[2] = 100 * std::cos(theta);
+            objs[i].mom[0] =
+                static_cast<float>(p.imom) * std::sin(theta) * std::cos(phi);
+            objs[i].mom[1] =
+                static_cast<float>(p.imom) * std::sin(theta) * std::sin(phi);
+            objs[i].mom[2] = static_cast<float>(p.imom) * std::cos(theta);
         }
 
         state.ResumeTiming();
@@ -154,6 +157,15 @@ struct LorentzEulerDeep : covfie::benchmark::AccessPattern<LorentzEulerDeep> {
                 o.pos[1] += o.mom[1] * ss;
                 o.pos[2] += o.mom[2] * ss;
 
+                if (o.pos[0] < -10000.f || o.pos[0] > 10000.f ||
+                    o.pos[1] < -10000.f || o.pos[1] > 10000.f ||
+                    o.pos[2] < -15000.f || o.pos[2] > 15000.f)
+                {
+                    o.pos[0] = 0.f;
+                    o.pos[1] = 0.f;
+                    o.pos[2] = 0.f;
+                }
+
                 o.mom[0] += f[0] * ss;
                 o.mom[1] += f[1] * ss;
                 o.mom[2] += f[2] * ss;
@@ -163,14 +175,18 @@ struct LorentzEulerDeep : covfie::benchmark::AccessPattern<LorentzEulerDeep> {
 
     static std::vector<std::vector<int64_t>> get_parameter_ranges()
     {
-        return {{1024, 2048, 4096, 8192}, {1024, 2048, 4096}};
+        return {
+            {1024, 4096, 16384, 65536},
+            {1024, 4096, 16384, 65536},
+            {128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768}};
     }
 
     static parameters get_parameters(benchmark::State & state)
     {
         return {
             static_cast<std::size_t>(state.range(0)),
-            static_cast<std::size_t>(state.range(1))};
+            static_cast<std::size_t>(state.range(1)),
+            static_cast<std::size_t>(state.range(2))};
     }
 
     template <typename S, std::size_t N>
