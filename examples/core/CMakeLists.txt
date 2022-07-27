@@ -67,3 +67,11 @@ target_link_libraries(
     Boost::log_setup
     Boost::program_options
 )
+
+add_library(asm asm.cpp)
+target_link_libraries(
+    asm
+
+    PRIVATE
+    covfie_core
+)
