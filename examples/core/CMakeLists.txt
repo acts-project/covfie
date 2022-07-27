@@ -68,6 +68,23 @@ target_link_libraries(
     Boost::program_options
 )
 
+# Add the an executable to scale up the ATLAS field.
+add_executable(
+    scaleup_atlas_bfield
+
+    scaleup_atlas_bfield.cpp
+)
+
+target_link_libraries(
+    scaleup_atlas_bfield
+
+    PRIVATE
+    covfie_core
+    Boost::log
+    Boost::log_setup
+    Boost::program_options
+)
+
 add_library(asm asm.cpp)
 target_link_libraries(
     asm
