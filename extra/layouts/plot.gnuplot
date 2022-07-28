@@ -21,12 +21,26 @@ set logscale y
 set ylabel "R. throughput"
 set xlabel "Number of dimensions"
 
-set output "layout_throughput.tex"
-plot "output.csv" u 1:2 every ::1 w linespoints pt 1 lc "#b6251c" t "Morton (naive)",\
-     "" u 1:3 every ::1 w linespoints pt 1 lc "#149b52" t "Morton (\\texttt{PDAP})",\
+set output "layout_CLANG_znver2.tex"
+plot "output_CLANG_znver2.csv" u 1:2 every ::1 w linespoints pt 1 lc "#b6251c" t "Morton (naive)",\
+     "" u 1:3 every ::1 w linespoints pt 1 lc "#149b52" t "Morton (\\texttt{PDEP})",\
      "" u 1:6 every ::1 w linespoints pt 1 lc "#52399d" t "Pitched (naive)",\
-     "" u 1:5 every ::1 w linespoints pt 1 lc "#FFCA3A" t "Pitched (precomp.)"#,\
-#     "" u 1:7 every ::1 w linespoints pt 2 dt "-" lc "#b6251c" t "Morton (gcc, naive)",\
-#     "" u 1:8 every ::1 w linespoints pt 2 dt "-" lc "#149b52" t "Morton (gcc, \\texttt{PDAP})",\
-#     "" u 1:10 every ::1 w linespoints pt 2 dt "-" lc "#FFCA3A"  t "Pitched (gcc, precalc)",\
-#     "" u 1:11 every ::1 w linespoints pt 2 dt "-" lc "#52399d" t "Pitched (gcc, fast)"
+     "" u 1:5 every ::1 w linespoints pt 1 lc "#FFCA3A" t "Pitched (precomp.)"
+
+set output "layout_GCC_znver2.tex"
+plot "output_GCC_znver2.csv" u 1:2 every ::1 w linespoints pt 1 lc "#b6251c" t "Morton (naive)",\
+     "" u 1:3 every ::1 w linespoints pt 1 lc "#149b52" t "Morton (\\texttt{PDEP})",\
+     "" u 1:6 every ::1 w linespoints pt 1 lc "#52399d" t "Pitched (naive)",\
+     "" u 1:5 every ::1 w linespoints pt 1 lc "#FFCA3A" t "Pitched (precomp.)"
+
+set output "layout_CLANG_haswell.tex"
+plot "output_CLANG_haswell.csv" u 1:2 every ::1 w linespoints pt 1 lc "#b6251c" t "Morton (naive)",\
+     "" u 1:3 every ::1 w linespoints pt 1 lc "#149b52" t "Morton (\\texttt{PDEP})",\
+     "" u 1:6 every ::1 w linespoints pt 1 lc "#52399d" t "Pitched (naive)",\
+     "" u 1:5 every ::1 w linespoints pt 1 lc "#FFCA3A" t "Pitched (precomp.)"
+
+set output "layout_GCC_haswell.tex"
+plot "output_GCC_haswell.csv" u 1:2 every ::1 w linespoints pt 1 lc "#b6251c" t "Morton (naive)",\
+     "" u 1:3 every ::1 w linespoints pt 1 lc "#149b52" t "Morton (\\texttt{PDEP})",\
+     "" u 1:6 every ::1 w linespoints pt 1 lc "#52399d" t "Pitched (naive)",\
+     "" u 1:5 every ::1 w linespoints pt 1 lc "#FFCA3A" t "Pitched (precomp.)"
