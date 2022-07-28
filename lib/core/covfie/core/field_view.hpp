@@ -43,6 +43,7 @@ public:
 
     template <
         typename... Args,
+        typename Q = coordinate_t,
         std::enable_if_t<
             (std::is_convertible_v<
                  Args,
@@ -51,13 +52,17 @@ public:
             bool> = true,
         std::enable_if_t<
             sizeof...(Args) == backend_t::contravariant_input_t::dimensions,
-            bool> = true>
+            bool> = true,
+        std::enable_if_t<!std::is_scalar_v<Q>, bool> = true>
     COVFIE_DEVICE output_t at(Args... c) const
     {
-        return at(coordinate_t{c...});
+        return m_storage.at(coordinate_t{c...});
     }
 
-    COVFIE_DEVICE output_t at(coordinate_t c) const
+    template <
+        typename T,
+        std::enable_if_t<std::is_same_v<T, coordinate_t>, bool> = true>
+    COVFIE_DEVICE output_t at(T c) const
     {
         return m_storage.at(c);
     }
