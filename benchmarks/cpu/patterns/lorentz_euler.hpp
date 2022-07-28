@@ -14,17 +14,23 @@
 #include <covfie/benchmark/pattern.hpp>
 #include <covfie/core/field_view.hpp>
 
-enum class LorentzPropagator {
-    EULER,
-    RUNGEKUTTA4
+class Euler
+{
 };
 
-enum class LorentzOrder {
-    WIDE,
-    DEEP
+class RungeKutta4
+{
 };
 
-template <LorentzPropagator Propagator, LorentzOrder Order>
+class Wide
+{
+};
+
+class Deep
+{
+};
+
+template <typename Propagator, typename Order>
 struct Lorentz : covfie::benchmark::AccessPattern<Lorentz<Propagator, Order>> {
     struct parameters {
         std::size_t particles, steps, imom;
@@ -69,13 +75,13 @@ struct Lorentz : covfie::benchmark::AccessPattern<Lorentz<Propagator, Order>> {
 
         state.ResumeTiming();
 
-        if constexpr (Order == LorentzOrder::DEEP) {
+        if constexpr (std::is_same_v<Order, Deep>) {
             for (std::size_t i = 0; i < p.particles; ++i) {
                 for (std::size_t s = 0; s < p.steps; ++s) {
                     covfie::benchmark::lorentz_agent<3> & o = objs[i];
                     float lf[3];
 
-                    if constexpr (Propagator == LorentzPropagator::EULER) {
+                    if constexpr (std::is_same_v<Propagator, Euler>) {
                         typename std::decay_t<decltype(f)>::output_t b =
                             f.at(o.pos[0], o.pos[1], o.pos[2]);
                         lf[0] = o.mom[1] * b[2] - o.mom[2] * b[1];
@@ -124,7 +130,7 @@ struct Lorentz : covfie::benchmark::AccessPattern<Lorentz<Propagator, Order>> {
                     covfie::benchmark::lorentz_agent<3> & o = objs[i];
                     float lf[3];
 
-                    if constexpr (Propagator == LorentzPropagator::EULER) {
+                    if constexpr (std::is_same_v<Propagator, Euler>) {
                         typename std::decay_t<decltype(f)>::output_t b =
                             f.at(o.pos[0], o.pos[1], o.pos[2]);
                         lf[0] = o.mom[1] * b[2] - o.mom[2] * b[1];
@@ -175,9 +181,9 @@ struct Lorentz : covfie::benchmark::AccessPattern<Lorentz<Propagator, Order>> {
         return {
             {4096},
             {1024, 2048, 4096, 8192, 16384, 32768, 65536},
-            {128,   192,   256,   384,   512,    768,    1024,  1536,
-             2048,  3072,  4096,  6144,  8192,   12288,  16384, 24576,
-             32768, 49152, 65536, 98304, 131072, 196608, 262144}};
+            {128,   192,   256,   384,   512,   768,   1024,
+             1536,  2048,  3072,  4096,  6144,  8192,  12288,
+             16384, 24576, 32768, 49152, 65536, 98304, 131072}};
     }
 
     static parameters get_parameters(benchmark::State & state)

@@ -25,16 +25,16 @@ void register_benchmarks(void)
     covfie::benchmark::register_bm<Sequential2D, Constant<float, 2, 1>>();
     covfie::benchmark::register_bm<Sequential2D, Constant<float, 2, 2>>();
     covfie::benchmark::register_product_bm<
+        boost::mp11::
+            mp_list<Lorentz<Euler, Deep>, Lorentz<Euler, Wide>, RandomFloat>,
         boost::mp11::mp_list<
-            Lorentz<LorentzPropagator::EULER, LorentzOrder::DEEP>,
-            Lorentz<LorentzPropagator::EULER, LorentzOrder::WIDE>,
-            RandomFloat>,
-        boost::mp11::mp_list<
-            Constant<float, 3, 3>,
-            AtlasBaseNN,
-            AtlasMortonNN,
-            AtlasBaseLin,
-            AtlasMortonLin>>();
+            AtlasConstant,
+            Atlas<InterpolateNN, LayoutStride>,
+            Atlas<InterpolateNN, LayoutMortonNaive>,
+            Atlas<InterpolateNN, LayoutMortonBMI2>,
+            Atlas<InterpolateLin, LayoutStride>,
+            Atlas<InterpolateLin, LayoutMortonNaive>,
+            Atlas<InterpolateLin, LayoutMortonBMI2>>>();
     covfie::benchmark::register_product_bm<
         boost::mp11::mp_list<RandomIntegral, Sequential3D, Sequential3DZYX>,
         boost::mp11::mp_list<AtlasIntBase, AtlasIntMorton>>();

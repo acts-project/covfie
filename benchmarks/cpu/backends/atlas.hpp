@@ -16,103 +16,47 @@
 #include <covfie/core/field.hpp>
 #include <covfie/core/vector.hpp>
 
-struct AtlasBaseNN {
-    using backend_t = covfie::backend::transformer::affine<
-        covfie::backend::transformer::interpolator::nearest_neighbour<
-            covfie::backend::layout::strided<
-                covfie::vector::ulong3,
-                covfie::backend::storage::array<covfie::vector::float3>>>>;
+struct AtlasConstant {
+    using backend_t = covfie::backend::constant<
+        covfie::vector::vector_d<float, 3>,
+        covfie::vector::vector_d<float, 3>>;
+
+    static covfie::field<backend_t> get_field()
+    {
+        return covfie::field<backend_t>(typename backend_t::configuration_t{
+            0.f, 0.f, 2.f});
+    }
+};
+
+template <typename T>
+using InterpolateNN =
+    covfie::backend::transformer::interpolator::nearest_neighbour<T>;
+
+template <typename T>
+using InterpolateLin = covfie::backend::transformer::interpolator::linear<T>;
+
+template <typename V, typename T>
+using LayoutStride = covfie::backend::layout::strided<V, T>;
+
+template <typename V, typename T>
+using LayoutMortonBMI2 = covfie::backend::layout::morton<V, T, true>;
+
+template <typename V, typename T>
+using LayoutMortonNaive = covfie::backend::layout::morton<V, T, false>;
+
+template <
+    template <typename>
+    typename Interpolator,
+    template <typename, typename>
+    typename Layout>
+struct Atlas {
+    using backend_t = covfie::backend::transformer::affine<Interpolator<Layout<
+        covfie::vector::ulong3,
+        covfie::backend::storage::array<covfie::vector::float3>>>>;
 
     static covfie::field<backend_t> get_field()
     {
         return covfie::field<backend_t>(get_atlas_field());
-    }
-};
-
-struct AtlasMortonNN {
-    using backend_t = covfie::backend::transformer::affine<
-        covfie::backend::transformer::interpolator::nearest_neighbour<
-            covfie::backend::layout::morton<
-                covfie::vector::ulong3,
-                covfie::backend::storage::array<covfie::vector::float3>>>>;
-
-    static covfie::field<backend_t> get_field()
-    {
-        return covfie::field<backend_t>(get_atlas_field());
-    }
-};
-
-struct AtlasApproxNN {
-    using backend_t = covfie::backend::transformer::affine<
-        covfie::backend::transformer::interpolator::nearest_neighbour<
-            covfie::backend::layout::strided<
-                covfie::vector::ulong3,
-                covfie::backend::
-                    constant<covfie::vector::ulong1, covfie::vector::float3>>>>;
-
-    static covfie::field<backend_t> get_field()
-    {
-        return covfie::field<backend_t>(
-            get_atlas_field().backend().get_configuration(),
-            std::monostate{},
-            get_atlas_field()
-                .backend()
-                .get_backend()
-                .get_backend()
-                .get_configuration(),
-            backend_t::backend_t::backend_t::backend_t::configuration_t{
-                0.f, 0.f, 2.f}
-        );
-    }
-};
-
-struct AtlasBaseLin {
-    using backend_t = covfie::backend::transformer::affine<
-        covfie::backend::transformer::interpolator::linear<
-            covfie::backend::layout::strided<
-                covfie::vector::ulong3,
-                covfie::backend::storage::array<covfie::vector::float3>>>>;
-
-    static covfie::field<backend_t> get_field()
-    {
-        return covfie::field<backend_t>(get_atlas_field());
-    }
-};
-
-struct AtlasMortonLin {
-    using backend_t = covfie::backend::transformer::affine<
-        covfie::backend::transformer::interpolator::linear<
-            covfie::backend::layout::morton<
-                covfie::vector::ulong3,
-                covfie::backend::storage::array<covfie::vector::float3>>>>;
-
-    static covfie::field<backend_t> get_field()
-    {
-        return covfie::field<backend_t>(get_atlas_field());
-    }
-};
-
-struct AtlasApproxLin {
-    using backend_t = covfie::backend::transformer::affine<
-        covfie::backend::transformer::interpolator::linear<
-            covfie::backend::layout::strided<
-                covfie::vector::ulong3,
-                covfie::backend::
-                    constant<covfie::vector::ulong1, covfie::vector::float3>>>>;
-
-    static covfie::field<backend_t> get_field()
-    {
-        return covfie::field<backend_t>(
-            get_atlas_field().backend().get_configuration(),
-            std::monostate{},
-            get_atlas_field()
-                .backend()
-                .get_backend()
-                .get_backend()
-                .get_configuration(),
-            backend_t::backend_t::backend_t::backend_t::configuration_t{
-                0.f, 0.f, 2.f}
-        );
     }
 };
 
