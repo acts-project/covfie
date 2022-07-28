@@ -11,6 +11,7 @@
 #pragma once
 
 #include <algorithm>
+#include <climits>
 #include <memory>
 #include <numeric>
 #include <type_traits>
@@ -49,6 +50,45 @@ struct morton {
 
     using configuration_t = utility::nd_size<contravariant_input_t::dimensions>;
 
+    static constexpr std::size_t get_mask(std::size_t i)
+    {
+        std::size_t r = 0;
+
+        for (std::size_t i = 0; i < 64; ++i) {
+            r |=
+                (i % contravariant_input_t::dimensions == 0 ? (1UL << i) : 0UL);
+        }
+
+        return r << i;
+    }
+
+    static constexpr std::size_t calculate_index(coordinate_t c)
+    {
+        std::size_t idx = 0;
+
+        if constexpr (use_bmi2) {
+            for (std::size_t i = 0; i < contravariant_input_t::dimensions; ++i)
+            {
+                idx |= _pdep_u64(c[i], get_mask(i));
+            }
+        } else {
+            for (std::size_t i = 0;
+                 i < ((CHAR_BIT *
+                       sizeof(typename contravariant_output_t::scalar_t)) /
+                      contravariant_input_t::dimensions);
+                 ++i)
+            {
+                for (std::size_t j = 0; j < contravariant_input_t::dimensions;
+                     ++j) {
+                    idx |= (c[j] & (1UL << i))
+                           << (i * (contravariant_input_t::dimensions - 1) + j);
+                }
+            }
+        }
+
+        return idx;
+    }
+
     template <typename T>
     static std::unique_ptr<
         std::decay_t<typename backend_t::covariant_output_t::vector_t>[]>
@@ -75,19 +115,7 @@ struct morton {
         utility::nd_map<tuple_t>(
             [&nother, &res](tuple_t t) {
                 coordinate_t c = utility::to_array(t);
-                std::size_t idx = 0;
-
-                for (std::size_t i = 0;
-                     i < (64 / contravariant_input_t::dimensions);
-                     ++i) {
-                    for (std::size_t j = 0;
-                         j < contravariant_input_t::dimensions;
-                         ++j) {
-                        idx |= (c[j] << (i + j)) &
-                               (1UL
-                                << (contravariant_input_t::dimensions * i + j));
-                    }
-                }
+                std::size_t idx = calculate_index(c);
 
                 for (std::size_t i = 0; i < covariant_output_t::dimensions; ++i)
                 {
@@ -205,47 +233,10 @@ struct morton {
         {
         }
 
-        static constexpr std::size_t get_mask(std::size_t i)
-        {
-            std::size_t r = 0;
-
-            for (std::size_t i = 0; i < 64; ++i) {
-                r |=
-                    (i % contravariant_input_t::dimensions == 0 ? (1UL << i)
-                                                                : 0UL);
-            }
-
-            return r << i;
-        }
-
         COVFIE_DEVICE typename covariant_output_t::vector_t at(coordinate_t c
         ) const
         {
-            std::size_t idx = 0;
-
-            if constexpr (use_bmi2) {
-                for (std::size_t i = 0; i < contravariant_input_t::dimensions;
-                     ++i) {
-                    idx |= _pdep_u64(c[i], get_mask(i));
-                }
-            } else {
-                for (std::size_t i = 0;
-                     i < ((CHAR_BIT *
-                           sizeof(typename contravariant_output_t::scalar_t)) /
-                          contravariant_input_t::dimensions);
-                     ++i)
-                {
-                    for (std::size_t j = 0;
-                         j < contravariant_input_t::dimensions;
-                         ++j) {
-                        idx |= (c[j] << (i + j)) &
-                               (1UL
-                                << (contravariant_input_t::dimensions * i + j));
-                    }
-                }
-            }
-
-            return m_storage.at({idx});
+            return m_storage.at(calculate_index(c));
         }
 
         typename backend_t::non_owning_data_t & get_backend(void)
