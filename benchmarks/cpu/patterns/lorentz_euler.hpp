@@ -157,13 +157,30 @@ struct LorentzEulerDeep : covfie::benchmark::AccessPattern<LorentzEulerDeep> {
                 o.pos[1] += o.mom[1] * ss;
                 o.pos[2] += o.mom[2] * ss;
 
-                if (o.pos[0] < -10000.f || o.pos[0] > 10000.f ||
-                    o.pos[1] < -10000.f || o.pos[1] > 10000.f ||
-                    o.pos[2] < -15000.f || o.pos[2] > 15000.f)
+                if (__builtin_expect(
+                        o.pos[0] < -10000.f || o.pos[0] > 10000.f ||
+                            o.pos[1] < -10000.f || o.pos[1] > 10000.f ||
+                            o.pos[2] < -15000.f || o.pos[2] > 15000.f,
+                        0
+                    ))
                 {
-                    o.pos[0] = 0.f;
-                    o.pos[1] = 0.f;
-                    o.pos[2] = 0.f;
+                    if (o.pos[0] < -10000.f) {
+                        o.pos[0] += 20000.f;
+                    } else if (o.pos[0] > 10000.f) {
+                        o.pos[0] -= 20000.f;
+                    }
+
+                    if (o.pos[1] < -10000.f) {
+                        o.pos[1] += 20000.f;
+                    } else if (o.pos[1] > 10000.f) {
+                        o.pos[1] -= 20000.f;
+                    }
+
+                    if (o.pos[2] < -10000.f) {
+                        o.pos[2] += 20000.f;
+                    } else if (o.pos[2] > 10000.f) {
+                        o.pos[2] -= 20000.f;
+                    }
                 }
 
                 o.mom[0] += f[0] * ss;
@@ -176,9 +193,11 @@ struct LorentzEulerDeep : covfie::benchmark::AccessPattern<LorentzEulerDeep> {
     static std::vector<std::vector<int64_t>> get_parameter_ranges()
     {
         return {
-            {1024, 4096, 16384, 65536},
-            {1024, 4096, 16384, 65536},
-            {128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768}};
+            {1, 4096},
+            {1024, 2048, 4096, 8192, 16384, 32768, 65536},
+            {128,   192,   256,   384,   512,    768,    1024,  1536,
+             2048,  3072,  4096,  6144,  8192,   12288,  16384, 24576,
+             32768, 49152, 65536, 98304, 131072, 196608, 262144}};
     }
 
     static parameters get_parameters(benchmark::State & state)
