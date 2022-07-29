@@ -112,13 +112,13 @@ struct linear {
         at(typename contravariant_input_t::vector_t coord) const
         {
             if constexpr (covariant_output_t::dimensions == 3) {
-                std::size_t i = std::lround(std::floor(coord[0]));
-                std::size_t j = std::lround(std::floor(coord[1]));
-                std::size_t k = std::lround(std::floor(coord[2]));
+                std::size_t i = static_cast<std::size_t>(coord[0]);
+                std::size_t j = static_cast<std::size_t>(coord[1]);
+                std::size_t k = static_cast<std::size_t>(coord[2]);
 
-                input_scalar_type a = std::fmod(coord[0], 1.f);
-                input_scalar_type b = std::fmod(coord[1], 1.f);
-                input_scalar_type c = std::fmod(coord[2], 1.f);
+                input_scalar_type a = coord[0] - std::floor(coord[0]);
+                input_scalar_type b = coord[1] - std::floor(coord[1]);
+                input_scalar_type c = coord[2] - std::floor(coord[2]);
 
                 input_scalar_type ra = static_cast<input_scalar_type>(1.) - a;
                 input_scalar_type rb = static_cast<input_scalar_type>(1.) - b;
