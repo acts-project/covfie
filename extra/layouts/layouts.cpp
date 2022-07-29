@@ -6,9 +6,10 @@ template <std::size_t N>
 std::size_t morton_bitshift(std::array<std::size_t, N> c)
 {
     std::size_t r = 0;
+
     for (std::size_t i = 0; i < (64 / N); ++i) {
         for (std::size_t j = 0; j < N; ++j) {
-            r |= (c[j] << (i + j)) & (1UL << (N * i + j));
+            r |= (c[j] & (1UL << i)) << (i * (N - 1) + j);
         }
     }
 
