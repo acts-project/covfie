@@ -29,6 +29,48 @@
 #include <covfie/core/vector.hpp>
 
 namespace covfie::backend::layout {
+template <typename Ix, typename Ox, std::size_t N>
+struct morton_pdep_mask {
+    template <std::size_t I>
+    struct get_mask {
+        template <typename>
+        struct get_mask_helper {
+        };
+
+        template <std::size_t... Js>
+        struct get_mask_helper<std::index_sequence<Js...>> {
+            template <Ox S>
+            struct shiftl {
+                static constexpr Ox value = static_cast<Ox>(1) << S;
+            };
+
+            static constexpr Ox value =
+                ((std::conditional_t<
+                     Js % N == 0,
+                     std::integral_constant<Ox, shiftl<Js>::value>,
+                     std::integral_constant<Ox, 0>>::value) |
+                 ...);
+        };
+
+        static constexpr Ox value =
+            get_mask_helper<
+                std::make_index_sequence<CHAR_BIT * sizeof(Ox)>>::value
+            << I;
+    };
+
+    template <typename C, std::size_t... Idxs>
+    static constexpr Ox compute(C c, std::index_sequence<Idxs...>)
+    {
+        return (_pdep_u64(c[Idxs], get_mask<Idxs>::value) | ...);
+    }
+
+    template <typename C, typename Ids = std::make_index_sequence<N>>
+    static constexpr Ox compute(C c)
+    {
+        return compute(std::forward<C>(c), Ids{});
+    }
+};
+
 template <
     CONSTRAINT(concepts::vector_descriptor) _input_vector_t,
     CONSTRAINT(concepts::field_backend) _storage_t,
@@ -50,28 +92,15 @@ struct morton {
 
     using configuration_t = utility::nd_size<contravariant_input_t::dimensions>;
 
-    static constexpr std::size_t get_mask(std::size_t i)
+    static std::size_t calculate_index(coordinate_t c)
     {
-        std::size_t r = 0;
-
-        for (std::size_t i = 0; i < 64; ++i) {
-            r |=
-                (i % contravariant_input_t::dimensions == 0 ? (1UL << i) : 0UL);
-        }
-
-        return r << i;
-    }
-
-    static constexpr std::size_t calculate_index(coordinate_t c)
-    {
-        std::size_t idx = 0;
-
         if constexpr (use_bmi2) {
-            for (std::size_t i = 0; i < contravariant_input_t::dimensions; ++i)
-            {
-                idx |= _pdep_u64(c[i], get_mask(i));
-            }
+            return morton_pdep_mask<
+                typename contravariant_input_t::scalar_t,
+                typename contravariant_output_t::scalar_t,
+                contravariant_input_t::dimensions>::compute(c);
         } else {
+            std::size_t idx = 0;
             for (std::size_t i = 0;
                  i < ((CHAR_BIT *
                        sizeof(typename contravariant_output_t::scalar_t)) /
@@ -84,9 +113,8 @@ struct morton {
                            << (i * (contravariant_input_t::dimensions - 1) + j);
                 }
             }
+            return idx;
         }
-
-        return idx;
     }
 
     template <typename T>
