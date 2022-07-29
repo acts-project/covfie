@@ -78,6 +78,12 @@ field_t read_atlas_bfield(const std::string & fn)
 
         f.open(fn);
 
+        if (!f.good()) {
+            BOOST_LOG_TRIVIAL(fatal)
+                << "Failed to open input file " << fn << "!";
+            std::exit(1);
+        }
+
         std::string line;
 
         BOOST_LOG_TRIVIAL(info) << "Skipping the first four lines (comments)";
@@ -161,6 +167,12 @@ field_t read_atlas_bfield(const std::string & fn)
         BOOST_LOG_TRIVIAL(info) << "Re-opening magnetic field to gather data";
 
         f.open(fn);
+
+        if (!f.good()) {
+            BOOST_LOG_TRIVIAL(fatal)
+                << "Failed to open input file " << fn << "!";
+            std::exit(1);
+        }
 
         std::string line;
 

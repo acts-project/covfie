@@ -105,6 +105,13 @@ int main(int argc, char ** argv)
     BOOST_LOG_TRIVIAL(info) << "Starting read of input file...";
 
     std::ifstream ifs(vm["input"].as<std::string>(), std::ifstream::binary);
+
+    if (!ifs.good()) {
+        BOOST_LOG_TRIVIAL(fatal) << "Failed to open input file "
+                                 << vm["input"].as<std::string>() << "!";
+        std::exit(1);
+    }
+
     field_t1 f(ifs);
     ifs.close();
 

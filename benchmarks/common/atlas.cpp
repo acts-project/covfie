@@ -21,6 +21,11 @@ const atlas_field_t & get_atlas_field()
 
         if (file_name) {
             std::ifstream ifs(file_name, std::ifstream::binary);
+            if (!ifs.good()) {
+                throw std::runtime_error(
+                    "Failed to open ATLAS magnetic field file!"
+                );
+            }
             ATLAS_FIELD = std::make_unique<atlas_field_t>(ifs);
         } else {
             throw std::runtime_error(

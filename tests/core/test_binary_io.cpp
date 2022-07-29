@@ -36,10 +36,20 @@ TEST(TestBinaryIO, WriteRead1DSingleFloatBuilder)
         );
 
     std::ofstream ofs(ofile.native(), std::ofstream::binary);
+
+    if (!ofs.good()) {
+        throw std::runtime_error("Invalid file was somehow opened!");
+    }
+
     f.dump(ofs);
     ofs.close();
 
     std::ifstream ifs(ofile.native(), std::ifstream::binary);
+
+    if (!ifs.good()) {
+        throw std::runtime_error("Invalid file was somehow opened!");
+    }
+
     field_t nf(ifs);
     ifs.close();
 
