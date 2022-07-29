@@ -59,7 +59,7 @@ struct LayoutMortonNaive {
 template <typename Interpolator, typename Layout>
 struct Atlas {
     using backend_t = covfie::backend::transformer::affine<
-        typename Interpolator::apply<typename Layout::apply<
+        typename Interpolator::template apply<typename Layout::template apply<
 
             covfie::backend::storage::array<covfie::vector::float3>>>>;
 
