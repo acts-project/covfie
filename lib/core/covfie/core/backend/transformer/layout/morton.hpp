@@ -28,6 +28,12 @@
 #include <covfie/core/utility/tuple.hpp>
 #include <covfie/core/vector.hpp>
 
+#ifdef __BMI2__
+#define HAVE_BMI2 true
+#else
+#define HAVE_BMI2 false
+#endif
+
 namespace covfie::backend::layout {
 template <typename Ix, typename Ox, std::size_t N>
 struct morton_pdep_mask {
@@ -94,7 +100,7 @@ struct morton {
 
     static std::size_t calculate_index(coordinate_t c)
     {
-        if constexpr (use_bmi2) {
+        if constexpr (use_bmi2 && HAVE_BMI2) {
             return morton_pdep_mask<
                 typename contravariant_input_t::scalar_t,
                 typename contravariant_output_t::scalar_t,
