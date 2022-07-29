@@ -28,31 +28,40 @@ struct AtlasConstant {
     }
 };
 
-template <typename T>
-using InterpolateNN =
-    covfie::backend::transformer::interpolator::nearest_neighbour<T>;
+struct InterpolateNN {
+    template <typename T>
+    using apply =
+        covfie::backend::transformer::interpolator::nearest_neighbour<T>;
+};
 
-template <typename T>
-using InterpolateLin = covfie::backend::transformer::interpolator::linear<T>;
+struct InterpolateLin {
+    template <typename T>
+    using apply = covfie::backend::transformer::interpolator::linear<T>;
+};
 
-template <typename V, typename T>
-using LayoutStride = covfie::backend::layout::strided<V, T>;
+struct LayoutStride {
+    template <typename T>
+    using apply = covfie::backend::layout::strided<covfie::vector::ulong3, T>;
+};
 
-template <typename V, typename T>
-using LayoutMortonBMI2 = covfie::backend::layout::morton<V, T, true>;
+struct LayoutMortonBMI2 {
+    template <typename T>
+    using apply =
+        covfie::backend::layout::morton<covfie::vector::ulong3, T, true>;
+};
 
-template <typename V, typename T>
-using LayoutMortonNaive = covfie::backend::layout::morton<V, T, false>;
+struct LayoutMortonNaive {
+    template <typename T>
+    using apply =
+        covfie::backend::layout::morton<covfie::vector::ulong3, T, false>;
+};
 
-template <
-    template <typename>
-    typename Interpolator,
-    template <typename, typename>
-    typename Layout>
+template <typename Interpolator, typename Layout>
 struct Atlas {
-    using backend_t = covfie::backend::transformer::affine<Interpolator<Layout<
-        covfie::vector::ulong3,
-        covfie::backend::storage::array<covfie::vector::float3>>>>;
+    using backend_t = covfie::backend::transformer::affine<
+        typename Interpolator::apply<typename Layout::apply<
+
+            covfie::backend::storage::array<covfie::vector::float3>>>>;
 
     static covfie::field<backend_t> get_field()
     {
