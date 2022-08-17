@@ -92,3 +92,12 @@ target_link_libraries(
     PRIVATE
     covfie_core
 )
+
+# Some libraries which are designed to inspected by the user.
+add_library(shuffle_asm shuffle_asm.cpp)
+target_link_libraries(
+    shuffle_asm
+
+    PRIVATE
+    covfie_core
+)
