@@ -24,9 +24,16 @@
 #include <covfie/cuda/utility/type_conversion.hpp>
 
 namespace covfie::backend::storage {
+enum class cuda_texture_interpolation {
+    LINEAR,
+    NEAREST_NEIGHBOUR
+};
+
 template <
     CONSTRAINT(concepts::vector_descriptor) _input_vector_t,
-    CONSTRAINT(concepts::vector_descriptor) _output_vector_t>
+    CONSTRAINT(concepts::vector_descriptor) _output_vector_t,
+    cuda_texture_interpolation _interpolation_method =
+        cuda_texture_interpolation::LINEAR>
 struct cuda_texture {
     using contravariant_input_t =
         covfie::vector::array_vector_d<_input_vector_t>;
@@ -159,7 +166,12 @@ struct cuda_texture {
             }
 
             // TODO: Make configurable
-            texDesc.filterMode = cudaFilterModeLinear;
+            if (_interpolation_method == cuda_texture_interpolation::LINEAR) {
+                texDesc.filterMode = cudaFilterModeLinear;
+            } else if (_interpolation_method == cuda_texture_interpolation::NEAREST_NEIGHBOUR)
+            {
+                texDesc.filterMode = cudaFilterModePoint;
+            }
             texDesc.readMode = cudaReadModeElementType;
 
             cudaErrorCheck(
