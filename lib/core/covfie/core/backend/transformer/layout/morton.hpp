@@ -161,13 +161,21 @@ struct morton {
         typename T::parent_t::non_owning_data_t nother(other);
 
         using tuple_t = decltype(std::tuple_cat(
-            std::declval<
-                std::array<std::size_t, contravariant_input_t::dimensions>>()
+            std::declval<std::array<
+                typename contravariant_input_t::scalar_t,
+                contravariant_input_t::dimensions>>()
         ));
 
         utility::nd_map<tuple_t>(
             [&nother, &res](tuple_t t) {
-                coordinate_t c = utility::to_array(t);
+                auto old_c = utility::to_array(t);
+                coordinate_t c;
+
+                for (std::size_t i = 0; i < contravariant_input_t::dimensions;
+                     ++i) {
+                    c[i] = old_c[i];
+                }
+
                 std::size_t idx = calculate_index(c);
 
                 for (std::size_t i = 0; i < covariant_output_t::dimensions; ++i)
