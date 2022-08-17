@@ -10,6 +10,8 @@
 
 #pragma once
 
+#include <sstream>
+
 #define cudaErrorCheck(r)                                                      \
     {                                                                          \
         _cudaErrorCheck((r), __FILE__, __LINE__);                              \
