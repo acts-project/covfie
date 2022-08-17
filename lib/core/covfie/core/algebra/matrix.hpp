@@ -35,7 +35,7 @@ struct matrix {
         }
     }
 
-    COVFIE_DEVICE matrix(const matrix<N, M, T, I> &) = default;
+    matrix(const matrix<N, M, T, I> &) = default;
 
     COVFIE_DEVICE T operator()(const I i, const I j) const
     {
