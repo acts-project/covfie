@@ -16,7 +16,11 @@
 #include <numeric>
 #include <type_traits>
 
+#if defined(__x86_64__) && (defined(__GNUC__) || defined(__clang__)) &&        \
+    defined(__BMI2__)
+#define HAVE_BMI2
 #include <x86intrin.h>
+#endif
 
 #include <covfie/core/backend/initial/array.hpp>
 #include <covfie/core/concepts.hpp>
@@ -28,13 +32,8 @@
 #include <covfie/core/utility/tuple.hpp>
 #include <covfie/core/vector.hpp>
 
-#ifdef __BMI2__
-#define HAVE_BMI2 true
-#else
-#define HAVE_BMI2 false
-#endif
-
 namespace covfie::backend::layout {
+#ifdef HAVE_BMI2
 template <typename Ix, typename Ox, std::size_t N>
 struct morton_pdep_mask {
     template <std::size_t I>
@@ -76,6 +75,7 @@ struct morton_pdep_mask {
         return compute(std::forward<C>(c), Ids{});
     }
 };
+#endif
 
 template <
     CONSTRAINT(concepts::vector_descriptor) _input_vector_t,
@@ -98,9 +98,10 @@ struct morton {
 
     using configuration_t = utility::nd_size<contravariant_input_t::dimensions>;
 
-    static std::size_t calculate_index(coordinate_t c)
+    COVFIE_DEVICE static std::size_t calculate_index(coordinate_t c)
     {
-        if constexpr (use_bmi2 && HAVE_BMI2) {
+#ifdef HAVE_BMI2
+        if constexpr (use_bmi2) {
             return morton_pdep_mask<
                 typename contravariant_input_t::scalar_t,
                 typename contravariant_output_t::scalar_t,
@@ -121,6 +122,24 @@ struct morton {
             }
             return idx;
         }
+#else
+        std::size_t idx = 0;
+        for (std::size_t i = 0;
+             i <
+             ((CHAR_BIT * sizeof(typename contravariant_output_t::scalar_t)) /
+              contravariant_input_t::dimensions);
+             ++i)
+        {
+            for (std::size_t j = 0; j < contravariant_input_t::dimensions; ++j)
+            {
+                idx |= (c[j] & (1UL << i))
+                       << (i * (contravariant_input_t::dimensions - 1) + j);
+            }
+        }
+        return idx;
+#endif
+
+        __builtin_unreachable();
     }
 
     template <typename T>
