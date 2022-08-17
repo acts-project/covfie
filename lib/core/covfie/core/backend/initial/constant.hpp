@@ -13,6 +13,7 @@
 #include <array>
 
 #include <covfie/core/concepts.hpp>
+#include <covfie/core/qualifiers.hpp>
 #include <covfie/core/utility/binary_io.hpp>
 #include <covfie/core/vector.hpp>
 
@@ -74,7 +75,7 @@ struct constant {
         {
         }
 
-        typename covariant_output_t::vector_t
+        COVFIE_DEVICE typename covariant_output_t::vector_t
             at(typename contravariant_input_t::vector_t) const
         {
             return m_value;
