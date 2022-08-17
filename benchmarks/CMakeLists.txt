@@ -23,3 +23,8 @@ add_subdirectory(common)
 if(COVFIE_PLATFORM_CPU)
     add_subdirectory(cpu)
 endif()
+
+# The CUDA tests are only built if requested.
+if(COVFIE_PLATFORM_CUDA)
+    add_subdirectory(cuda)
+endif()
