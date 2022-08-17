@@ -16,6 +16,7 @@
 
 #include <covfie/core/backend/initial/array.hpp>
 #include <covfie/core/concepts.hpp>
+#include <covfie/core/qualifiers.hpp>
 #include <covfie/core/vector.hpp>
 #include <covfie/cuda/error_check.hpp>
 
