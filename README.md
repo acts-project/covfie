@@ -38,13 +38,13 @@ example is included in the repository as
 
 ```cpp
 using field_t = covfie::field<covfie::backend::layout::strided<
-    covfie::backend::vector::input::ulong2,
-    covfie::backend::storage::array<covfie::backend::vector::output::float2>>>;
+    covfie::vector::ulong2,
+    covfie::backend::storage::array<covfie::vector::float2>>>;
 
 int main(void)
 {
     // Initialize the field as a 10x10 field, then create a view from it.
-    field_t my_field(field_t::backend_t::configuration_data_t{10ul, 10ul});
+    field_t my_field(field_t::backend_t::configuration_t{10ul, 10ul});
     field_t::view_t my_view(my_field);
 
     // Assign f(x, y) = (sin x, cos y)
@@ -72,20 +72,19 @@ we can simply add a linear interpolator:
 
 ```cpp
 using builder_t = covfie::field<covfie::backend::layout::strided<
-    covfie::backend::vector::input::ulong2,
-    covfie::backend::storage::array<covfie::backend::vector::output::float2>>>;
+    covfie::vector::ulong2,
+    covfie::backend::storage::array<covfie::vector::float2>>>;
 
 using field_t =
     covfie::field<covfie::backend::transformer::interpolator::linear<
         covfie::backend::layout::strided<
-            covfie::backend::vector::input::ulong2,
-            covfie::backend::storage::array<
-                covfie::backend::vector::output::float2>>>>;
+            covfie::vector::ulong2,
+            covfie::backend::storage::array<covfie::vector::float2>>>>;
 
 int main(void)
 {
     // Initialize the field as a 10x10 field, then create a view from it.
-    builder_t my_field(builder_t::backend_t::configuration_data_t{10ul, 10ul});
+    builder_t my_field(builder_t::backend_t::configuration_t{10ul, 10ul});
     builder_t::view_t my_view(my_field);
 
     // Assign f(x, y) = (sin x, cos y)
