@@ -10,6 +10,14 @@
 [![GitHub contributors](https://img.shields.io/github/contributors/acts-project/covfie)](https://github.com/acts-project/covfie/graphs/contributors)
 [![GitHub last commit](https://img.shields.io/github/last-commit/acts-project/covfie)](https://github.com/acts-project/covfie/commits/main)
 
+[<img src="docs/static/cern-logo.svg" alt="CERN logo" height="60px"/>](https://home.web.cern.ch/)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+[<img src="docs/static/uva-logo.svg" alt="UvA logo" height="60px"/>](https://www.uva.nl/)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+[<img src="docs/static/pcs-logo.svg" alt="PCS logo" height="60px"/>](https://pcs-research.nl/)
+&nbsp;
+[<img src="docs/static/acts-logo.svg" alt="Acts logo" height="60px"/>](https://acts.readthedocs.io/en/latest/)
+
 **covfie** (pronounced _coffee_) is a **co**-processor **v**ector **fie**ld
 library. covfie consists of two main components; the first is the header-only
 C++ library, which can be used by scientific applications using CUDA or other
