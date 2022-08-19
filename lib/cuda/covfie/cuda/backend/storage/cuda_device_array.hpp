@@ -19,6 +19,8 @@
 #include <covfie/core/qualifiers.hpp>
 #include <covfie/core/vector.hpp>
 #include <covfie/cuda/error_check.hpp>
+#include <covfie/cuda/utility/memory.hpp>
+#include <covfie/cuda/utility/unique_ptr.hpp>
 
 namespace covfie::backend::storage {
 template <
@@ -49,22 +51,8 @@ struct cuda_device_array {
             std::size_t size, std::unique_ptr<vector_t[]> && ptr
         )
             : m_size(size)
-            , m_ptr(nullptr)
+            , m_ptr(utility::cuda::device_copy(std::move(ptr), size))
         {
-            cudaErrorCheck(cudaMalloc(
-                reinterpret_cast<void **>(&m_ptr), m_size * sizeof(vector_t)
-            ));
-            cudaErrorCheck(cudaMemcpy(
-                m_ptr,
-                ptr.get(),
-                m_size * sizeof(vector_t),
-                cudaMemcpyHostToDevice
-            ));
-        }
-
-        ~owning_data_t()
-        {
-            cudaErrorCheck(cudaFree(m_ptr));
         }
 
         configuration_t get_configuration() const
@@ -73,14 +61,14 @@ struct cuda_device_array {
         }
 
         std::size_t m_size;
-        vector_t * m_ptr;
+        utility::cuda::unique_device_ptr<vector_t[]> m_ptr;
     };
 
     struct non_owning_data_t {
         using parent_t = this_t;
 
         non_owning_data_t(const owning_data_t & o)
-            : m_ptr(o.m_ptr)
+            : m_ptr(o.m_ptr.get())
         {
         }
 
