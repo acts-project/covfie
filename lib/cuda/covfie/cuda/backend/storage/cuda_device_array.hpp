@@ -25,6 +25,10 @@ template <
     CONSTRAINT(concepts::vector_descriptor) _output_vector_t,
     typename _index_t = std::size_t>
 struct cuda_device_array {
+    using this_t = cuda_device_array<_output_vector_t, _index_t>;
+
+    static constexpr bool is_initial = true;
+
     using contravariant_input_t =
         covfie::vector::scalar_d<covfie::vector::vector_d<_index_t, 1>>;
     using covariant_output_t =
@@ -39,6 +43,8 @@ struct cuda_device_array {
     using configuration_t = utility::nd_size<1>;
 
     struct owning_data_t {
+        using parent_t = this_t;
+
         explicit owning_data_t(
             std::size_t size, std::unique_ptr<vector_t[]> && ptr
         )
@@ -61,11 +67,18 @@ struct cuda_device_array {
             cudaErrorCheck(cudaFree(m_ptr));
         }
 
+        configuration_t get_configuration() const
+        {
+            return {m_size};
+        }
+
         std::size_t m_size;
         vector_t * m_ptr;
     };
 
     struct non_owning_data_t {
+        using parent_t = this_t;
+
         non_owning_data_t(const owning_data_t & o)
             : m_ptr(o.m_ptr)
         {
