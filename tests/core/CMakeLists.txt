@@ -23,6 +23,7 @@ add_executable(
     test_utility.cpp
     test_constant_field.cpp
     test_transformer_affine.cpp
+    test_transformer_clamp.cpp
     test_binary_io.cpp
     test_identity_backend.cpp
     test_nearest_neighbour_interpolator.cpp
