@@ -101,3 +101,20 @@ target_link_libraries(
     PRIVATE
     covfie_core
 )
+
+# Executable for generating an ATLAS-like field.
+add_executable(
+    generate_test_field
+
+    generate_test_field.cpp
+)
+
+target_link_libraries(
+    generate_test_field
+
+    PRIVATE
+    covfie_core
+    Boost::log
+    Boost::log_setup
+    Boost::program_options
+)
