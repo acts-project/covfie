@@ -18,16 +18,13 @@
 #include <covfie/core/vector.hpp>
 
 namespace covfie::backend {
-template <
-    CONSTRAINT(concepts::vector_descriptor) _input_vector_t,
-    CONSTRAINT(concepts::vector_descriptor) _output_vector_t>
+template <CONSTRAINT(concepts::vector_descriptor) _vector_t>
 struct identity {
-    using this_t = identity<_input_vector_t, _output_vector_t>;
+    using this_t = identity<_vector_t>;
     static constexpr bool is_initial = true;
 
-    using contravariant_input_t =
-        covfie::vector::array_vector_d<_input_vector_t>;
-    using covariant_output_t = covfie::vector::array_vector_d<_output_vector_t>;
+    using contravariant_input_t = covfie::vector::array_vector_d<_vector_t>;
+    using covariant_output_t = covfie::vector::array_vector_d<_vector_t>;
 
     static_assert(
         contravariant_input_t::dimensions == covariant_output_t::dimensions,

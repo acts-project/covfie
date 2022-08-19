@@ -17,9 +17,8 @@
 
 TEST(TestIdentityBackend, 1Fto1F)
 {
-    using field_t = covfie::field<covfie::backend::identity<
-        covfie::vector::float1,
-        covfie::vector::float1>>;
+    using field_t =
+        covfie::field<covfie::backend::identity<covfie::vector::float1>>;
 
     field_t f(field_t::backend_t::configuration_t({}));
 
@@ -32,9 +31,8 @@ TEST(TestIdentityBackend, 1Fto1F)
 
 TEST(TestIdentityBackend, 2Fto2F)
 {
-    using field_t = covfie::field<covfie::backend::identity<
-        covfie::vector::float2,
-        covfie::vector::float2>>;
+    using field_t =
+        covfie::field<covfie::backend::identity<covfie::vector::float2>>;
 
     field_t f(field_t::backend_t::configuration_t({}));
 
@@ -50,9 +48,8 @@ TEST(TestIdentityBackend, 2Fto2F)
 
 TEST(TestIdentityBackend, 3Fto3F)
 {
-    using field_t = covfie::field<covfie::backend::identity<
-        covfie::vector::float3,
-        covfie::vector::float3>>;
+    using field_t =
+        covfie::field<covfie::backend::identity<covfie::vector::float3>>;
 
     field_t f(field_t::backend_t::configuration_t({}));
 

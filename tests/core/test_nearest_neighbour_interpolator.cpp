@@ -21,8 +21,7 @@ TEST(TestNearestNeighbourInterpolator, Identity1Nto1F)
 {
     using field_t = covfie::field<
         covfie::backend::transformer::interpolator::nearest_neighbour<
-            covfie::backend::
-                identity<covfie::vector::int1, covfie::vector::int1>>>;
+            covfie::backend::identity<covfie::vector::int1>>>;
 
     field_t f(
         field_t::backend_t::configuration_t({}),
@@ -43,8 +42,7 @@ TEST(TestNearestNeighbourInterpolator, Identity2Nto2F)
 {
     using field_t = covfie::field<
         covfie::backend::transformer::interpolator::nearest_neighbour<
-            covfie::backend::
-                identity<covfie::vector::int2, covfie::vector::int2>>>;
+            covfie::backend::identity<covfie::vector::int2>>>;
 
     field_t f(
         field_t::backend_t::configuration_t({}),
@@ -98,8 +96,7 @@ TEST(TestNearestNeighbourInterpolator, Identity3Nto3F)
 {
     using field_t = covfie::field<
         covfie::backend::transformer::interpolator::nearest_neighbour<
-            covfie::backend::
-                identity<covfie::vector::int3, covfie::vector::int3>>>;
+            covfie::backend::identity<covfie::vector::int3>>>;
 
     field_t f(
         field_t::backend_t::configuration_t({}),
