@@ -55,28 +55,28 @@ __global__ void lorentz_kernel(
         o.pos[2] += o.mom[2] * ss;
 
         if (__builtin_expect(
-                o.pos[0] < -10000.f || o.pos[0] > 10000.f ||
-                    o.pos[1] < -10000.f || o.pos[1] > 10000.f ||
-                    o.pos[2] < -15000.f || o.pos[2] > 15000.f,
+                o.pos[0] < -9999.f || o.pos[0] > 9999.f || o.pos[1] < -9999.f ||
+                    o.pos[1] > 9999.f || o.pos[2] < -14999.f ||
+                    o.pos[2] > 14999.f,
                 0
             ))
         {
-            if (o.pos[0] < -10000.f) {
-                o.pos[0] += 20000.f;
-            } else if (o.pos[0] > 10000.f) {
-                o.pos[0] -= 20000.f;
+            if (o.pos[0] < -9999.f) {
+                o.pos[0] += 19998.f;
+            } else if (o.pos[0] > 9999.f) {
+                o.pos[0] -= 19998.f;
             }
 
-            if (o.pos[1] < -10000.f) {
-                o.pos[1] += 20000.f;
-            } else if (o.pos[1] > 10000.f) {
-                o.pos[1] -= 20000.f;
+            if (o.pos[1] < -9999.f) {
+                o.pos[1] += 19998.f;
+            } else if (o.pos[1] > 9999.f) {
+                o.pos[1] -= 19998.f;
             }
 
-            if (o.pos[2] < -10000.f) {
-                o.pos[2] += 20000.f;
-            } else if (o.pos[2] > 10000.f) {
-                o.pos[2] -= 20000.f;
+            if (o.pos[2] < -14999.f) {
+                o.pos[2] += 29998.f;
+            } else if (o.pos[2] > 14999.f) {
+                o.pos[2] -= 29998.f;
             }
         }
 
