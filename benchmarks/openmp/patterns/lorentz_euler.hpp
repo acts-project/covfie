@@ -189,7 +189,7 @@ struct Lorentz : covfie::benchmark::AccessPattern<Lorentz<Propagator, Order>> {
             {128,   192,   256,   384,   512,   768,   1024,
              1536,  2048,  3072,  4096,  6144,  8192,  12288,
              16384, 24576, 32768, 49152, 65536, 98304, 131072},
-            {1, 2, 4, 8, 16, 32}};
+            {1, 2, 4, 8, 16, 24, 32, 48}};
     }
 
     static parameters get_parameters(benchmark::State & state)
