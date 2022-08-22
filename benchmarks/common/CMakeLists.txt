@@ -9,7 +9,7 @@
 add_library(
     covfie_benchmark
     SHARED
-    atlas.cpp
+    test_field.cpp
 )
 
 target_include_directories(

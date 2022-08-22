@@ -13,7 +13,7 @@
 
 #include <covfie/benchmark/register.hpp>
 
-#include "backends/atlas.hpp"
+#include "backends/test_field.hpp"
 #include "patterns/lorentz_euler.hpp"
 
 void register_benchmarks(void)
@@ -21,13 +21,13 @@ void register_benchmarks(void)
     covfie::benchmark::register_product_bm<
         boost::mp11::mp_list<Lorentz<Euler>>,
         boost::mp11::mp_list<
-            AtlasConstant,
-            AtlasTex<TexInterpolateLin>,
-            AtlasTex<TexInterpolateNN>,
-            Atlas<InterpolateNN, LayoutStride>,
-            Atlas<InterpolateNN, LayoutMortonNaive>,
-            Atlas<InterpolateLin, LayoutStride>,
-            Atlas<InterpolateLin, LayoutMortonNaive>>>();
+            FieldConstant,
+            FieldTex<TexInterpolateLin>,
+            FieldTex<TexInterpolateNN>,
+            Field<InterpolateNN, LayoutStride>,
+            Field<InterpolateNN, LayoutMortonNaive>,
+            Field<InterpolateLin, LayoutStride>,
+            Field<InterpolateLin, LayoutMortonNaive>>>();
 }
 
 int main(int argc, char ** argv)

@@ -13,8 +13,8 @@
 
 #include <covfie/benchmark/register.hpp>
 
-#include "backends/atlas.hpp"
 #include "backends/constant.hpp"
+#include "backends/test_field.hpp"
 #include "patterns/lorentz_euler.hpp"
 #include "patterns/random.hpp"
 #include "patterns/sequential.hpp"
@@ -28,16 +28,16 @@ void register_benchmarks(void)
         boost::mp11::
             mp_list<Lorentz<Euler, Deep>, Lorentz<Euler, Wide>, RandomFloat>,
         boost::mp11::mp_list<
-            AtlasConstant,
-            Atlas<InterpolateNN, LayoutStride>,
-            Atlas<InterpolateNN, LayoutMortonNaive>,
-            Atlas<InterpolateNN, LayoutMortonBMI2>,
-            Atlas<InterpolateLin, LayoutStride>,
-            Atlas<InterpolateLin, LayoutMortonNaive>,
-            Atlas<InterpolateLin, LayoutMortonBMI2>>>();
+            FieldConstant,
+            Field<InterpolateNN, LayoutStride>,
+            Field<InterpolateNN, LayoutMortonNaive>,
+            Field<InterpolateNN, LayoutMortonBMI2>,
+            Field<InterpolateLin, LayoutStride>,
+            Field<InterpolateLin, LayoutMortonNaive>,
+            Field<InterpolateLin, LayoutMortonBMI2>>>();
     covfie::benchmark::register_product_bm<
         boost::mp11::mp_list<RandomIntegral, Sequential3D, Sequential3DZYX>,
-        boost::mp11::mp_list<AtlasIntBase, AtlasIntMorton>>();
+        boost::mp11::mp_list<FieldIntBase, FieldIntMorton>>();
 }
 
 int main(int argc, char ** argv)

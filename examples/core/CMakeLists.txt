@@ -6,15 +6,15 @@
 # v. 2.0. If a copy of the MPL was not distributed with this file, You can
 # obtain one at http://mozilla.org/MPL/2.0/.
 
-# Add the conversion of the ATLAS B-field to our native format.
+# Add the conversion of B-fields to our native format.
 add_executable(
-    convert_atlas_bfield
+    convert_bfield
 
-    convert_atlas_bfield.cpp
+    convert_bfield.cpp
 )
 
 target_link_libraries(
-    convert_atlas_bfield
+    convert_bfield
 
     PRIVATE
     covfie_core
@@ -68,15 +68,15 @@ target_link_libraries(
     Boost::program_options
 )
 
-# Add the an executable to scale up the ATLAS field.
+# Add the an executable to scale up B-fields.
 add_executable(
-    scaleup_atlas_bfield
+    scaleup_bfield
 
-    scaleup_atlas_bfield.cpp
+    scaleup_bfield.cpp
 )
 
 target_link_libraries(
-    scaleup_atlas_bfield
+    scaleup_bfield
 
     PRIVATE
     covfie_core
@@ -102,7 +102,7 @@ target_link_libraries(
     covfie_core
 )
 
-# Executable for generating an ATLAS-like field.
+# Executable for generating an testable field.
 add_executable(
     generate_test_field
 

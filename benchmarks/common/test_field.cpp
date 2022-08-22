@@ -10,30 +10,30 @@
 
 #include <cstdlib>
 
-#include <covfie/benchmark/atlas.hpp>
+#include <covfie/benchmark/test_field.hpp>
 
-std::unique_ptr<atlas_field_t> ATLAS_FIELD;
+std::unique_ptr<data_field_t> TEST_FIELD;
 
-const atlas_field_t & get_atlas_field()
+const data_field_t & get_test_field()
 {
-    if (!ATLAS_FIELD) {
-        char * file_name = std::getenv("COVFIE_BENCHMARK_ATLAS_FIELD");
+    if (!TEST_FIELD) {
+        char * file_name = std::getenv("COVFIE_BENCHMARK_FIELD");
 
         if (file_name) {
             std::ifstream ifs(file_name, std::ifstream::binary);
             if (!ifs.good()) {
                 throw std::runtime_error(
-                    "Failed to open ATLAS magnetic field file!"
+                    "Failed to open testing vector field file!"
                 );
             }
-            ATLAS_FIELD = std::make_unique<atlas_field_t>(ifs);
+            TEST_FIELD = std::make_unique<data_field_t>(ifs);
         } else {
             throw std::runtime_error(
-                "Environment variable \"COVFIE_BENCHMARK_ATLAS_FIELD\" is not "
+                "Environment variable \"COVFIE_BENCHMARK_FIELD\" is not "
                 "set!"
             );
         }
     }
 
-    return *ATLAS_FIELD.get();
+    return *TEST_FIELD.get();
 }

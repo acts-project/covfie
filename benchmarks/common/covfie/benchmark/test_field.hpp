@@ -16,12 +16,12 @@
 #include <covfie/core/backend/transformer/layout/strided.hpp>
 #include <covfie/core/field.hpp>
 
-using atlas_field_t = covfie::field<covfie::backend::transformer::affine<
+using data_field_t = covfie::field<covfie::backend::transformer::affine<
     covfie::backend::transformer::interpolator::nearest_neighbour<
         covfie::backend::layout::strided<
             covfie::vector::ulong3,
             covfie::backend::storage::array<covfie::vector::float3>>>>>;
 
-extern std::unique_ptr<atlas_field_t> ATLAS_FIELD;
+extern std::unique_ptr<data_field_t> TEST_FIELD;
 
-const atlas_field_t & get_atlas_field();
+const data_field_t & get_test_field();

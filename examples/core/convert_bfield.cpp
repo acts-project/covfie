@@ -61,7 +61,7 @@ using field_t = covfie::field<covfie::backend::transformer::affine<
             covfie::vector::ulong3,
             covfie::backend::storage::array<covfie::vector::float3>>>>>;
 
-field_t read_atlas_bfield(const std::string & fn)
+field_t read_bfield(const std::string & fn)
 {
     std::ifstream f;
 
@@ -223,7 +223,7 @@ int main(int argc, char ** argv)
                             << vm["input"].as<std::string>() << "\"";
     BOOST_LOG_TRIVIAL(info) << "Starting read of input file...";
 
-    field_t fb = read_atlas_bfield(vm["input"].as<std::string>());
+    field_t fb = read_bfield(vm["input"].as<std::string>());
 
     BOOST_LOG_TRIVIAL(info) << "Writing magnetic field to file \""
                             << vm["output"].as<std::string>() << "\"...";
