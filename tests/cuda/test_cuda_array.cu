@@ -16,13 +16,15 @@
 #include <covfie/core/backend/transformer/layout/strided.hpp>
 #include <covfie/core/field.hpp>
 #include <covfie/core/field_view.hpp>
+#include <covfie/core/utility/nd_map.hpp>
+#include <covfie/core/utility/tuple.hpp>
 #include <covfie/core/vector.hpp>
 #include <covfie/cuda/backend/storage/cuda_device_array.hpp>
 
 #include "retrieve_vector.hpp"
 
-template <typename B>
-class TestCudaLookupIntegerIndexed3D : public ::testing::Test
+template <std::size_t N, typename B>
+class TestLookupGeneric : public ::testing::Test
 {
 protected:
     void SetUp() override
@@ -39,13 +41,13 @@ protected:
         );
         covfie::field_view<canonical_backend_t> fv(f);
 
-        for (std::size_t x = 0; x < sizes[0]; ++x) {
-            for (std::size_t y = 0; y < sizes[1]; ++y) {
-                for (std::size_t z = 0; z < sizes[2]; ++z) {
-                    fv.at(x, y, z) = {x, y, z};
-                }
-            }
-        }
+        covfie::utility::nd_map<decltype(std::tuple_cat(sizes))>(
+            [&fv](decltype(std::tuple_cat(sizes)) t) {
+                fv.at(covfie::utility::to_array(t)) =
+                    covfie::utility::to_array(t);
+            },
+            std::tuple_cat(sizes)
+        );
 
         m_field = covfie::field<B>(f);
     }
@@ -53,10 +55,32 @@ protected:
     std::optional<covfie::field<B>> m_field;
 };
 
-using Backends = ::testing::Types<covfie::backend::layout::strided<
+template <typename B>
+using TestCudaLookupIntegerIndexed1D = TestLookupGeneric<1, B>;
+
+using BackendsInteger1D = ::testing::Types<covfie::backend::layout::strided<
+    covfie::vector::ulong1,
+    covfie::backend::storage::cuda_device_array<covfie::vector::ulong1>>>;
+
+TYPED_TEST_SUITE(TestCudaLookupIntegerIndexed1D, BackendsInteger1D);
+
+template <typename B>
+using TestCudaLookupIntegerIndexed2D = TestLookupGeneric<2, B>;
+
+using BackendsInteger2D = ::testing::Types<covfie::backend::layout::strided<
+    covfie::vector::ulong2,
+    covfie::backend::storage::cuda_device_array<covfie::vector::ulong2>>>;
+
+TYPED_TEST_SUITE(TestCudaLookupIntegerIndexed2D, BackendsInteger2D);
+
+template <typename B>
+using TestCudaLookupIntegerIndexed3D = TestLookupGeneric<3, B>;
+
+using BackendsInteger3D = ::testing::Types<covfie::backend::layout::strided<
     covfie::vector::ulong3,
     covfie::backend::storage::cuda_device_array<covfie::vector::ulong3>>>;
-TYPED_TEST_SUITE(TestCudaLookupIntegerIndexed3D, Backends);
+
+TYPED_TEST_SUITE(TestCudaLookupIntegerIndexed3D, BackendsInteger3D);
 
 TYPED_TEST(TestCudaLookupIntegerIndexed3D, LookUp)
 {
