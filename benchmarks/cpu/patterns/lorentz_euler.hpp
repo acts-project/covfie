@@ -179,7 +179,7 @@ struct Lorentz : covfie::benchmark::AccessPattern<Lorentz<Propagator, Order>> {
     static std::vector<std::vector<int64_t>> get_parameter_ranges()
     {
         return {
-            {4096},
+            {4096, 65536},
             {1024, 2048, 4096, 8192, 16384, 32768, 65536},
             {128,   192,   256,   384,   512,   768,   1024,
              1536,  2048,  3072,  4096,  6144,  8192,  12288,
