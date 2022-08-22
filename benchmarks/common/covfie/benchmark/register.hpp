@@ -35,7 +35,9 @@ void register_bm()
         ->ArgNames(
             {Pattern::parameter_names.begin(), Pattern::parameter_names.end()}
         )
-        ->ArgsProduct({parameter_ranges.begin(), parameter_ranges.end()});
+        ->ArgsProduct({parameter_ranges.begin(), parameter_ranges.end()})
+        ->UseRealTime()
+        ->MeasureProcessCPUTime();
 }
 
 template <typename>
