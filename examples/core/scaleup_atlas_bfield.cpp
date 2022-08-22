@@ -129,6 +129,12 @@ int main(int argc, char ** argv)
 
     std::ofstream fs(vm["output"].as<std::string>(), std::ofstream::binary);
 
+    if (!fs.good()) {
+        BOOST_LOG_TRIVIAL(fatal) << "Failed to open output file "
+                                 << vm["output"].as<std::string>() << "!";
+        std::exit(1);
+    }
+
     new_field.dump(fs);
 
     fs.close();

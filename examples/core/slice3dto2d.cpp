@@ -169,6 +169,13 @@ int main(int argc, char ** argv)
                             << vm["output"].as<std::string>() << "\"...";
 
     std::ofstream ofs(vm["output"].as<std::string>(), std::ifstream::binary);
+
+    if (!ofs.good()) {
+        BOOST_LOG_TRIVIAL(fatal) << "Failed to open output file "
+                                 << vm["output"].as<std::string>() << "!";
+        std::exit(1);
+    }
+
     of.dump(ofs);
     ofs.close();
 
