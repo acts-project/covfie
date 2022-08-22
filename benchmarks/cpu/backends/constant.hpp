@@ -8,6 +8,8 @@
  * obtain one at http://mozilla.org/MPL/2.0/.
  */
 
+#pragma once
+
 #include <covfie/core/backend/initial/constant.hpp>
 #include <covfie/core/field.hpp>
 #include <covfie/core/vector.hpp>
