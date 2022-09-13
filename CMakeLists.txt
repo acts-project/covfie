@@ -45,6 +45,11 @@ option(
     Off
 )
 
+option(
+    COVFIE_QUIET
+    "Disable warnings about missing C++ features. Enabling this is strongly discouraged."
+)
+
 # The core library should always be built.
 add_subdirectory(lib)
 

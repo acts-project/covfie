@@ -28,6 +28,14 @@ if(COVFIE_REQUIRE_CXX20)
     )
 endif()
 
+if(COVFIE_QUIET)
+    target_compile_definitions(
+        covfie_core
+        INTERFACE
+        COVFIE_QUIET
+    )
+endif()
+
 # Logic to ensure that the core module can be installed properly.
 install(
     TARGETS covfie_core
