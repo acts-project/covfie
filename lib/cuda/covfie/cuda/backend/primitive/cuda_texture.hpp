@@ -14,8 +14,8 @@
 
 #include <cuda_runtime.h>
 
-#include <covfie/core/backend/initial/array.hpp>
-#include <covfie/core/backend/transformer/interpolator/linear.hpp>
+#include <covfie/core/backend/primitive/array.hpp>
+#include <covfie/core/backend/transformer/linear.hpp>
 #include <covfie/core/concepts.hpp>
 #include <covfie/core/utility/nd_map.hpp>
 #include <covfie/core/utility/tuple.hpp>

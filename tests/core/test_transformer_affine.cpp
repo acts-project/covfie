@@ -12,7 +12,7 @@
 
 #include <gtest/gtest.h>
 
-#include <covfie/core/backend/initial/constant.hpp>
+#include <covfie/core/backend/primitive/constant.hpp>
 #include <covfie/core/backend/transformer/affine.hpp>
 #include <covfie/core/field.hpp>
 

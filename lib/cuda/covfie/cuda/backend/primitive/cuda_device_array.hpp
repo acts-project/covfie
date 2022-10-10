@@ -14,7 +14,7 @@
 
 #include <cuda_runtime.h>
 
-#include <covfie/core/backend/initial/array.hpp>
+#include <covfie/core/backend/primitive/array.hpp>
 #include <covfie/core/concepts.hpp>
 #include <covfie/core/qualifiers.hpp>
 #include <covfie/core/vector.hpp>

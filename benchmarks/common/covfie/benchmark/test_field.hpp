@@ -12,10 +12,10 @@
 
 #include <memory>
 
-#include <covfie/core/backend/initial/array.hpp>
+#include <covfie/core/backend/primitive/array.hpp>
 #include <covfie/core/backend/transformer/affine.hpp>
-#include <covfie/core/backend/transformer/interpolator/nearest_neighbour.hpp>
-#include <covfie/core/backend/transformer/layout/strided.hpp>
+#include <covfie/core/backend/transformer/nearest_neighbour.hpp>
+#include <covfie/core/backend/transformer/strided.hpp>
 #include <covfie/core/field.hpp>
 
 using data_field_t = covfie::field<covfie::backend::affine<

@@ -12,8 +12,8 @@
 
 #include <gtest/gtest.h>
 
-#include <covfie/core/backend/initial/identity.hpp>
-#include <covfie/core/backend/transformer/boundary/clamp.hpp>
+#include <covfie/core/backend/primitive/identity.hpp>
+#include <covfie/core/backend/transformer/clamp.hpp>
 #include <covfie/core/field.hpp>
 
 TEST(TestTransformerClamp, ClampIdentityInt1D)

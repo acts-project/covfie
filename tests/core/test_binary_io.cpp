@@ -13,7 +13,7 @@
 #include <boost/filesystem.hpp>
 #include <gtest/gtest.h>
 
-#include <covfie/core/backend/initial/array.hpp>
+#include <covfie/core/backend/primitive/array.hpp>
 #include <covfie/core/field.hpp>
 
 TEST(TestBinaryIO, WriteRead1DSingleFloatBuilder)

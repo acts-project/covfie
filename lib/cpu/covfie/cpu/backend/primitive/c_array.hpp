@@ -12,7 +12,7 @@
 
 #include <memory>
 
-#include <covfie/core/backend/initial/array.hpp>
+#include <covfie/core/backend/primitive/array.hpp>
 
 namespace covfie::backend {
 template <

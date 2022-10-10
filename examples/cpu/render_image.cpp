@@ -16,8 +16,8 @@
 #include <boost/program_options.hpp>
 
 #include <covfie/core/backend/transformer/affine.hpp>
-#include <covfie/core/backend/transformer/interpolator/linear.hpp>
-#include <covfie/core/backend/transformer/layout/strided.hpp>
+#include <covfie/core/backend/transformer/linear.hpp>
+#include <covfie/core/backend/transformer/strided.hpp>
 #include <covfie/core/field.hpp>
 #include <covfie/core/utility/nd_size.hpp>
 

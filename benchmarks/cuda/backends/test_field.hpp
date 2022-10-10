@@ -11,14 +11,14 @@
 #pragma once
 
 #include <covfie/benchmark/test_field.hpp>
-#include <covfie/core/backend/initial/constant.hpp>
-#include <covfie/core/backend/transformer/interpolator/linear.hpp>
-#include <covfie/core/backend/transformer/interpolator/nearest_neighbour.hpp>
-#include <covfie/core/backend/transformer/layout/morton.hpp>
+#include <covfie/core/backend/primitive/constant.hpp>
+#include <covfie/core/backend/transformer/linear.hpp>
+#include <covfie/core/backend/transformer/morton.hpp>
+#include <covfie/core/backend/transformer/nearest_neighbour.hpp>
 #include <covfie/core/field.hpp>
 #include <covfie/core/vector.hpp>
-#include <covfie/cuda/backend/storage/cuda_device_array.hpp>
-#include <covfie/cuda/backend/storage/cuda_texture.hpp>
+#include <covfie/cuda/backend/primitive/cuda_device_array.hpp>
+#include <covfie/cuda/backend/primitive/cuda_texture.hpp>
 
 struct FieldConstant {
     using backend_t = covfie::backend::constant<

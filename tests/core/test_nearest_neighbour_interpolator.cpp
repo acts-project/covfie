@@ -13,8 +13,8 @@
 
 #include <gtest/gtest.h>
 
-#include <covfie/core/backend/initial/identity.hpp>
-#include <covfie/core/backend/transformer/interpolator/nearest_neighbour.hpp>
+#include <covfie/core/backend/primitive/identity.hpp>
+#include <covfie/core/backend/transformer/nearest_neighbour.hpp>
 #include <covfie/core/field.hpp>
 
 TEST(TestNearestNeighbourInterpolator, Identity1Nto1F)

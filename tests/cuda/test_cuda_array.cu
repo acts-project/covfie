@@ -12,14 +12,14 @@
 
 #include <gtest/gtest.h>
 
-#include <covfie/core/backend/initial/array.hpp>
-#include <covfie/core/backend/transformer/layout/strided.hpp>
+#include <covfie/core/backend/primitive/array.hpp>
+#include <covfie/core/backend/transformer/strided.hpp>
 #include <covfie/core/field.hpp>
 #include <covfie/core/field_view.hpp>
 #include <covfie/core/utility/nd_map.hpp>
 #include <covfie/core/utility/tuple.hpp>
 #include <covfie/core/vector.hpp>
-#include <covfie/cuda/backend/storage/cuda_device_array.hpp>
+#include <covfie/cuda/backend/primitive/cuda_device_array.hpp>
 
 #include "retrieve_vector.hpp"
 

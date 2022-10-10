@@ -10,25 +10,79 @@
 
 #pragma once
 
+#include <algorithm>
+#include <climits>
 #include <memory>
 #include <numeric>
 #include <type_traits>
 
-#include <covfie/core/backend/initial/array.hpp>
+#if defined(__x86_64__) && (defined(__GNUC__) || defined(__clang__)) &&        \
+    defined(__BMI2__)
+#define HAVE_BMI2
+#include <x86intrin.h>
+#endif
+
+#include <covfie/core/backend/primitive/array.hpp>
 #include <covfie/core/concepts.hpp>
 #include <covfie/core/qualifiers.hpp>
 #include <covfie/core/utility/binary_io.hpp>
 #include <covfie/core/utility/nd_map.hpp>
 #include <covfie/core/utility/nd_size.hpp>
+#include <covfie/core/utility/numeric.hpp>
 #include <covfie/core/utility/tuple.hpp>
 #include <covfie/core/vector.hpp>
 
 namespace covfie::backend {
+#ifdef HAVE_BMI2
+template <typename Ix, typename Ox, std::size_t N>
+struct morton_pdep_mask {
+    template <std::size_t I>
+    struct get_mask {
+        template <typename>
+        struct get_mask_helper {
+        };
+
+        template <std::size_t... Js>
+        struct get_mask_helper<std::index_sequence<Js...>> {
+            template <Ox S>
+            struct shiftl {
+                static constexpr Ox value = static_cast<Ox>(1) << S;
+            };
+
+            static constexpr Ox value =
+                ((std::conditional_t<
+                     Js % N == 0,
+                     std::integral_constant<Ox, shiftl<Js>::value>,
+                     std::integral_constant<Ox, 0>>::value) |
+                 ...);
+        };
+
+        static constexpr Ox value =
+            get_mask_helper<
+                std::make_index_sequence<CHAR_BIT * sizeof(Ox)>>::value
+            << I;
+    };
+
+    template <typename C, std::size_t... Idxs>
+    static constexpr Ox compute(C c, std::index_sequence<Idxs...>)
+    {
+        return (_pdep_u64(c[Idxs], get_mask<Idxs>::value) | ...);
+    }
+
+    template <typename C, typename Ids = std::make_index_sequence<N>>
+    static constexpr Ox compute(C c)
+    {
+        return compute(std::forward<C>(c), Ids{});
+    }
+};
+#endif
+
 template <
     CONSTRAINT(concepts::vector_descriptor) _input_vector_t,
-    CONSTRAINT(concepts::field_backend) _storage_t>
-struct strided {
-    using this_t = strided<_input_vector_t, _storage_t>;
+    CONSTRAINT(concepts::field_backend) _storage_t,
+    bool use_bmi2 = true>
+struct morton {
+    using this_t = morton<_input_vector_t, _storage_t>;
     static constexpr bool is_initial = false;
 
     using backend_t = _storage_t;
@@ -44,46 +98,85 @@ struct strided {
 
     using configuration_t = utility::nd_size<contravariant_input_t::dimensions>;
 
+    COVFIE_DEVICE static std::size_t calculate_index(coordinate_t c)
+    {
+#ifdef HAVE_BMI2
+        if constexpr (use_bmi2) {
+            return morton_pdep_mask<
+                typename contravariant_input_t::scalar_t,
+                typename contravariant_output_t::scalar_t,
+                contravariant_input_t::dimensions>::compute(c);
+        } else {
+            std::size_t idx = 0;
+            for (std::size_t i = 0;
+                 i < ((CHAR_BIT *
+                       sizeof(typename contravariant_output_t::scalar_t)) /
+                      contravariant_input_t::dimensions);
+                 ++i)
+            {
+                for (std::size_t j = 0; j < contravariant_input_t::dimensions;
+                     ++j) {
+                    idx |= (c[j] & (1UL << i))
+                           << (i * (contravariant_input_t::dimensions - 1) + j);
+                }
+            }
+            return idx;
+        }
+#else
+        std::size_t idx = 0;
+        for (std::size_t i = 0;
+             i <
+             ((CHAR_BIT * sizeof(typename contravariant_output_t::scalar_t)) /
+              contravariant_input_t::dimensions);
+             ++i)
+        {
+            for (std::size_t j = 0; j < contravariant_input_t::dimensions; ++j)
+            {
+                idx |= (c[j] & (1UL << i))
+                       << (i * (contravariant_input_t::dimensions - 1) + j);
+            }
+        }
+        return idx;
+#endif
+
+        __builtin_unreachable();
+    }
+
     template <typename T>
     static std::unique_ptr<
         std::decay_t<typename backend_t::covariant_output_t::vector_t>[]>
-    make_strided_copy(const T & other) {
+    make_morton_copy(const T & other) {
         configuration_t sizes = other.get_configuration();
         std::unique_ptr<
             std::decay_t<typename backend_t::covariant_output_t::vector_t>[]>
             res = std::make_unique<std::decay_t<
                 typename backend_t::covariant_output_t::vector_t>[]>(
-                std::accumulate(
-                    std::begin(sizes),
-                    std::end(sizes),
-                    1,
-                    std::multiplies<std::size_t>()
+                utility::ipow(
+                    utility::round_pow2(
+                        *std::max_element(sizes.begin(), sizes.end())
+                    ),
+                    contravariant_input_t::dimensions
                 )
             );
         typename T::parent_t::non_owning_data_t nother(other);
 
         using tuple_t = decltype(std::tuple_cat(
-            std::declval<
-                std::array<std::size_t, contravariant_input_t::dimensions>>()
+            std::declval<std::array<
+                typename contravariant_input_t::scalar_t,
+                contravariant_input_t::dimensions>>()
         ));
 
         utility::nd_map<tuple_t>(
-            [&sizes, &nother, &res](tuple_t t) {
-                coordinate_t c = utility::to_array(t);
-                typename contravariant_input_t::scalar_t idx = 0;
+            [&nother, &res](tuple_t t) {
+                auto old_c = utility::to_array(t);
+                coordinate_t c;
 
-                for (std::size_t k = 0; k < contravariant_input_t::dimensions;
-                     ++k) {
-                    typename contravariant_input_t::scalar_t tmp = c[k];
-
-                    for (std::size_t l = k + 1;
-                         l < contravariant_input_t::dimensions;
-                         ++l) {
-                        tmp *= sizes[l];
-                    }
-
-                    idx += tmp;
+                for (std::size_t i = 0; i < contravariant_input_t::dimensions;
+                     ++i) {
+                    c[i] = old_c[i];
                 }
+
+                std::size_t idx = calculate_index(c);
 
                 for (std::size_t i = 0; i < covariant_output_t::dimensions; ++i)
                 {
@@ -117,13 +210,13 @@ struct strided {
         explicit owning_data_t(const T & o)
             : m_sizes(o.get_configuration())
             , m_storage(
-                  std::accumulate(
-                      std::begin(m_sizes),
-                      std::end(m_sizes),
-                      1,
-                      std::multiplies<std::size_t>()
+                  utility::ipow(
+                      utility::round_pow2(
+                          *std::max_element(m_sizes.begin(), m_sizes.end())
+                      ),
+                      contravariant_input_t::dimensions
                   ),
-                  make_strided_copy(o)
+                  make_morton_copy(o)
               )
         {
         }
@@ -204,22 +297,7 @@ struct strided {
         COVFIE_DEVICE typename covariant_output_t::vector_t at(coordinate_t c
         ) const
         {
-            typename contravariant_input_t::scalar_t idx = 0;
-
-            for (std::size_t k = 0; k < contravariant_input_t::dimensions; ++k)
-            {
-                typename contravariant_input_t::scalar_t tmp = c[k];
-
-                for (std::size_t l = k + 1;
-                     l < contravariant_input_t::dimensions;
-                     ++l) {
-                    tmp *= m_sizes[l];
-                }
-
-                idx += tmp;
-            }
-
-            return m_storage.at({idx});
+            return m_storage.at(calculate_index(c));
         }
 
         typename backend_t::non_owning_data_t & get_backend(void)

@@ -8,10 +8,10 @@
  * obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include <covfie/core/backend/initial/array.hpp>
+#include <covfie/core/backend/primitive/array.hpp>
 #include <covfie/core/backend/transformer/dereference.hpp>
-#include <covfie/core/backend/transformer/layout/strided.hpp>
 #include <covfie/core/backend/transformer/shuffle.hpp>
+#include <covfie/core/backend/transformer/strided.hpp>
 #include <covfie/core/field_view.hpp>
 
 using backend_base = covfie::backend::strided<

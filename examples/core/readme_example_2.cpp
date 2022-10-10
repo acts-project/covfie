@@ -11,9 +11,9 @@
 #include <cmath>
 #include <iostream>
 
-#include <covfie/core/backend/initial/array.hpp>
-#include <covfie/core/backend/transformer/interpolator/linear.hpp>
-#include <covfie/core/backend/transformer/layout/strided.hpp>
+#include <covfie/core/backend/primitive/array.hpp>
+#include <covfie/core/backend/transformer/linear.hpp>
+#include <covfie/core/backend/transformer/strided.hpp>
 #include <covfie/core/field.hpp>
 #include <covfie/core/field_view.hpp>
 
