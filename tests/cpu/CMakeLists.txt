@@ -18,8 +18,8 @@ target_link_libraries(
     test_cpu
 
     PUBLIC
-    covfie_core
-    covfie_cpu
+    core
+    cpu
     GTest::gtest
     GTest::gtest_main
 )

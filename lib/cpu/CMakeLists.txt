@@ -6,23 +6,23 @@
 # v. 2.0. If a copy of the MPL was not distributed with this file, You can
 # obtain one at http://mozilla.org/MPL/2.0/.
 
-add_library(covfie_cpu INTERFACE)
+add_library(cpu INTERFACE)
 
 target_include_directories(
-    covfie_cpu
+    cpu
     INTERFACE
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 
 # Remove this line!
-target_compile_options(covfie_cpu INTERFACE "-Wall" "-Wextra")
+target_compile_options(cpu INTERFACE "-Wall" "-Wextra")
 
-target_compile_features(covfie_cpu INTERFACE cxx_std_17)
+target_compile_features(cpu INTERFACE cxx_std_17)
 
 # Logic to ensure that the CPU module can be installed properly.
 install(
-    TARGETS covfie_cpu
+    TARGETS cpu
     EXPORT ${PROJECT_NAME}Targets
 )
 

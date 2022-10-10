@@ -17,7 +17,7 @@ target_link_libraries(
     convert_bfield
 
     PRIVATE
-    covfie_core
+    core
     Boost::log
     Boost::log_setup
     Boost::program_options
@@ -34,7 +34,7 @@ target_link_libraries(
     readme_example_1
 
     PRIVATE
-    covfie_core
+    core
 )
 
 # Add the second example that can be found in the README.
@@ -48,7 +48,7 @@ target_link_libraries(
     readme_example_2
 
     PRIVATE
-    covfie_core
+    core
 )
 
 # Add the an executable to create 2D slices from 3D fields.
@@ -62,7 +62,7 @@ target_link_libraries(
     slice3dto2d
 
     PRIVATE
-    covfie_core
+    core
     Boost::log
     Boost::log_setup
     Boost::program_options
@@ -79,7 +79,7 @@ target_link_libraries(
     scaleup_bfield
 
     PRIVATE
-    covfie_core
+    core
     Boost::log
     Boost::log_setup
     Boost::program_options
@@ -90,7 +90,7 @@ target_link_libraries(
     asm
 
     PRIVATE
-    covfie_core
+    core
 )
 
 # Some libraries which are designed to inspected by the user.
@@ -99,7 +99,7 @@ target_link_libraries(
     shuffle_asm
 
     PRIVATE
-    covfie_core
+    core
 )
 
 # Executable for generating an testable field.
@@ -113,7 +113,7 @@ target_link_libraries(
     generate_test_field
 
     PRIVATE
-    covfie_core
+    core
     Boost::log
     Boost::log_setup
     Boost::program_options

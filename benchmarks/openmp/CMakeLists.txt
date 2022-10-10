@@ -21,9 +21,9 @@ target_link_libraries(
     benchmark_openmp
 
     PUBLIC
-    covfie_core
-    covfie_cpu
-    covfie_benchmark
+    core
+    cpu
+    benchmark
     OpenMP::OpenMP_CXX
     benchmark::benchmark
     Boost::headers

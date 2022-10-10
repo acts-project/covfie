@@ -21,8 +21,8 @@ target_link_libraries(
     test_cuda
 
     PUBLIC
-    covfie_core
-    covfie_cuda
+    core
+    cuda
     GTest::gtest
     GTest::gtest_main
 )

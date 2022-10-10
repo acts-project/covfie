@@ -20,9 +20,9 @@ target_link_libraries(
     benchmark_cuda
 
     PUBLIC
-    covfie_core
-    covfie_cuda
-    covfie_benchmark
+    core
+    cuda
+    benchmark
     benchmark::benchmark
     Boost::headers
 )

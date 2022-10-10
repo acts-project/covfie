@@ -18,9 +18,9 @@ target_link_libraries(
     benchmark_cpu
 
     PUBLIC
-    covfie_core
-    covfie_cpu
-    covfie_benchmark
+    core
+    cpu
+    benchmark
     benchmark::benchmark
     Boost::headers
 )

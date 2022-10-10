@@ -17,8 +17,8 @@ target_link_libraries(
     render_slice_cpu
 
     PRIVATE
-    covfie_core
-    covfie_cpu
+    core
+    cpu
     bitmap
     Boost::log
     Boost::log_setup
@@ -35,8 +35,8 @@ target_link_libraries(
     render_image_cpu
 
     PRIVATE
-    covfie_core
-    covfie_cpu
+    core
+    cpu
     bitmap
     Boost::log
     Boost::log_setup

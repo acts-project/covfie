@@ -37,7 +37,7 @@ target_link_libraries(
     test_core
 
     PUBLIC
-    covfie_core
+    core
     GTest::gtest
     GTest::gtest_main
     Boost::filesystem

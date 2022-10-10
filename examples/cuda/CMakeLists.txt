@@ -21,8 +21,8 @@ target_link_libraries(
     render_slice_cuda
 
     PRIVATE
-    covfie_core
-    covfie_cuda
+    core
+    cuda
     bitmap
     Boost::log
     Boost::log_setup
@@ -40,8 +40,8 @@ target_link_libraries(
     render_slice_texture_cuda
 
     PRIVATE
-    covfie_core
-    covfie_cuda
+    core
+    cuda
     bitmap
     Boost::log
     Boost::log_setup

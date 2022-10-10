@@ -6,10 +6,10 @@
 # v. 2.0. If a copy of the MPL was not distributed with this file, You can
 # obtain one at http://mozilla.org/MPL/2.0/.
 
-add_library(covfie_cuda INTERFACE)
+add_library(cuda INTERFACE)
 
 target_include_directories(
-    covfie_cuda
+    cuda
     INTERFACE
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
@@ -17,17 +17,17 @@ target_include_directories(
 
 # Remove this line!
 target_compile_options(
-    covfie_cuda
+    cuda
     INTERFACE
     -Wall -Wextra
     $<$<COMPILE_LANGUAGE:CUDA>:--expt-relaxed-constexpr>
 )
 
-target_compile_features(covfie_cuda INTERFACE cxx_std_17)
+target_compile_features(cuda INTERFACE cxx_std_17)
 
 # Logic to ensure that the CUDA module can be installed properly.
 install(
-    TARGETS covfie_cuda
+    TARGETS cuda
     EXPORT ${PROJECT_NAME}Targets
 )
 

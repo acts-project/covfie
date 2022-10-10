@@ -7,19 +7,19 @@
 # obtain one at http://mozilla.org/MPL/2.0/.
 
 add_library(
-    covfie_benchmark
+    benchmark
     SHARED
     test_field.cpp
 )
 
 target_include_directories(
-    covfie_benchmark
+    benchmark
     PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
 target_link_libraries(
-    covfie_benchmark
+    benchmark
     PUBLIC
-    covfie_core
+    core
 )
