@@ -85,16 +85,15 @@ void parse_opts(
 
 int main(int argc, char ** argv)
 {
-    using core_t = covfie::backend::layout::strided<
+    using core_t = covfie::backend::strided<
         covfie::vector::ulong3,
-        covfie::backend::storage::array<covfie::vector::float3>>;
-    using field_t1 = covfie::field<covfie::backend::transformer::affine<
-        covfie::backend::transformer::interpolator::linear<core_t>>>;
-    using field_t2 = covfie::field<
-        covfie::backend::transformer::ownership::reference<core_t>>;
-    using field_t3 = covfie::field<covfie::backend::layout::strided<
+        covfie::backend::array<covfie::vector::float3>>;
+    using field_t1 =
+        covfie::field<covfie::backend::affine<covfie::backend::linear<core_t>>>;
+    using field_t2 = covfie::field<covfie::backend::reference<core_t>>;
+    using field_t3 = covfie::field<covfie::backend::strided<
         covfie::vector::ulong2,
-        covfie::backend::storage::array<covfie::vector::float3>>>;
+        covfie::backend::array<covfie::vector::float3>>>;
 
     boost::program_options::variables_map vm;
     parse_opts(argc, argv, vm);

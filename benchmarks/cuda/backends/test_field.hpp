@@ -33,45 +33,41 @@ struct FieldConstant {
 };
 
 struct TexInterpolateNN {
-    static constexpr covfie::backend::storage::cuda_texture_interpolation
-        value = covfie::backend::storage::cuda_texture_interpolation::
-            NEAREST_NEIGHBOUR;
+    static constexpr covfie::backend::cuda_texture_interpolation value =
+        covfie::backend::cuda_texture_interpolation::NEAREST_NEIGHBOUR;
 };
 
 struct TexInterpolateLin {
-    static constexpr covfie::backend::storage::cuda_texture_interpolation
-        value = covfie::backend::storage::cuda_texture_interpolation::LINEAR;
+    static constexpr covfie::backend::cuda_texture_interpolation value =
+        covfie::backend::cuda_texture_interpolation::LINEAR;
 };
 
 struct InterpolateNN {
     template <typename T>
-    using apply =
-        covfie::backend::transformer::interpolator::nearest_neighbour<T>;
+    using apply = covfie::backend::nearest_neighbour<T>;
 };
 
 struct InterpolateLin {
     template <typename T>
-    using apply = covfie::backend::transformer::interpolator::linear<T>;
+    using apply = covfie::backend::linear<T>;
 };
 
 struct LayoutStride {
     template <typename T>
-    using apply = covfie::backend::layout::strided<covfie::vector::ulong3, T>;
+    using apply = covfie::backend::strided<covfie::vector::ulong3, T>;
 };
 
 struct LayoutMortonNaive {
     template <typename T>
-    using apply =
-        covfie::backend::layout::morton<covfie::vector::ulong3, T, false>;
+    using apply = covfie::backend::morton<covfie::vector::ulong3, T, false>;
 };
 
 template <typename Interpolator, typename Layout>
 struct Field {
-    using backend_t = covfie::backend::transformer::affine<
+    using backend_t = covfie::backend::affine<
         typename Interpolator::template apply<typename Layout::template apply<
 
-            covfie::backend::storage::cuda_device_array<
-                covfie::vector::float3>>>>;
+            covfie::backend::cuda_device_array<covfie::vector::float3>>>>;
 
     static covfie::field<backend_t> get_field()
     {
@@ -81,11 +77,10 @@ struct Field {
 
 template <typename Interpolator>
 struct FieldTex {
-    using backend_t = covfie::backend::transformer::affine<
-        covfie::backend::storage::cuda_texture<
-            covfie::vector::float3,
-            covfie::vector::float3,
-            Interpolator::value>>;
+    using backend_t = covfie::backend::affine<covfie::backend::cuda_texture<
+        covfie::vector::float3,
+        covfie::vector::float3,
+        Interpolator::value>>;
 
     static covfie::field<backend_t> get_field()
     {

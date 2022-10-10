@@ -23,7 +23,7 @@
 #include <covfie/core/utility/tuple.hpp>
 #include <covfie/core/vector.hpp>
 
-namespace covfie::backend::layout {
+namespace covfie::backend {
 template <
     CONSTRAINT(concepts::vector_descriptor) _input_vector_t,
     CONSTRAINT(concepts::field_backend) _storage_t>

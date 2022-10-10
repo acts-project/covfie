@@ -55,11 +55,10 @@ void parse_opts(
     }
 }
 
-using field_t = covfie::field<covfie::backend::transformer::affine<
-    covfie::backend::transformer::interpolator::nearest_neighbour<
-        covfie::backend::layout::strided<
-            covfie::vector::ulong3,
-            covfie::backend::storage::array<covfie::vector::float3>>>>>;
+using field_t = covfie::field<covfie::backend::affine<
+    covfie::backend::nearest_neighbour<covfie::backend::strided<
+        covfie::vector::ulong3,
+        covfie::backend::array<covfie::vector::float3>>>>>;
 
 field_t read_bfield(const std::string & fn)
 {

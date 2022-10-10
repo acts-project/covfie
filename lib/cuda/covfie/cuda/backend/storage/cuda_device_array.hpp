@@ -22,7 +22,7 @@
 #include <covfie/cuda/utility/memory.hpp>
 #include <covfie/cuda/utility/unique_ptr.hpp>
 
-namespace covfie::backend::storage {
+namespace covfie::backend {
 template <
     CONSTRAINT(concepts::vector_descriptor) _output_vector_t,
     typename _index_t = std::size_t>

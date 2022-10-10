@@ -32,38 +32,35 @@ struct FieldConstant {
 
 struct InterpolateNN {
     template <typename T>
-    using apply =
-        covfie::backend::transformer::interpolator::nearest_neighbour<T>;
+    using apply = covfie::backend::nearest_neighbour<T>;
 };
 
 struct InterpolateLin {
     template <typename T>
-    using apply = covfie::backend::transformer::interpolator::linear<T>;
+    using apply = covfie::backend::linear<T>;
 };
 
 struct LayoutStride {
     template <typename T>
-    using apply = covfie::backend::layout::strided<covfie::vector::ulong3, T>;
+    using apply = covfie::backend::strided<covfie::vector::ulong3, T>;
 };
 
 struct LayoutMortonBMI2 {
     template <typename T>
-    using apply =
-        covfie::backend::layout::morton<covfie::vector::ulong3, T, true>;
+    using apply = covfie::backend::morton<covfie::vector::ulong3, T, true>;
 };
 
 struct LayoutMortonNaive {
     template <typename T>
-    using apply =
-        covfie::backend::layout::morton<covfie::vector::ulong3, T, false>;
+    using apply = covfie::backend::morton<covfie::vector::ulong3, T, false>;
 };
 
 template <typename Interpolator, typename Layout>
 struct Field {
-    using backend_t = covfie::backend::transformer::affine<
+    using backend_t = covfie::backend::affine<
         typename Interpolator::template apply<typename Layout::template apply<
 
-            covfie::backend::storage::array<covfie::vector::float3>>>>;
+            covfie::backend::array<covfie::vector::float3>>>>;
 
     static covfie::field<backend_t> get_field()
     {
@@ -72,9 +69,9 @@ struct Field {
 };
 
 struct FieldIntBase {
-    using backend_t = covfie::backend::layout::strided<
+    using backend_t = covfie::backend::strided<
         covfie::vector::ulong3,
-        covfie::backend::storage::array<covfie::vector::float3>>;
+        covfie::backend::array<covfie::vector::float3>>;
 
     static covfie::field<backend_t> get_field()
     {
@@ -85,9 +82,9 @@ struct FieldIntBase {
 };
 
 struct FieldIntMorton {
-    using backend_t = covfie::backend::layout::morton<
+    using backend_t = covfie::backend::morton<
         covfie::vector::ulong3,
-        covfie::backend::storage::array<covfie::vector::float3>>;
+        covfie::backend::array<covfie::vector::float3>>;
 
     static covfie::field<backend_t> get_field()
     {

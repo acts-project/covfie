@@ -56,16 +56,15 @@ void parse_opts(
     }
 }
 
-using inner_backend_t = covfie::backend::layout::strided<
+using inner_backend_t = covfie::backend::strided<
     covfie::vector::ulong3,
-    covfie::backend::storage::array<covfie::vector::float3>>;
+    covfie::backend::array<covfie::vector::float3>>;
 
-using input_field_t = covfie::field<covfie::backend::transformer::affine<
-    covfie::backend::transformer::interpolator::linear<inner_backend_t>>>;
+using input_field_t = covfie::field<
+    covfie::backend::affine<covfie::backend::linear<inner_backend_t>>>;
 
-using output_field_t = covfie::field<covfie::backend::transformer::affine<
-    covfie::backend::transformer::interpolator::nearest_neighbour<
-        inner_backend_t>>>;
+using output_field_t = covfie::field<covfie::backend::affine<
+    covfie::backend::nearest_neighbour<inner_backend_t>>>;
 
 int main(int argc, char ** argv)
 {

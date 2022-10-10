@@ -17,10 +17,10 @@ If the availability of covfie is critical for the rest of your build system
     find_package(covfie REQUIRED)
 
 Following this directive, the covfie targets should be available for use. The
-target for the core library is called :code:`covfie::covfie_core`, while the
-platform-specific targets are found under the names :code:`covfie::covfie_cpu`
-and :code:`covfie::covfie_cuda`. As an example of a complete CMake
-configuration that includes covfie, consider the following:
+target for the core library is called :code:`covfie::core`, while the
+platform-specific targets are found under the names :code:`covfie::cpu` and
+:code:`covfie::cuda`. As an example of a complete CMake configuration that
+includes covfie, consider the following:
 
 .. code-block:: cmake
 

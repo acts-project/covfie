@@ -12,7 +12,7 @@
 
 #include <variant>
 
-namespace covfie::backend::transformer {
+namespace covfie::backend {
 template <CONSTRAINT(concepts::field_backend) _backend_t>
 struct dereference {
     using this_t = dereference<_backend_t>;

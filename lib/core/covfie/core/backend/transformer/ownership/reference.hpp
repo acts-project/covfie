@@ -17,7 +17,7 @@
 #include <covfie/core/concepts.hpp>
 #include <covfie/core/qualifiers.hpp>
 
-namespace covfie::backend::transformer::ownership {
+namespace covfie::backend {
 template <CONSTRAINT(concepts::field_backend) _backend_t>
 struct reference {
     using this_t = reference<_backend_t>;

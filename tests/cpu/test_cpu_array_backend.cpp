@@ -21,9 +21,9 @@
 
 TEST(TestFieldViewCPUArrayBackend, WriteRead1DSingleFloat)
 {
-    using field_t = covfie::field<covfie::backend::layout::strided<
+    using field_t = covfie::field<covfie::backend::strided<
         covfie::vector::ulong1,
-        covfie::backend::storage::array<covfie::vector::float1>>>;
+        covfie::backend::array<covfie::vector::float1>>>;
 
     field_t f(field_t::backend_t::configuration_t{5u});
     field_t::view_t fv(f);
@@ -43,9 +43,9 @@ TEST(TestFieldViewCPUArrayBackend, WriteRead1DSingleFloat)
 
 TEST(TestFieldViewCPUArrayBackend, WriteRead1DArrayFloat)
 {
-    using field_t = covfie::field<covfie::backend::layout::strided<
+    using field_t = covfie::field<covfie::backend::strided<
         covfie::vector::ulong1,
-        covfie::backend::storage::array<covfie::vector::float3>>>;
+        covfie::backend::array<covfie::vector::float3>>>;
 
     field_t f(field_t::backend_t::configuration_t{5u});
     field_t::view_t fv(f);
@@ -65,9 +65,9 @@ TEST(TestFieldViewCPUArrayBackend, WriteRead1DArrayFloat)
 
 TEST(TestFieldViewCPUArrayBackend, WriteRead2DSingleFloat)
 {
-    using field_t = covfie::field<covfie::backend::layout::strided<
+    using field_t = covfie::field<covfie::backend::strided<
         covfie::vector::ulong2,
-        covfie::backend::storage::array<covfie::vector::float1>>>;
+        covfie::backend::array<covfie::vector::float1>>>;
 
     field_t f(field_t::backend_t::configuration_t{5u, 7u});
     field_t::view_t fv(f);
@@ -91,9 +91,9 @@ TEST(TestFieldViewCPUArrayBackend, WriteRead2DSingleFloat)
 
 TEST(TestFieldViewCPUArrayBackend, WriteRead2DArrayFloat)
 {
-    using field_t = covfie::field<covfie::backend::layout::strided<
+    using field_t = covfie::field<covfie::backend::strided<
         covfie::vector::ulong2,
-        covfie::backend::storage::array<covfie::vector::float3>>>;
+        covfie::backend::array<covfie::vector::float3>>>;
 
     field_t f(field_t::backend_t::configuration_t{5u, 7u});
     field_t::view_t fv(f);
@@ -117,9 +117,9 @@ TEST(TestFieldViewCPUArrayBackend, WriteRead2DArrayFloat)
 
 TEST(TestFieldViewCPUArrayBackend, WriteRead3DSingleFloat)
 {
-    using field_t = covfie::field<covfie::backend::layout::strided<
+    using field_t = covfie::field<covfie::backend::strided<
         covfie::vector::ulong3,
-        covfie::backend::storage::array<covfie::vector::float1>>>;
+        covfie::backend::array<covfie::vector::float1>>>;
 
     field_t f(field_t::backend_t::configuration_t{5u, 7u, 2u});
     field_t::view_t fv(f);
@@ -150,9 +150,9 @@ TEST(TestFieldViewCPUArrayBackend, WriteRead3DSingleFloat)
 
 TEST(TestFieldViewCPUArrayBackend, WriteRead3DArrayFloat)
 {
-    using field_t = covfie::field<covfie::backend::layout::strided<
+    using field_t = covfie::field<covfie::backend::strided<
         covfie::vector::ulong3,
-        covfie::backend::storage::array<covfie::vector::float3>>>;
+        covfie::backend::array<covfie::vector::float3>>>;
 
     field_t f(field_t::backend_t::configuration_t{5u, 7u, 2u});
     field_t::view_t fv(f);

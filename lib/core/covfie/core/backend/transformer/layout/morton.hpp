@@ -32,7 +32,7 @@
 #include <covfie/core/utility/tuple.hpp>
 #include <covfie/core/vector.hpp>
 
-namespace covfie::backend::layout {
+namespace covfie::backend {
 #ifdef HAVE_BMI2
 template <typename Ix, typename Ox, std::size_t N>
 struct morton_pdep_mask {

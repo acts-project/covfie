@@ -18,7 +18,7 @@
 
 TEST(TestTransformerClamp, ClampIdentityInt1D)
 {
-    using field_t = covfie::field<covfie::backend::transformer::boundary::clamp<
+    using field_t = covfie::field<covfie::backend::clamp<
         covfie::backend::identity<covfie::vector::int1>>>;
 
     field_t f(
@@ -40,7 +40,7 @@ TEST(TestTransformerClamp, ClampIdentityInt1D)
 
 TEST(TestTransformerClamp, ClampIdentityInt2D)
 {
-    using field_t = covfie::field<covfie::backend::transformer::boundary::clamp<
+    using field_t = covfie::field<covfie::backend::clamp<
         covfie::backend::identity<covfie::vector::int2>>>;
 
     field_t f(

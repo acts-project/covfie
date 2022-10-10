@@ -22,7 +22,7 @@
 #include <covfie/core/utility/nd_size.hpp>
 #include <covfie/core/vector.hpp>
 
-namespace covfie::backend::transformer::boundary {
+namespace covfie::backend {
 template <CONSTRAINT(concepts::field_backend) _backend_t>
 struct clamp {
     using this_t = clamp<_backend_t>;

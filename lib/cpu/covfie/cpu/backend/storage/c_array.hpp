@@ -14,7 +14,7 @@
 
 #include <covfie/core/backend/initial/array.hpp>
 
-namespace covfie::backend::storage {
+namespace covfie::backend {
 template <
     CONSTRAINT(concepts::vector_descriptor) _output_vector_t,
     typename _index_t = std::size_t>

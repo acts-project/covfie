@@ -20,7 +20,7 @@
 #include <covfie/core/utility/nd_size.hpp>
 #include <covfie/core/vector.hpp>
 
-namespace covfie::backend::transformer::boundary {
+namespace covfie::backend {
 template <CONSTRAINT(concepts::field_backend) _backend_t>
 struct backup {
     using this_t = backup<_backend_t>;

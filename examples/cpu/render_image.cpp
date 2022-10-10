@@ -59,9 +59,9 @@ void parse_opts(
 
 int main(int argc, char ** argv)
 {
-    using field_t = covfie::field<covfie::backend::layout::strided<
+    using field_t = covfie::field<covfie::backend::strided<
         covfie::vector::ulong2,
-        covfie::backend::storage::array<covfie::vector::float3>>>;
+        covfie::backend::array<covfie::vector::float3>>>;
 
     boost::program_options::variables_map vm;
     parse_opts(argc, argv, vm);

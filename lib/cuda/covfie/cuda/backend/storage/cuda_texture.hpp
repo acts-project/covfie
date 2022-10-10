@@ -23,7 +23,7 @@
 #include <covfie/cuda/error_check.hpp>
 #include <covfie/cuda/utility/type_conversion.hpp>
 
-namespace covfie::backend::storage {
+namespace covfie::backend {
 enum class cuda_texture_interpolation {
     LINEAR,
     NEAREST_NEIGHBOUR
@@ -43,7 +43,7 @@ struct cuda_texture {
         typename utility::to_cuda_channel_t<_output_vector_t>::type;
 
     template <typename T>
-    using linear_tc = transformer::interpolator::linear<T, float>;
+    using linear_tc = linear<T, float>;
 
     struct owning_data_t {
         template <

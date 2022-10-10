@@ -19,7 +19,7 @@
 #include <covfie/core/qualifiers.hpp>
 #include <covfie/core/vector.hpp>
 
-namespace covfie::backend::transformer::interpolator {
+namespace covfie::backend {
 template <
     CONSTRAINT(concepts::field_backend) _backend_t,
     typename _input_scalar_type = float>

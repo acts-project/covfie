@@ -18,11 +18,10 @@
 #include <covfie/core/backend/transformer/layout/strided.hpp>
 #include <covfie/core/field.hpp>
 
-using data_field_t = covfie::field<covfie::backend::transformer::affine<
-    covfie::backend::transformer::interpolator::nearest_neighbour<
-        covfie::backend::layout::strided<
-            covfie::vector::ulong3,
-            covfie::backend::storage::array<covfie::vector::float3>>>>>;
+using data_field_t = covfie::field<covfie::backend::affine<
+    covfie::backend::nearest_neighbour<covfie::backend::strided<
+        covfie::vector::ulong3,
+        covfie::backend::array<covfie::vector::float3>>>>>;
 
 extern std::unique_ptr<data_field_t> TEST_FIELD;
 

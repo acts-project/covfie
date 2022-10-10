@@ -37,9 +37,9 @@ example is included in the repository as
 [`readme_example_1`](examples/core/readme_example_1.cpp)):
 
 ```cpp
-using field_t = covfie::field<covfie::backend::layout::strided<
+using field_t = covfie::field<covfie::backend::strided<
     covfie::vector::ulong2,
-    covfie::backend::storage::array<covfie::vector::float2>>>;
+    covfie::backend::array<covfie::vector::float2>>>;
 
 int main(void)
 {
@@ -71,15 +71,15 @@ indices in each direction. If we want to use real numbers for our vector field,
 we can simply add a linear interpolator:
 
 ```cpp
-using builder_t = covfie::field<covfie::backend::layout::strided<
+using builder_t = covfie::field<covfie::backend::strided<
     covfie::vector::ulong2,
-    covfie::backend::storage::array<covfie::vector::float2>>>;
+    covfie::backend::array<covfie::vector::float2>>>;
 
 using field_t =
-    covfie::field<covfie::backend::transformer::interpolator::linear<
-        covfie::backend::layout::strided<
+    covfie::field<covfie::backend::linear<
+        covfie::backend::strided<
             covfie::vector::ulong2,
-            covfie::backend::storage::array<covfie::vector::float2>>>>;
+            covfie::backend::array<covfie::vector::float2>>>>;
 
 int main(void)
 {

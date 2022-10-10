@@ -19,7 +19,7 @@
 #include <covfie/core/qualifiers.hpp>
 #include <covfie/core/utility/binary_io.hpp>
 
-namespace covfie::backend::transformer {
+namespace covfie::backend {
 template <CONSTRAINT(concepts::field_backend) _backend_t>
 struct affine {
     using this_t = affine<_backend_t>;

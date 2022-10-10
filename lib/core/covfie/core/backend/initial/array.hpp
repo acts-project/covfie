@@ -21,7 +21,7 @@
 #include <covfie/core/utility/nd_size.hpp>
 #include <covfie/core/vector.hpp>
 
-namespace covfie::backend::storage {
+namespace covfie::backend {
 template <
     CONSTRAINT(concepts::vector_descriptor) _output_vector_t,
     typename _index_t = std::size_t>

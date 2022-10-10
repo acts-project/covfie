@@ -113,9 +113,9 @@ way:
 .. code-block:: cpp
 
     using l0 = covfie::backend::constant<...>;
-    using l1 = covfie::backend::transformer::my_transformer<l0>;
-    using l2 = covfie::backend::transformer::my_interpolator<l1>;
-    using l3 = covfie::backend::transformer::my_affine<l2>;
+    using l1 = covfie::backend::my_transformer<l0>;
+    using l2 = covfie::backend::my_interpolator<l1>;
+    using l3 = covfie::backend::my_affine<l2>;
 
 Alternatively, we can construct a new type constructor which applies multiple
 transformer layers to the same initial backend:
@@ -123,9 +123,9 @@ transformer layers to the same initial backend:
 .. code-block:: cpp
 
     template<typename T>
-    using l123 = covfie::backend::transformer::my_affine<
-        covfie::backend::transformer::my_interpolator<
-            covfie::backend::transformer::my_transformer<
+    using l123 = covfie::backend::my_affine<
+        covfie::backend::my_interpolator<
+            covfie::backend::my_transformer<
                 T
             >
         >
@@ -154,9 +154,9 @@ follows:
 
     // Once again, equivalent to what is shown above
     using l3 = compose<
-        covfie::backend::transformer::my_affine
-        covfie::backend::transformer::my_interpolator
-        covfie::backend::transformer::my_transformer
+        covfie::backend::my_affine
+        covfie::backend::my_interpolator
+        covfie::backend::my_transformer
     >::type<covfie::backend::constant<...>>;
 
 These three approaches are equivalent, and you are free to pick whichever fits

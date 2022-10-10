@@ -16,9 +16,9 @@
 #include <covfie/core/field.hpp>
 #include <covfie/core/field_view.hpp>
 
-using field_t = covfie::field<covfie::backend::layout::strided<
+using field_t = covfie::field<covfie::backend::strided<
     covfie::vector::ulong2,
-    covfie::backend::storage::array<covfie::vector::float2>>>;
+    covfie::backend::array<covfie::vector::float2>>>;
 
 int main(void)
 {

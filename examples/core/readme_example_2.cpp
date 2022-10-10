@@ -17,15 +17,13 @@
 #include <covfie/core/field.hpp>
 #include <covfie/core/field_view.hpp>
 
-using builder_t = covfie::field<covfie::backend::layout::strided<
+using builder_t = covfie::field<covfie::backend::strided<
     covfie::vector::ulong2,
-    covfie::backend::storage::array<covfie::vector::float2>>>;
+    covfie::backend::array<covfie::vector::float2>>>;
 
-using field_t =
-    covfie::field<covfie::backend::transformer::interpolator::linear<
-        covfie::backend::layout::strided<
-            covfie::vector::ulong2,
-            covfie::backend::storage::array<covfie::vector::float2>>>>;
+using field_t = covfie::field<covfie::backend::linear<covfie::backend::strided<
+    covfie::vector::ulong2,
+    covfie::backend::array<covfie::vector::float2>>>>;
 
 int main(void)
 {

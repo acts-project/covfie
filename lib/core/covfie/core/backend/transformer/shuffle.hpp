@@ -12,7 +12,7 @@
 
 #include <variant>
 
-namespace covfie::backend::transformer {
+namespace covfie::backend {
 template <CONSTRAINT(concepts::field_backend) _backend_t, typename _shuffle>
 struct shuffle {
     using this_t = shuffle<_backend_t, _shuffle>;

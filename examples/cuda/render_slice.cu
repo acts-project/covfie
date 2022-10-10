@@ -24,18 +24,15 @@
 
 #include "bitmap.hpp"
 
-using cpu_field_t = covfie::field<covfie::backend::transformer::affine<
-    covfie::backend::transformer::interpolator::linear<
-        covfie::backend::layout::strided<
-            covfie::vector::ulong3,
-            covfie::backend::storage::array<covfie::vector::float3>>>>>;
+using cpu_field_t = covfie::field<
+    covfie::backend::affine<covfie::backend::linear<covfie::backend::strided<
+        covfie::vector::ulong3,
+        covfie::backend::array<covfie::vector::float3>>>>>;
 
-using cuda_field_t = covfie::field<covfie::backend::transformer::affine<
-    covfie::backend::transformer::interpolator::linear<
-        covfie::backend::layout::strided<
-            covfie::vector::ulong3,
-            covfie::backend::storage::cuda_device_array<
-                covfie::vector::float3>>>>>;
+using cuda_field_t = covfie::field<
+    covfie::backend::affine<covfie::backend::linear<covfie::backend::strided<
+        covfie::vector::ulong3,
+        covfie::backend::cuda_device_array<covfie::vector::float3>>>>>;
 
 void parse_opts(
     int argc, char * argv[], boost::program_options::variables_map & vm

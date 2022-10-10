@@ -53,15 +53,14 @@ void parse_opts(
     }
 }
 
-using core_backend_t = covfie::backend::layout::strided<
+using core_backend_t = covfie::backend::strided<
     covfie::vector::ulong3,
-    covfie::backend::storage::array<covfie::vector::float3>>;
+    covfie::backend::array<covfie::vector::float3>>;
 
 using core_field_t = covfie::field<core_backend_t>;
 
-using full_backend_t = covfie::backend::transformer::affine<
-    covfie::backend::transformer::interpolator::nearest_neighbour<
-        core_backend_t>>;
+using full_backend_t =
+    covfie::backend::affine<covfie::backend::nearest_neighbour<core_backend_t>>;
 
 using full_field_t = covfie::field<full_backend_t>;
 
