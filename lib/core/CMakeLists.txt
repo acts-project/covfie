@@ -46,3 +46,7 @@ install(
     DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/covfie
     DESTINATION include
 )
+
+# Hack for people using the disgusting mal-practice of pullling in external
+# projects via "add_subdirectory"...
+add_library(covfie::core ALIAS core)

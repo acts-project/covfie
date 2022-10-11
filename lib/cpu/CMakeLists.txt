@@ -30,3 +30,6 @@ install(
     DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/covfie
     DESTINATION include
 )
+
+# Hack for compatibility
+add_library(covfie::cpu ALIAS cpu)
