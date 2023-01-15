@@ -14,12 +14,18 @@
 #include <covfie/benchmark/register.hpp>
 
 #include "backends/test_field.hpp"
+#include "patterns/euler.hpp"
 #include "patterns/lorentz.hpp"
+#include "patterns/runge_kutta4.hpp"
 
 void register_benchmarks(void)
 {
     covfie::benchmark::register_product_bm<
-        boost::mp11::mp_list<Lorentz<Euler>>,
+        boost::mp11::mp_list<
+            Lorentz<Euler>,
+            Lorentz<RungeKutta4>,
+            RungeKutta4Pattern,
+            EulerPattern>,
         boost::mp11::mp_list<
             FieldConstant,
             FieldTex<TexInterpolateLin>,

@@ -25,6 +25,11 @@ struct lorentz_agent {
     float mom[N];
 };
 
+template <std::size_t N>
+struct propagation_agent {
+    float pos[N];
+};
+
 template <typename T, std::size_t N>
 struct random_agent {
     T pos[N];

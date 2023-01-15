@@ -15,12 +15,20 @@
 
 #include "backends/constant.hpp"
 #include "backends/test_field.hpp"
+#include "patterns/euler.hpp"
 #include "patterns/lorentz.hpp"
+#include "patterns/runge_kutta4.hpp"
 
 void register_benchmarks(void)
 {
     covfie::benchmark::register_product_bm<
-        boost::mp11::mp_list<Lorentz<Euler, Deep>, Lorentz<Euler, Wide>>,
+        boost::mp11::mp_list<
+            Lorentz<Euler, Deep>,
+            Lorentz<Euler, Wide>,
+            RungeKutta4Pattern<Deep>,
+            RungeKutta4Pattern<Wide>,
+            EulerPattern<Deep>,
+            EulerPattern<Wide>>,
         boost::mp11::mp_list<
             FieldConstant,
             Field<InterpolateNN, LayoutStride>,

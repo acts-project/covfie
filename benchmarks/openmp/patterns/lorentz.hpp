@@ -12,24 +12,10 @@
 
 #include <random>
 
+#include <covfie/benchmark/lorentz.hpp>
 #include <covfie/benchmark/pattern.hpp>
+#include <covfie/benchmark/propagate.hpp>
 #include <covfie/core/field_view.hpp>
-
-class Euler
-{
-};
-
-class RungeKutta4
-{
-};
-
-class Wide
-{
-};
-
-class Deep
-{
-};
 
 template <typename Propagator, typename Order>
 struct Lorentz : covfie::benchmark::AccessPattern<Lorentz<Propagator, Order>> {
@@ -80,50 +66,7 @@ struct Lorentz : covfie::benchmark::AccessPattern<Lorentz<Propagator, Order>> {
 #pragma omp parallel for num_threads(p.threads) schedule(static)
             for (std::size_t i = 0; i < p.particles; ++i) {
                 for (std::size_t s = 0; s < p.steps; ++s) {
-                    covfie::benchmark::lorentz_agent<3> & o = objs[i];
-                    float lf[3];
-
-                    if constexpr (std::is_same_v<Propagator, Euler>) {
-                        typename std::decay_t<decltype(f)>::output_t b =
-                            f.at(o.pos[0], o.pos[1], o.pos[2]);
-                        lf[0] = o.mom[1] * b[2] - o.mom[2] * b[1];
-                        lf[1] = o.mom[2] * b[0] - o.mom[0] * b[2];
-                        lf[2] = o.mom[0] * b[1] - o.mom[1] * b[0];
-                    }
-
-                    o.pos[0] += o.mom[0] * ss;
-                    o.pos[1] += o.mom[1] * ss;
-                    o.pos[2] += o.mom[2] * ss;
-
-                    if (__builtin_expect(
-                            o.pos[0] < -9999.f || o.pos[0] > 9999.f ||
-                                o.pos[1] < -9999.f || o.pos[1] > 9999.f ||
-                                o.pos[2] < -14999.f || o.pos[2] > 14999.f,
-                            0
-                        ))
-                    {
-                        if (o.pos[0] < -9999.f) {
-                            o.pos[0] += 19998.f;
-                        } else if (o.pos[0] > 9999.f) {
-                            o.pos[0] -= 19998.f;
-                        }
-
-                        if (o.pos[1] < -9999.f) {
-                            o.pos[1] += 19998.f;
-                        } else if (o.pos[1] > 9999.f) {
-                            o.pos[1] -= 19998.f;
-                        }
-
-                        if (o.pos[2] < -14999.f) {
-                            o.pos[2] += 29998.f;
-                        } else if (o.pos[2] > 14999.f) {
-                            o.pos[2] -= 29998.f;
-                        }
-                    }
-
-                    o.mom[0] += lf[0] * ss;
-                    o.mom[1] += lf[1] * ss;
-                    o.mom[2] += lf[2] * ss;
+                    lorentz_step<Propagator>(f, objs[i], ss);
                 }
             }
         } else {
@@ -131,50 +74,7 @@ struct Lorentz : covfie::benchmark::AccessPattern<Lorentz<Propagator, Order>> {
             for (std::size_t s = 0; s < p.steps; ++s) {
 #pragma omp for schedule(static)
                 for (std::size_t i = 0; i < p.particles; ++i) {
-                    covfie::benchmark::lorentz_agent<3> & o = objs[i];
-                    float lf[3];
-
-                    if constexpr (std::is_same_v<Propagator, Euler>) {
-                        typename std::decay_t<decltype(f)>::output_t b =
-                            f.at(o.pos[0], o.pos[1], o.pos[2]);
-                        lf[0] = o.mom[1] * b[2] - o.mom[2] * b[1];
-                        lf[1] = o.mom[2] * b[0] - o.mom[0] * b[2];
-                        lf[2] = o.mom[0] * b[1] - o.mom[1] * b[0];
-                    }
-
-                    o.pos[0] += o.mom[0] * ss;
-                    o.pos[1] += o.mom[1] * ss;
-                    o.pos[2] += o.mom[2] * ss;
-
-                    if (__builtin_expect(
-                            o.pos[0] < -9999.f || o.pos[0] > 9999.f ||
-                                o.pos[1] < -9999.f || o.pos[1] > 9999.f ||
-                                o.pos[2] < -14999.f || o.pos[2] > 14999.f,
-                            0
-                        ))
-                    {
-                        if (o.pos[0] < -9999.f) {
-                            o.pos[0] += 19998.f;
-                        } else if (o.pos[0] > 9999.f) {
-                            o.pos[0] -= 19998.f;
-                        }
-
-                        if (o.pos[1] < -9999.f) {
-                            o.pos[1] += 19998.f;
-                        } else if (o.pos[1] > 9999.f) {
-                            o.pos[1] -= 19998.f;
-                        }
-
-                        if (o.pos[2] < -14999.f) {
-                            o.pos[2] += 29998.f;
-                        } else if (o.pos[2] > 14999.f) {
-                            o.pos[2] -= 29998.f;
-                        }
-                    }
-
-                    o.mom[0] += lf[0] * ss;
-                    o.mom[1] += lf[1] * ss;
-                    o.mom[2] += lf[2] * ss;
+                    lorentz_step<Propagator>(f, objs[i], ss);
                 }
 #pragma omp barrier
             }
