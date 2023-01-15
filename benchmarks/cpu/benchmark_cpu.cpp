@@ -15,7 +15,7 @@
 
 #include "backends/constant.hpp"
 #include "backends/test_field.hpp"
-#include "patterns/lorentz_euler.hpp"
+#include "patterns/lorentz.hpp"
 #include "patterns/random.hpp"
 #include "patterns/sequential.hpp"
 
