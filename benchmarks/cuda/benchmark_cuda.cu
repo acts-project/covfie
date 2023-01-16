@@ -16,6 +16,7 @@
 #include "backends/test_field.hpp"
 #include "patterns/euler.hpp"
 #include "patterns/lorentz.hpp"
+#include "patterns/random.hpp"
 #include "patterns/runge_kutta4.hpp"
 
 void register_benchmarks(void)
@@ -25,7 +26,8 @@ void register_benchmarks(void)
             Lorentz<Euler>,
             Lorentz<RungeKutta4>,
             RungeKutta4Pattern,
-            EulerPattern>,
+            EulerPattern,
+            Random>,
         boost::mp11::mp_list<
             FieldConstant,
             FieldTex<TexInterpolateLin>,

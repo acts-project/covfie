@@ -10,9 +10,9 @@
 
 #pragma once
 
+#include <covfie/benchmark/propagate.hpp>
 #include <covfie/benchmark/types.hpp>
 #include <covfie/core/field_view.hpp>
-#include <covfie/benchmark/propagate.hpp>
 
 #ifdef __CUDACC__
 #define HOST_DEVICE __host__ __device__
