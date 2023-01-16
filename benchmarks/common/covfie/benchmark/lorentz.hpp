@@ -12,20 +12,13 @@
 
 #include <covfie/benchmark/types.hpp>
 #include <covfie/core/field_view.hpp>
+#include <covfie/benchmark/propagate.hpp>
 
 #ifdef __CUDACC__
 #define HOST_DEVICE __host__ __device__
 #else
 #define HOST_DEVICE
 #endif
-
-class Euler
-{
-};
-
-class RungeKutta4
-{
-};
 
 template <typename propagator_t, typename backend_t>
 HOST_DEVICE inline __attribute__((always_inline)) void lorentz_step(

@@ -27,6 +27,14 @@ class Deep
 {
 };
 
+class Euler
+{
+};
+
+class RungeKutta4
+{
+};
+
 template <typename propagator_t, typename backend_t>
 HOST_DEVICE inline __attribute__((always_inline)) void propagation_step(
     const covfie::field_view<backend_t> & f,
