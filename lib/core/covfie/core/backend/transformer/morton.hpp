@@ -222,22 +222,6 @@ struct morton {
         }
 
         template <
-            typename B = backend_t,
-            std::enable_if_t<
-                std::is_constructible_v<typename B::owning_data_t, std::size_t>,
-                bool> = true>
-        explicit owning_data_t(configuration_t conf)
-            : m_sizes(conf)
-            , m_storage(std::accumulate(
-                  std::begin(m_sizes),
-                  std::end(m_sizes),
-                  1,
-                  std::multiplies<std::size_t>()
-              ))
-        {
-        }
-
-        template <
             typename... Args,
             typename B = backend_t,
             std::enable_if_t<
