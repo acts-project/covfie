@@ -18,6 +18,7 @@
 #include "patterns/lorentz.hpp"
 #include "patterns/random.hpp"
 #include "patterns/runge_kutta4.hpp"
+#include "patterns/scan.hpp"
 
 void register_benchmarks(void)
 {
@@ -27,7 +28,8 @@ void register_benchmarks(void)
             Lorentz<RungeKutta4>,
             RungeKutta4Pattern,
             EulerPattern,
-            Random>,
+            Random,
+            Scan>,
         boost::mp11::mp_list<
             FieldConstant,
             FieldTex<TexInterpolateLin>,
