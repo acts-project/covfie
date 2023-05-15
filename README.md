@@ -112,6 +112,41 @@ covfie types can seem intimidating at first, but they are quite friendly! Also,
 you only really need to worry about them once, and you can hide them away in a
 typedef.
 
+## Citation
+
+If you use covfie in your research, please cite the following paper:
+
+```bibtex
+@inproceedings{covfie_paper,
+    author = {Swatman, Stephen Nicholas and Varbanescu, Ana-Lucia and Pimentel, Andy and Salzburger, Andreas and Krasznahorkay, Attila},
+    title = {Systematically Exploring High-Performance Representations of Vector Fields Through Compile-Time Composition},
+    year = {2023},
+    isbn = {9798400700682},
+    publisher = {Association for Computing Machinery},
+    address = {New York, NY, USA},
+    doi = {10.1145/3578244.3583723},
+    booktitle = {Proceedings of the 2023 ACM/SPEC International Conference on Performance Engineering},
+    pages = {55–66},
+    numpages = {12},
+    location = {Coimbra, Portugal},
+    series = {ICPE '23}
+}
+```
+
+You may also want to cite the software itself. Unfortunately, academia has not
+yet progressed to the point where software citations are regarded as highly as
+paper citations; therefore, we prefer references to the paper (although you may
+want to cite both). To cite the software, use:
+
+```bibtex
+@software{covfie_lib,
+    author = {Swatman, Stephen Nicholas},
+    license = {MPL-2.0},
+    title = {{Covfie: A Compositional Vector Field Library}},
+    url = {https://github.com/acts-project/covfie}
+}
+```
+
 ## Documentation
 
 All documentation pertaining to covfie can be found on ReadTheDocs at the
