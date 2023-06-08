@@ -17,7 +17,7 @@
         _cudaErrorCheck((r), __FILE__, __LINE__);                              \
     }
 
-void _cudaErrorCheck(cudaError_t code, const char * file, int line)
+inline void _cudaErrorCheck(cudaError_t code, const char * file, int line)
 {
     if (code != cudaSuccess) {
         std::stringstream ss;
