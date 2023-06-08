@@ -37,9 +37,8 @@ struct cuda_device_array {
         covfie::vector::array_reference_vector_d<_output_vector_t>;
 
     using output_vector_t = _output_vector_t;
-    static constexpr std::size_t size = output_vector_t::size;
 
-    using value_t = typename output_vector_t::type[size];
+    using value_t = typename output_vector_t::type[output_vector_t::size];
     using vector_t = std::decay_t<typename covariant_output_t::vector_t>;
 
     using configuration_t = utility::nd_size<1>;
