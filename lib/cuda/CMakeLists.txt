@@ -6,6 +6,8 @@
 # v. 2.0. If a copy of the MPL was not distributed with this file, You can
 # obtain one at http://mozilla.org/MPL/2.0/.
 
+find_package(CUDAToolkit REQUIRED)
+
 add_library(cuda INTERFACE)
 
 target_include_directories(
@@ -24,6 +26,12 @@ target_compile_options(
 )
 
 target_compile_features(cuda INTERFACE cxx_std_17)
+
+target_link_libraries(
+    cuda
+    INTERFACE
+    CUDA::cudart
+)
 
 # Logic to ensure that the CUDA module can be installed properly.
 install(
