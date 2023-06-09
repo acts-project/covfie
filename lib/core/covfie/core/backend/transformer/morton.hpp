@@ -12,6 +12,7 @@
 
 #include <algorithm>
 #include <climits>
+#include <iostream>
 #include <memory>
 #include <numeric>
 #include <type_traits>
@@ -115,7 +116,8 @@ struct morton {
                  ++i)
             {
                 for (std::size_t j = 0; j < contravariant_input_t::dimensions;
-                     ++j) {
+                     ++j)
+                {
                     idx |= (c[j] & (1UL << i))
                            << (i * (contravariant_input_t::dimensions - 1) + j);
                 }
@@ -145,7 +147,8 @@ struct morton {
     template <typename T>
     static std::unique_ptr<
         std::decay_t<typename backend_t::covariant_output_t::vector_t>[]>
-    make_morton_copy(const T & other) {
+    make_morton_copy(const T & other)
+    {
         configuration_t sizes = other.get_configuration();
         std::unique_ptr<
             std::decay_t<typename backend_t::covariant_output_t::vector_t>[]>
@@ -234,13 +237,13 @@ struct morton {
         {
         }
 
-        explicit owning_data_t(std::ifstream & fs)
+        explicit owning_data_t(std::istream & fs)
             : m_sizes(utility::read_binary<decltype(m_sizes)>(fs))
             , m_storage(fs)
         {
         }
 
-        void dump(std::ofstream & fs) const
+        void dump(std::ostream & fs) const
         {
             fs.write(
                 reinterpret_cast<const char *>(&m_sizes),

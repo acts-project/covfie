@@ -11,7 +11,6 @@
 #pragma once
 
 #include <algorithm>
-#include <fstream>
 #include <iostream>
 #include <type_traits>
 #include <variant>
@@ -68,14 +67,14 @@ struct clamp {
             }
         }
 
-        explicit owning_data_t(std::ifstream & fs)
+        explicit owning_data_t(std::istream & fs)
             : m_min(utility::read_binary<decltype(m_min)>(fs))
             , m_max(utility::read_binary<decltype(m_max)>(fs))
             , m_backend(fs)
         {
         }
 
-        void dump(std::ofstream & fs) const
+        void dump(std::ostream & fs) const
         {
             fs.write(
                 reinterpret_cast<const char *>(&m_min), sizeof(decltype(m_min))

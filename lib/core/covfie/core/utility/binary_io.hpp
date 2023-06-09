@@ -10,12 +10,12 @@
 
 #pragma once
 
-#include <fstream>
+#include <iostream>
 #include <memory>
 
 namespace covfie::utility {
 template <typename T>
-T read_binary(std::ifstream & fs)
+T read_binary(std::istream & fs)
 {
     std::byte mem[sizeof(T)];
 
@@ -25,7 +25,7 @@ T read_binary(std::ifstream & fs)
 }
 
 template <typename T>
-std::unique_ptr<T[]> read_binary_array(std::ifstream & fs, std::size_t n)
+std::unique_ptr<T[]> read_binary_array(std::istream & fs, std::size_t n)
 {
     std::unique_ptr<T[]> r = std::make_unique<T[]>(n);
 

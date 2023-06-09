@@ -11,6 +11,7 @@
 #pragma once
 
 #include <cstring>
+#include <iostream>
 #include <memory>
 #include <tuple>
 #include <utility>
@@ -61,7 +62,7 @@ struct array {
         {
         }
 
-        explicit owning_data_t(std::ifstream & fs)
+        explicit owning_data_t(std::istream & fs)
             : m_size(utility::read_binary<decltype(m_size)>(fs))
             , m_ptr(utility::read_binary_array<vector_t>(fs, m_size))
         {
@@ -87,7 +88,7 @@ struct array {
             return {m_size};
         }
 
-        void dump(std::ofstream & fs) const
+        void dump(std::ostream & fs) const
         {
             fs.write(
                 reinterpret_cast<const char *>(&m_size),

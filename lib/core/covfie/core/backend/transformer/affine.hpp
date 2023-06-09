@@ -11,7 +11,7 @@
 #pragma once
 
 #include <cstddef>
-#include <fstream>
+#include <iostream>
 
 #include <covfie/core/algebra/affine.hpp>
 #include <covfie/core/algebra/vector.hpp>
@@ -63,13 +63,13 @@ struct affine {
         {
         }
 
-        explicit owning_data_t(std::ifstream & fs)
+        explicit owning_data_t(std::istream & fs)
             : m_transform(utility::read_binary<decltype(m_transform)>(fs))
             , m_backend(fs)
         {
         }
 
-        void dump(std::ofstream & fs) const
+        void dump(std::ostream & fs) const
         {
             fs.write(
                 reinterpret_cast<const char *>(&m_transform),

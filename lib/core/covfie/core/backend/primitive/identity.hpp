@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include <fstream>
+#include <iostream>
 #include <type_traits>
 #include <variant>
 
@@ -51,7 +51,7 @@ struct identity {
         {
         }
 
-        explicit owning_data_t(std::ifstream &)
+        explicit owning_data_t(std::istream &)
         {
         }
 
@@ -60,7 +60,7 @@ struct identity {
             return {};
         }
 
-        void dump(std::ofstream &) const
+        void dump(std::ostream &) const
         {
         }
     };
@@ -78,7 +78,8 @@ struct identity {
             typename covariant_output_t::vector_t rv;
 
             for (std::size_t i = 0ul; i < contravariant_input_t::dimensions;
-                 ++i) {
+                 ++i)
+            {
                 rv[i] = c[i];
             }
 

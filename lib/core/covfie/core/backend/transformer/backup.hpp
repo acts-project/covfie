@@ -10,7 +10,6 @@
 
 #pragma once
 
-#include <fstream>
 #include <iostream>
 #include <type_traits>
 #include <variant>
@@ -74,7 +73,7 @@ struct backup {
             );
         }
 
-        explicit owning_data_t(std::ifstream & fs)
+        explicit owning_data_t(std::istream & fs)
             : m_min(utility::read_binary<decltype(m_min)>(fs))
             , m_max(utility::read_binary<decltype(m_max)>(fs))
             , m_default(utility::read_binary<decltype(m_default)>(fs))
@@ -82,7 +81,7 @@ struct backup {
         {
         }
 
-        void dump(std::ofstream & fs) const
+        void dump(std::ostream & fs) const
         {
             fs.write(
                 reinterpret_cast<const char *>(&m_min), sizeof(decltype(m_min))

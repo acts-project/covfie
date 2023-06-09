@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include <fstream>
+#include <iostream>
 
 #include <covfie/core/definitions.hpp>
 
@@ -82,13 +82,13 @@ concept field_backend = requires
     {
         {
             o.get_configuration()
-            } -> std::same_as<typename T::configuration_t>;
+        } -> std::same_as<typename T::configuration_t>;
     };
 
     /*
      * Check whether the owning data type can be read from a file.
      */
-    requires requires(std::ifstream & fs)
+    requires requires(std::istream & fs)
     {
         {typename T::owning_data_t(fs)};
     };
@@ -100,7 +100,7 @@ concept field_backend = requires
             typename T::backend_t;
             {
                 d.get_backend()
-                } -> std::same_as<typename T::backend_t::owning_data_t &>;
+            } -> std::same_as<typename T::backend_t::owning_data_t &>;
         };
     };
 
@@ -115,7 +115,7 @@ concept field_backend = requires
         /*
          * Check whether an owning data type can be written to disk.
          */
-        requires requires(std::ofstream & fs)
+        requires requires(std::ostream & fs)
         {
             {d.dump(fs)};
         };
@@ -129,7 +129,7 @@ concept field_backend = requires
             typename T::backend_t;
             {
                 d.get_backend()
-                } -> std::same_as<const typename T::backend_t::owning_data_t &>;
+            } -> std::same_as<const typename T::backend_t::owning_data_t &>;
         };
     };
 
@@ -144,7 +144,7 @@ concept field_backend = requires
             typename T::backend_t;
             {
                 d.get_backend()
-                } -> std::same_as<typename T::backend_t::non_owning_data_t &>;
+            } -> std::same_as<typename T::backend_t::non_owning_data_t &>;
         };
     };
 
@@ -156,7 +156,7 @@ concept field_backend = requires
     {
         {
             d.at(std::declval<typename T::contravariant_input_t::vector_t>())
-            } -> std::same_as<typename T::covariant_output_t::vector_t>;
+        } -> std::same_as<typename T::covariant_output_t::vector_t>;
 
         /*
          * Constant version of the requirement that non-owning data can be
@@ -167,8 +167,7 @@ concept field_backend = requires
             typename T::backend_t;
             {
                 d.get_backend()
-                } -> std::same_as<
-                    const typename T::backend_t::non_owning_data_t &>;
+            } -> std::same_as<const typename T::backend_t::non_owning_data_t &>;
         };
     };
 };

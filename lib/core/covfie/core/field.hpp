@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include <fstream>
+#include <iostream>
 
 #include <covfie/core/concepts.hpp>
 #include <covfie/core/field_view.hpp>
@@ -44,7 +44,7 @@ public:
     {
     }
 
-    explicit field(std::ifstream & fs)
+    explicit field(std::istream & fs)
         : m_backend(fs)
     {
     }
@@ -54,7 +54,7 @@ public:
         return m_backend;
     }
 
-    void dump(std::ofstream & fs) const
+    void dump(std::ostream & fs) const
     {
         m_backend.dump(fs);
     }

@@ -12,7 +12,7 @@
 
 #include <cmath>
 #include <cstddef>
-#include <fstream>
+#include <iostream>
 #include <type_traits>
 #include <variant>
 
@@ -62,12 +62,12 @@ struct _nearest_neighbour {
         {
         }
 
-        explicit owning_data_t(std::ifstream & fs)
+        explicit owning_data_t(std::istream & fs)
             : m_backend(fs)
         {
         }
 
-        void dump(std::ofstream & fs) const
+        void dump(std::ostream & fs) const
         {
             m_backend.dump(fs);
         }

@@ -10,6 +10,7 @@
 
 #pragma once
 
+#include <iostream>
 #include <memory>
 #include <numeric>
 #include <type_traits>
@@ -47,7 +48,8 @@ struct strided {
     template <typename T>
     static std::unique_ptr<
         std::decay_t<typename backend_t::covariant_output_t::vector_t>[]>
-    make_strided_copy(const T & other) {
+    make_strided_copy(const T & other)
+    {
         configuration_t sizes = other.get_configuration();
         std::unique_ptr<
             std::decay_t<typename backend_t::covariant_output_t::vector_t>[]>
@@ -78,7 +80,8 @@ struct strided {
 
                     for (std::size_t l = k + 1;
                          l < contravariant_input_t::dimensions;
-                         ++l) {
+                         ++l)
+                    {
                         tmp *= sizes[l];
                     }
 
@@ -157,13 +160,13 @@ struct strided {
         {
         }
 
-        explicit owning_data_t(std::ifstream & fs)
+        explicit owning_data_t(std::istream & fs)
             : m_sizes(utility::read_binary<decltype(m_sizes)>(fs))
             , m_storage(fs)
         {
         }
 
-        void dump(std::ofstream & fs) const
+        void dump(std::ostream & fs) const
         {
             fs.write(
                 reinterpret_cast<const char *>(&m_sizes),
@@ -212,7 +215,8 @@ struct strided {
 
                 for (std::size_t l = k + 1;
                      l < contravariant_input_t::dimensions;
-                     ++l) {
+                     ++l)
+                {
                     tmp *= m_sizes[l];
                 }
 

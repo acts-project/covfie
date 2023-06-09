@@ -11,6 +11,7 @@
 #pragma once
 
 #include <array>
+#include <iostream>
 
 #include <covfie/core/concepts.hpp>
 #include <covfie/core/qualifiers.hpp>
@@ -43,7 +44,7 @@ struct constant {
         {
         }
 
-        explicit owning_data_t(std::ifstream & fs)
+        explicit owning_data_t(std::istream & fs)
             : m_value(
                   utility::read_binary<typename covariant_output_t::vector_t>(fs
                   )
@@ -56,7 +57,7 @@ struct constant {
             return m_value;
         }
 
-        void dump(std::ofstream & fs) const
+        void dump(std::ostream & fs) const
         {
             fs.write(
                 reinterpret_cast<const char *>(&m_value),

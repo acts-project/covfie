@@ -11,7 +11,7 @@
 #pragma once
 
 #include <cstddef>
-#include <fstream>
+#include <iostream>
 #include <variant>
 
 #include <covfie/core/concepts.hpp>
@@ -38,11 +38,11 @@ struct reference {
         {
         }
 
-        explicit owning_data_t(std::ifstream &)
+        explicit owning_data_t(std::istream &)
         {
         }
 
-        void dump(std::ofstream & fs) const
+        void dump(std::ostream & fs) const
         {
             m_backend.dump(fs);
         }
