@@ -103,6 +103,11 @@ struct strided {
     struct owning_data_t {
         using parent_t = this_t;
 
+        owning_data_t()
+            : owning_data_t(configuration_t{})
+        {
+        }
+
         owning_data_t(const owning_data_t &) = default;
 
         template <

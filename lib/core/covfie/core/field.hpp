@@ -27,6 +27,7 @@ public:
     using output_t = typename backend_t::covariant_output_t::vector_t;
     using coordinate_t = typename backend_t::contravariant_input_t::vector_t;
 
+    field() = default;
     field(field &) = default;
     field(const field &) = default;
     field(field &&) = default;
