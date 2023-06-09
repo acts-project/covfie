@@ -22,10 +22,10 @@ TEST(TestNearestNeighbourInterpolator, Identity1Nto1F)
     using field_t = covfie::field<covfie::backend::nearest_neighbour<
         covfie::backend::identity<covfie::vector::int1>>>;
 
-    field_t f(
+    field_t f(covfie::make_parameter_pack(
         field_t::backend_t::configuration_t({}),
         field_t::backend_t::backend_t::configuration_t({})
-    );
+    ));
     field_t::view_t fv(f);
 
     EXPECT_EQ(fv.at(1.f)[0], 1);
@@ -42,10 +42,10 @@ TEST(TestNearestNeighbourInterpolator, Identity2Nto2F)
     using field_t = covfie::field<covfie::backend::nearest_neighbour<
         covfie::backend::identity<covfie::vector::int2>>>;
 
-    field_t f(
+    field_t f(covfie::make_parameter_pack(
         field_t::backend_t::configuration_t({}),
         field_t::backend_t::backend_t::configuration_t({})
-    );
+    ));
     field_t::view_t fv(f);
 
     EXPECT_EQ(fv.at(-63.85f, 77.77f)[0], -64);
@@ -95,10 +95,10 @@ TEST(TestNearestNeighbourInterpolator, Identity3Nto3F)
     using field_t = covfie::field<covfie::backend::nearest_neighbour<
         covfie::backend::identity<covfie::vector::int3>>>;
 
-    field_t f(
+    field_t f(covfie::make_parameter_pack(
         field_t::backend_t::configuration_t({}),
         field_t::backend_t::backend_t::configuration_t({})
-    );
+    ));
     field_t::view_t fv(f);
 
     EXPECT_EQ(fv.at(-40.52f, -45.92f, -66.71f)[0], -41);

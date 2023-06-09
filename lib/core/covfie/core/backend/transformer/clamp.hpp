@@ -16,6 +16,7 @@
 #include <variant>
 
 #include <covfie/core/concepts.hpp>
+#include <covfie/core/parameter_pack.hpp>
 #include <covfie/core/qualifiers.hpp>
 #include <covfie/core/utility/binary_io.hpp>
 #include <covfie/core/utility/nd_size.hpp>
@@ -40,10 +41,10 @@ struct clamp {
         using parent_t = this_t;
 
         template <typename... Args>
-        explicit owning_data_t(configuration_t conf, Args... args)
-            : m_min(conf.min)
-            , m_max(conf.max)
-            , m_backend(std::forward<Args>(args)...)
+        explicit owning_data_t(parameter_pack<configuration_t, Args...> && args)
+            : m_min(args.x.min)
+            , m_max(args.x.max)
+            , m_backend(std::move(args.xs))
         {
         }
 

@@ -109,6 +109,9 @@ struct strided {
         }
 
         owning_data_t(const owning_data_t &) = default;
+        owning_data_t(owning_data_t &&) = default;
+        owning_data_t & operator=(const owning_data_t &) = default;
+        owning_data_t & operator=(owning_data_t &&) = default;
 
         template <
             typename T,

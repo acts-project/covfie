@@ -14,6 +14,7 @@
 
 #include <covfie/core/backend/primitive/constant.hpp>
 #include <covfie/core/field.hpp>
+#include <covfie/core/parameter_pack.hpp>
 
 TEST(TestConstantField, Constant1Dto1D)
 {
@@ -21,7 +22,9 @@ TEST(TestConstantField, Constant1Dto1D)
         covfie::vector::float1,
         covfie::vector::float1>>;
 
-    field_t f(field_t::backend_t::configuration_t({5.f}));
+    field_t f(
+        covfie::make_parameter_pack(field_t::backend_t::configuration_t({5.f}))
+    );
 
     field_t::view_t fv(f);
 
@@ -36,7 +39,9 @@ TEST(TestConstantField, Constant1Dto3D)
         covfie::vector::float1,
         covfie::vector::float3>>;
 
-    field_t f(field_t::backend_t::configuration_t({5.f, 2.f, 8.f}));
+    field_t f(covfie::make_parameter_pack(
+        field_t::backend_t::configuration_t({5.f, 2.f, 8.f})
+    ));
 
     field_t::view_t fv(f);
 
@@ -53,7 +58,9 @@ TEST(TestConstantField, Constant3Dto1D)
         covfie::vector::float3,
         covfie::vector::float1>>;
 
-    field_t f(field_t::backend_t::configuration_t({5.f}));
+    field_t f(
+        covfie::make_parameter_pack(field_t::backend_t::configuration_t({5.f}))
+    );
 
     field_t::view_t fv(f);
 
@@ -72,7 +79,9 @@ TEST(TestConstantField, Constant3Dto3D)
         covfie::vector::float3,
         covfie::vector::float3>>;
 
-    field_t f(field_t::backend_t::configuration_t({5.f, 2.f, 8.f}));
+    field_t f(covfie::make_parameter_pack(
+        field_t::backend_t::configuration_t({5.f, 2.f, 8.f})
+    ));
 
     field_t::view_t fv(f);
 

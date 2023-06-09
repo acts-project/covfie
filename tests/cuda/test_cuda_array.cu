@@ -36,9 +36,9 @@ protected:
         std::array<std::size_t, 3> sizes;
         sizes.fill(10);
 
-        covfie::field<canonical_backend_t> f(
+        covfie::field<canonical_backend_t> f(covfie::make_parameter_pack(
             canonical_backend_t::configuration_t{sizes}
-        );
+        ));
         covfie::field_view<canonical_backend_t> fv(f);
 
         covfie::utility::nd_map<decltype(std::tuple_cat(sizes))>(

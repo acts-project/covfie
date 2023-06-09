@@ -21,7 +21,8 @@ TEST(TestBinaryIO, WriteRead1DSingleFloatBuilder)
     using field_t =
         covfie::field<covfie::backend::array<covfie::vector::float1>>;
 
-    field_t f(5ul);
+    field_t f(covfie::make_parameter_pack(field_t::backend_t::configuration_t{
+        5ul}));
 
     field_t::view_t fv(f);
 

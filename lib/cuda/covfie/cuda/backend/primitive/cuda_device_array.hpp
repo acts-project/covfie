@@ -46,6 +46,12 @@ struct cuda_device_array {
     struct owning_data_t {
         using parent_t = this_t;
 
+        explicit owning_data_t(parameter_pack<configuration_t> && args)
+            : m_size(args.x[0])
+            , m_ptr(utility::cuda::device_allocate<vector_t[]>(m_size))
+        {
+        }
+
         explicit owning_data_t(
             std::size_t size, std::unique_ptr<vector_t[]> && ptr
         )

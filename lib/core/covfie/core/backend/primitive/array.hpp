@@ -17,6 +17,7 @@
 #include <utility>
 
 #include <covfie/core/concepts.hpp>
+#include <covfie/core/parameter_pack.hpp>
 #include <covfie/core/qualifiers.hpp>
 #include <covfie/core/utility/binary_io.hpp>
 #include <covfie/core/utility/nd_size.hpp>
@@ -56,6 +57,11 @@ struct array {
 
         explicit owning_data_t(configuration_t conf)
             : owning_data_t(conf[0])
+        {
+        }
+
+        explicit owning_data_t(parameter_pack<configuration_t> && conf)
+            : owning_data_t(conf.x[0])
         {
         }
 

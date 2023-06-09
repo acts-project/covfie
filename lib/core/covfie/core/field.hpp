@@ -33,12 +33,6 @@ public:
     field(field &&) = default;
 
     template <CONSTRAINT(concepts::field_backend) other_backend>
-    explicit field(field<other_backend> & other)
-        : m_backend(other.m_backend)
-    {
-    }
-
-    template <CONSTRAINT(concepts::field_backend) other_backend>
     explicit field(field<other_backend> && other)
         : m_backend(std::forward<decltype(other.m_backend)>(other.m_backend))
     {
