@@ -26,14 +26,20 @@ public:
     using output_t = typename backend_t::covariant_output_t::vector_t;
     using coordinate_t = typename backend_t::contravariant_input_t::vector_t;
 
-    template <typename other_backend>
-    explicit field(field<other_backend> & other)
+    template <CONSTRAINT(concepts::field_backend) other_backend>
+    field(field<other_backend> & other)
         : m_backend(other.m_backend)
     {
     }
 
-    template <typename other_backend>
-    explicit field(const field<other_backend> & other)
+    template <CONSTRAINT(concepts::field_backend) other_backend>
+    field(field<other_backend> && other)
+        : m_backend(std::forward<decltype(other.m_backend)>(other.m_backend))
+    {
+    }
+
+    template <CONSTRAINT(concepts::field_backend) other_backend>
+    field(const field<other_backend> & other)
         : m_backend(other.m_backend)
     {
     }
@@ -48,6 +54,10 @@ public:
         : m_backend(fs)
     {
     }
+
+    field & operator=(const field &) = default;
+
+    field & operator=(field &&) = default;
 
     const storage_t & backend(void) const
     {
