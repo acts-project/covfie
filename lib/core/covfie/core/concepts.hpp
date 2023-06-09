@@ -93,6 +93,8 @@ concept field_backend = requires
         {typename T::owning_data_t(fs)};
     };
 
+    {typename T::owning_data_t()};
+
     requires requires(typename T::owning_data_t & d)
     {
         requires T::is_initial || requires
@@ -101,6 +103,15 @@ concept field_backend = requires
             {
                 d.get_backend()
             } -> std::same_as<typename T::backend_t::owning_data_t &>;
+        };
+
+        {typename T::owning_data_t(d)};
+        {typename T::owning_data_t(std::move(d))};
+
+        requires requires(typename T::owning_data_t & e)
+        {
+            {d = e};
+            {d = std::move(e)};
         };
     };
 
