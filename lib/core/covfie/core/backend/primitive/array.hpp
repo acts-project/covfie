@@ -68,7 +68,7 @@ struct array {
         {
         }
 
-        explicit owning_data_t(const owning_data_t & o)
+        owning_data_t(const owning_data_t & o)
             : m_size(o.m_size)
             , m_ptr(std::make_unique<vector_t[]>(m_size))
         {

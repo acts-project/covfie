@@ -44,6 +44,8 @@ struct constant {
         {
         }
 
+        owning_data_t(const owning_data_t &) = default;
+
         explicit owning_data_t(std::istream & fs)
             : m_value(
                   utility::read_binary<typename covariant_output_t::vector_t>(fs

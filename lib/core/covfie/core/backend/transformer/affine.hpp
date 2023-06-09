@@ -50,6 +50,8 @@ struct affine {
         {
         }
 
+        owning_data_t(const owning_data_t &) = default;
+
         template <
             typename T,
             std::enable_if_t<

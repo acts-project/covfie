@@ -102,6 +102,8 @@ struct strided {
     struct owning_data_t {
         using parent_t = this_t;
 
+        owning_data_t(const owning_data_t &) = default;
+
         template <
             typename T,
             typename B = backend_t,

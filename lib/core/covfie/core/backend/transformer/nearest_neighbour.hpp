@@ -49,6 +49,8 @@ struct _nearest_neighbour {
         {
         }
 
+        owning_data_t(const owning_data_t &) = default;
+
         template <
             typename T,
             typename... Args,
