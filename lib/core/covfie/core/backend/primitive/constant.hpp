@@ -39,6 +39,8 @@ struct constant {
     struct owning_data_t {
         using parent_t = this_t;
 
+        owning_data_t() = default;
+
         explicit owning_data_t(configuration_t conf)
             : m_value(conf)
         {

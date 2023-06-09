@@ -43,6 +43,12 @@ struct array {
     struct owning_data_t {
         using parent_t = this_t;
 
+        owning_data_t()
+            : m_size(0)
+            , m_ptr({})
+        {
+        }
+
         explicit owning_data_t(owning_data_t && o)
             : m_size(o.m_size)
             , m_ptr(std::move(o.m_ptr))

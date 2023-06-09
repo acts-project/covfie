@@ -49,6 +49,8 @@ struct linear {
     struct owning_data_t {
         using parent_t = this_t;
 
+        owning_data_t() = default;
+
         template <typename... Args>
         explicit owning_data_t(configuration_t, Args... args)
             : m_backend(std::forward<Args>(args)...)
