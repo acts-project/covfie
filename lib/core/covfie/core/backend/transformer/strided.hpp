@@ -17,6 +17,7 @@
 
 #include <covfie/core/backend/primitive/array.hpp>
 #include <covfie/core/concepts.hpp>
+#include <covfie/core/parameter_pack.hpp>
 #include <covfie/core/qualifiers.hpp>
 #include <covfie/core/utility/binary_io.hpp>
 #include <covfie/core/utility/nd_map.hpp>
@@ -151,14 +152,19 @@ struct strided {
 
         template <
             typename... Args,
-            typename B = backend_t,
-            std::enable_if_t<
-                !std::
-                    is_constructible_v<typename B::owning_data_t, std::size_t>,
-                bool> = true>
-        explicit owning_data_t(configuration_t conf, Args... args)
-            : m_sizes(conf)
-            , m_storage(std::forward<Args>(args)...)
+            std::enable_if_t<(sizeof...(Args) > 0), bool> = true>
+        explicit owning_data_t(parameter_pack<configuration_t, Args...> && args)
+            : m_sizes(args.x)
+            , m_storage(std::move(args.xs))
+        {
+        }
+
+        template <
+            typename T,
+            std::enable_if_t<std::is_constructible_v<owning_data_t, T>, bool> =
+                true>
+        explicit owning_data_t(parameter_pack<T> && args)
+            : owning_data_t(args.x)
         {
         }
 

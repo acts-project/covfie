@@ -17,6 +17,7 @@
 #include <covfie/core/backend/primitive/array.hpp>
 #include <covfie/core/backend/transformer/linear.hpp>
 #include <covfie/core/concepts.hpp>
+#include <covfie/core/parameter_pack.hpp>
 #include <covfie/core/utility/nd_map.hpp>
 #include <covfie/core/utility/tuple.hpp>
 #include <covfie/core/vector.hpp>
@@ -177,6 +178,12 @@ struct cuda_texture {
             cudaErrorCheck(
                 cudaCreateTextureObject(&m_tex, &resDesc, &texDesc, nullptr)
             );
+        }
+
+        template <typename T>
+        owning_data_t(parameter_pack<T> && i)
+            : owning_data_t(std::move(i.x))
+        {
         }
 
         ~owning_data_t()

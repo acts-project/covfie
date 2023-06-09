@@ -20,6 +20,7 @@
 #include <covfie/core/backend/transformer/nearest_neighbour.hpp>
 #include <covfie/core/backend/transformer/strided.hpp>
 #include <covfie/core/field.hpp>
+#include <covfie/core/parameter_pack.hpp>
 
 void parse_opts(
     int argc, char * argv[], boost::program_options::variables_map & vm
@@ -155,11 +156,11 @@ field_t read_bfield(const std::string & fn)
         (sz - 1) / (maxz - minz)
     );
 
-    field_t field(
+    field_t field(covfie::make_parameter_pack(
         field_t::backend_t::configuration_t(scaling * translation),
         field_t::backend_t::backend_t::configuration_t{},
         field_t::backend_t::backend_t::backend_t::configuration_t{sx, sy, sz}
-    );
+    ));
     field_t::view_t fv(field);
 
     {

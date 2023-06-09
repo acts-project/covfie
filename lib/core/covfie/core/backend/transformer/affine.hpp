@@ -16,6 +16,7 @@
 #include <covfie/core/algebra/affine.hpp>
 #include <covfie/core/algebra/vector.hpp>
 #include <covfie/core/concepts.hpp>
+#include <covfie/core/parameter_pack.hpp>
 #include <covfie/core/qualifiers.hpp>
 #include <covfie/core/utility/binary_io.hpp>
 
@@ -44,9 +45,9 @@ struct affine {
         using parent_t = this_t;
 
         template <typename... Args>
-        explicit owning_data_t(configuration_t conf, Args... args)
-            : m_transform(conf)
-            , m_backend(std::forward<Args>(args)...)
+        explicit owning_data_t(parameter_pack<configuration_t, Args...> && args)
+            : m_transform(args.x)
+            , m_backend(std::move(args.xs))
         {
         }
 

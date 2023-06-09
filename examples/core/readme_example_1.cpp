@@ -15,6 +15,7 @@
 #include <covfie/core/backend/transformer/strided.hpp>
 #include <covfie/core/field.hpp>
 #include <covfie/core/field_view.hpp>
+#include <covfie/core/parameter_pack.hpp>
 
 using field_t = covfie::field<covfie::backend::strided<
     covfie::vector::ulong2,
@@ -23,7 +24,9 @@ using field_t = covfie::field<covfie::backend::strided<
 int main(void)
 {
     // Initialize the field as a 10x10 field, then create a view from it.
-    field_t my_field(field_t::backend_t::configuration_t{10ul, 10ul});
+    field_t my_field(covfie::make_parameter_pack(
+        field_t::backend_t::configuration_t{10ul, 10ul}
+    ));
     field_t::view_t my_view(my_field);
 
     // Assign f(x, y) = (sin x, cos y)

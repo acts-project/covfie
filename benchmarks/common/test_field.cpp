@@ -9,6 +9,7 @@
  */
 
 #include <cstdlib>
+#include <fstream>
 
 #include <covfie/benchmark/test_field.hpp>
 

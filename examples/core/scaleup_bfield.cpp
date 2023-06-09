@@ -21,6 +21,7 @@
 #include <covfie/core/backend/transformer/nearest_neighbour.hpp>
 #include <covfie/core/backend/transformer/strided.hpp>
 #include <covfie/core/field.hpp>
+#include <covfie/core/parameter_pack.hpp>
 
 void parse_opts(
     int argc, char * argv[], boost::program_options::variables_map & vm
@@ -95,11 +96,11 @@ int main(int argc, char ** argv)
         600 / 20000.f, 600 / 20000.f, 900 / 30000.f
     );
 
-    output_field_t new_field(
+    output_field_t new_field(covfie::make_parameter_pack(
         scaling * translation,
         std::monostate{},
         covfie::utility::nd_size<3>{601, 601, 901}
-    );
+    ));
 
     BOOST_LOG_TRIVIAL(info) << "Copying data from old field to new field...";
 

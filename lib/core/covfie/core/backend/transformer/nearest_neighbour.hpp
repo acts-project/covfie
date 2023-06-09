@@ -44,8 +44,8 @@ struct _nearest_neighbour {
         using parent_t = this_t;
 
         template <typename... Args>
-        explicit owning_data_t(configuration_t, Args... args)
-            : m_backend(std::forward<Args>(args)...)
+        explicit owning_data_t(parameter_pack<configuration_t, Args...> && args)
+            : m_backend(std::move(args.xs))
         {
         }
 

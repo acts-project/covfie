@@ -30,9 +30,9 @@
 
 #include <covfie/core/backend/transformer/affine.hpp>
 #include <covfie/core/backend/transformer/linear.hpp>
-#include <covfie/core/backend/transformer/reference.hpp>
 #include <covfie/core/backend/transformer/strided.hpp>
 #include <covfie/core/field.hpp>
+#include <covfie/core/parameter_pack.hpp>
 #include <covfie/core/utility/nd_size.hpp>
 
 void parse_opts(
@@ -90,8 +90,7 @@ int main(int argc, char ** argv)
         covfie::backend::array<covfie::vector::float3>>;
     using field_t1 =
         covfie::field<covfie::backend::affine<covfie::backend::linear<core_t>>>;
-    using field_t2 = covfie::field<covfie::backend::reference<core_t>>;
-    using field_t3 = covfie::field<covfie::backend::strided<
+    using field_t2 = covfie::field<covfie::backend::strided<
         covfie::vector::ulong2,
         covfie::backend::array<covfie::vector::float3>>>;
 
@@ -114,19 +113,16 @@ int main(int argc, char ** argv)
     field_t1 f(ifs);
     ifs.close();
 
-    BOOST_LOG_TRIVIAL(info) << "Fetching integral coordinate part of field...";
-
-    const core_t::owning_data_t & core_data =
-        f.backend().get_backend().get_backend();
-
-    field_t2 nf(core_data);
-    field_t2::view_t ifv(nf);
+    covfie::field<core_t> cf(
+        covfie::make_parameter_pack(f.backend().get_backend().get_backend())
+    );
+    covfie::field<core_t>::view_t cfv(cf);
 
     BOOST_LOG_TRIVIAL(info) << "Building new output vector field...";
 
     covfie::utility::nd_size<3> in_size =
-        nf.backend().get_backend().get_configuration();
-    covfie::utility::nd_size<2> out_size;
+        f.backend().get_backend().get_backend().get_configuration();
+    covfie::utility::nd_size<2> out_size{0, 0};
 
     if (vm["axis"].as<std::string>() == "x") {
         out_size = {in_size[1], in_size[2]};
@@ -136,30 +132,32 @@ int main(int argc, char ** argv)
         out_size = {in_size[0], in_size[1]};
     }
 
-    field_t3 of(field_t3::backend_t::configuration_t{out_size});
+    field_t2 of(covfie::make_parameter_pack(
+        field_t2::backend_t::configuration_t{out_size}
+    ));
 
     BOOST_LOG_TRIVIAL(info) << "Creating vector field views...";
 
-    field_t3::view_t ofv(of);
+    field_t2::view_t ofv(of);
 
     BOOST_LOG_TRIVIAL(info) << "Slicing vector field...";
 
     if (vm["axis"].as<std::string>() == "x") {
         for (unsigned long x = 0; x < out_size[0]; ++x) {
             for (unsigned long y = 0; y < out_size[1]; ++y) {
-                ofv.at(x, y) = ifv.at(vm["slice"].as<unsigned long>(), x, y);
+                ofv.at(x, y) = cfv.at(vm["slice"].as<unsigned long>(), x, y);
             }
         }
     } else if (vm["axis"].as<std::string>() == "y") {
         for (unsigned long x = 0; x < out_size[0]; ++x) {
             for (unsigned long y = 0; y < out_size[1]; ++y) {
-                ofv.at(x, y) = ifv.at(x, vm["slice"].as<unsigned long>(), y);
+                ofv.at(x, y) = cfv.at(x, vm["slice"].as<unsigned long>(), y);
             }
         }
     } else if (vm["axis"].as<std::string>() == "z") {
         for (unsigned long x = 0; x < out_size[0]; ++x) {
             for (unsigned long y = 0; y < out_size[1]; ++y) {
-                ofv.at(x, y) = ifv.at(x, y, vm["slice"].as<unsigned long>());
+                ofv.at(x, y) = cfv.at(x, y, vm["slice"].as<unsigned long>());
             }
         }
     }

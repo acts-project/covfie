@@ -19,6 +19,7 @@
 #include <covfie/core/backend/transformer/linear.hpp>
 #include <covfie/core/backend/transformer/strided.hpp>
 #include <covfie/core/field.hpp>
+#include <covfie/core/parameter_pack.hpp>
 #include <covfie/cuda/backend/primitive/cuda_device_array.hpp>
 #include <covfie/cuda/backend/primitive/cuda_texture.hpp>
 #include <covfie/cuda/error_check.hpp>
@@ -124,9 +125,9 @@ int main(int argc, char ** argv)
 
     BOOST_LOG_TRIVIAL(info) << "Casting magnetic field into CUDA array...";
 
-    cuda_field_t nf(
+    cuda_field_t nf(covfie::make_parameter_pack(
         f.backend().get_configuration(), f.backend().get_backend().get_backend()
-    );
+    ));
 
     BOOST_LOG_TRIVIAL(info) << "Allocating device memory for output image...";
 

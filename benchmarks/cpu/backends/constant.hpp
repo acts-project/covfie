@@ -12,6 +12,7 @@
 
 #include <covfie/core/backend/primitive/constant.hpp>
 #include <covfie/core/field.hpp>
+#include <covfie/core/parameter_pack.hpp>
 #include <covfie/core/vector.hpp>
 
 template <typename S, std::size_t N, std::size_t M>
@@ -22,7 +23,8 @@ struct Constant {
 
     static covfie::field<backend_t> get_field()
     {
-        return covfie::field<backend_t>(typename backend_t::configuration_t{0.f}
-        );
+        return covfie::field<backend_t>(covfie::make_parameter_pack(
+            typename backend_t::configuration_t{0.f}
+        ));
     }
 };

@@ -14,6 +14,7 @@
 
 #include <covfie/core/concepts.hpp>
 #include <covfie/core/field_view.hpp>
+#include <covfie/core/parameter_pack.hpp>
 
 namespace covfie {
 template <CONSTRAINT(concepts::field_backend) _backend_t>
@@ -26,27 +27,31 @@ public:
     using output_t = typename backend_t::covariant_output_t::vector_t;
     using coordinate_t = typename backend_t::contravariant_input_t::vector_t;
 
+    field(field &) = default;
+    field(const field &) = default;
+    field(field &&) = default;
+
     template <CONSTRAINT(concepts::field_backend) other_backend>
-    field(field<other_backend> & other)
+    explicit field(field<other_backend> & other)
         : m_backend(other.m_backend)
     {
     }
 
     template <CONSTRAINT(concepts::field_backend) other_backend>
-    field(field<other_backend> && other)
+    explicit field(field<other_backend> && other)
         : m_backend(std::forward<decltype(other.m_backend)>(other.m_backend))
     {
     }
 
     template <CONSTRAINT(concepts::field_backend) other_backend>
-    field(const field<other_backend> & other)
+    explicit field(const field<other_backend> & other)
         : m_backend(other.m_backend)
     {
     }
 
     template <typename... Args>
-    explicit field(Args &&... args)
-        : m_backend(std::forward<Args>(args)...)
+    explicit field(parameter_pack<Args...> && args)
+        : m_backend(std::forward<parameter_pack<Args...>>(args))
     {
     }
 

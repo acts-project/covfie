@@ -54,6 +54,11 @@ struct array {
         {
         }
 
+        explicit owning_data_t(configuration_t conf)
+            : owning_data_t(conf[0])
+        {
+        }
+
         explicit owning_data_t(
             std::size_t size, std::unique_ptr<vector_t[]> && ptr
         )

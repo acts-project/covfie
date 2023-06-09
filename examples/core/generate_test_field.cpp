@@ -20,6 +20,7 @@
 #include <covfie/core/backend/transformer/nearest_neighbour.hpp>
 #include <covfie/core/backend/transformer/strided.hpp>
 #include <covfie/core/field.hpp>
+#include <covfie/core/parameter_pack.hpp>
 
 void parse_opts(
     int argc, char * argv[], boost::program_options::variables_map & vm
@@ -72,7 +73,8 @@ int main(int argc, char ** argv)
     BOOST_LOG_TRIVIAL(info) << "Welcome to the vector field generator!";
     BOOST_LOG_TRIVIAL(info) << "Allocating space for new vector field...";
 
-    core_field_t cf(core_backend_t::configuration_t{201, 201, 301});
+    core_field_t cf(covfie::make_parameter_pack(core_backend_t::configuration_t{
+        201, 201, 301}));
 
     BOOST_LOG_TRIVIAL(info) << "Filling new vector field...";
 
@@ -94,11 +96,11 @@ int main(int argc, char ** argv)
         200 / (20000.f), 200 / (20000.f), 300 / (30000.f)
     );
 
-    full_field_t ff(
+    full_field_t ff(covfie::make_parameter_pack(
         full_backend_t::configuration_t(scaling * translation),
         full_backend_t::backend_t::configuration_t{},
         cf.backend()
-    );
+    ));
 
     BOOST_LOG_TRIVIAL(info) << "Writing final field to file \""
                             << vm["output"].as<std::string>() << "\"...";

@@ -16,6 +16,7 @@
 #include <covfie/core/backend/transformer/morton.hpp>
 #include <covfie/core/backend/transformer/nearest_neighbour.hpp>
 #include <covfie/core/field.hpp>
+#include <covfie/core/parameter_pack.hpp>
 #include <covfie/core/vector.hpp>
 
 struct FieldConstant {
@@ -25,8 +26,9 @@ struct FieldConstant {
 
     static covfie::field<backend_t> get_field()
     {
-        return covfie::field<backend_t>(typename backend_t::configuration_t{
-            0.f, 0.f, 2.f});
+        return covfie::field<backend_t>(covfie::make_parameter_pack(
+            backend_t::configuration_t{0.f, 0.f, 2.f}
+        ));
     }
 };
 
@@ -75,9 +77,9 @@ struct FieldIntBase {
 
     static covfie::field<backend_t> get_field()
     {
-        return covfie::field<backend_t>(
+        return covfie::field<backend_t>(covfie::make_parameter_pack(
             get_test_field().backend().get_backend().get_backend()
-        );
+        ));
     }
 };
 
@@ -88,8 +90,8 @@ struct FieldIntMorton {
 
     static covfie::field<backend_t> get_field()
     {
-        return covfie::field<backend_t>(
+        return covfie::field<backend_t>(covfie::make_parameter_pack(
             get_test_field().backend().get_backend().get_backend()
-        );
+        ));
     }
 };

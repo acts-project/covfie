@@ -14,6 +14,7 @@
 #include <iostream>
 
 #include <covfie/core/concepts.hpp>
+#include <covfie/core/parameter_pack.hpp>
 #include <covfie/core/qualifiers.hpp>
 #include <covfie/core/utility/binary_io.hpp>
 #include <covfie/core/vector.hpp>
@@ -38,9 +39,13 @@ struct constant {
     struct owning_data_t {
         using parent_t = this_t;
 
-        template <typename... Args>
         explicit owning_data_t(configuration_t conf)
             : m_value(conf)
+        {
+        }
+
+        explicit owning_data_t(parameter_pack<configuration_t> && conf)
+            : owning_data_t(std::move(conf.x))
         {
         }
 
