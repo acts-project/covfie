@@ -10,7 +10,7 @@ cmake_minimum_required(VERSION 3.18)
 
 project(
     "covfie"
-    VERSION 0.6.0
+    VERSION 0.7.0
 )
 
 # Look for the Boost Endianness package
