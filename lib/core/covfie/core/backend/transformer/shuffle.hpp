@@ -27,6 +27,8 @@ struct shuffle {
     using configuration_t = std::monostate;
     using indices = _shuffle;
 
+    static constexpr uint32_t IO_MAGIC_HEADER = 0xAB020009;
+
     struct owning_data_t {
         using parent_t = this_t;
 
@@ -39,13 +41,18 @@ struct shuffle {
         }
 
         explicit owning_data_t(std::istream & fs)
-            : m_backend(fs)
+            : m_backend(utility::read_io_header(fs, IO_MAGIC_HEADER))
         {
+            utility::read_io_footer(fs, IO_MAGIC_HEADER);
         }
 
         void dump(std::ostream & fs) const
         {
+            utility::write_io_header(fs, IO_MAGIC_HEADER);
+
             m_backend.dump(fs);
+
+            utility::write_io_footer(fs, IO_MAGIC_HEADER);
         }
 
         typename backend_t::owning_data_t & get_backend(void)

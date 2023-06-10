@@ -16,6 +16,7 @@
 
 #include <covfie/core/concepts.hpp>
 #include <covfie/core/parameter_pack.hpp>
+#include <covfie/core/utility/binary_io.hpp>
 #include <covfie/core/vector.hpp>
 
 namespace covfie::backend {
@@ -44,6 +45,8 @@ struct identity {
 
     using configuration_t = std::monostate;
 
+    static constexpr uint32_t IO_MAGIC_HEADER = 0xAB010002;
+
     struct owning_data_t {
         using parent_t = this_t;
 
@@ -59,8 +62,10 @@ struct identity {
         {
         }
 
-        explicit owning_data_t(std::istream &)
+        explicit owning_data_t(std::istream & fs)
         {
+            utility::read_io_header(fs, IO_MAGIC_HEADER);
+            utility::read_io_footer(fs, IO_MAGIC_HEADER);
         }
 
         configuration_t get_configuration() const
@@ -68,8 +73,10 @@ struct identity {
             return {};
         }
 
-        void dump(std::ostream &) const
+        void dump(std::ostream & fs) const
         {
+            utility::write_io_header(fs, IO_MAGIC_HEADER);
+            utility::write_io_footer(fs, IO_MAGIC_HEADER);
         }
     };
 

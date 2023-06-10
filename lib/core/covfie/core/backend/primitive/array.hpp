@@ -10,8 +10,8 @@
 
 #pragma once
 
+#include <cassert>
 #include <cstring>
-#include <iostream>
 #include <memory>
 #include <tuple>
 #include <utility>
@@ -40,6 +40,8 @@ struct array {
 
     using configuration_t = utility::nd_size<contravariant_input_t::dimensions>;
 
+    static constexpr uint32_t IO_MAGIC_HEADER = 0xAB010000;
+
     struct owning_data_t {
         using parent_t = this_t;
 
@@ -49,11 +51,8 @@ struct array {
         {
         }
 
-        explicit owning_data_t(owning_data_t && o)
-            : m_size(o.m_size)
-            , m_ptr(std::move(o.m_ptr))
-        {
-        }
+        owning_data_t(owning_data_t &&) = default;
+        owning_data_t & operator=(owning_data_t &&) = default;
 
         explicit owning_data_t(std::size_t n)
             : m_size(n)
@@ -80,16 +79,25 @@ struct array {
         }
 
         explicit owning_data_t(std::istream & fs)
-            : m_size(utility::read_binary<decltype(m_size)>(fs))
+            : m_size(utility::read_binary<std::decay_t<decltype(m_size)>>(
+                  utility::read_io_header(fs, IO_MAGIC_HEADER)
+              ))
             , m_ptr(utility::read_binary_array<vector_t>(fs, m_size))
         {
+            utility::read_io_footer(fs, IO_MAGIC_HEADER);
         }
 
         owning_data_t(const owning_data_t & o)
             : m_size(o.m_size)
             , m_ptr(std::make_unique<vector_t[]>(m_size))
         {
-            std::memcpy(m_ptr.get(), o.m_ptr.get(), m_size * sizeof(vector_t));
+            assert(m_size == 0 || m_ptr);
+
+            if (o.m_ptr && m_size > 0) {
+                std::memcpy(
+                    m_ptr.get(), o.m_ptr.get(), m_size * sizeof(vector_t)
+                );
+            }
         }
 
         owning_data_t & operator=(const owning_data_t & o)
@@ -97,7 +105,13 @@ struct array {
             m_size = o.m_size;
             m_ptr = std::make_unique<vector_t[]>(m_size);
 
-            std::memcpy(m_ptr.get(), o.m_ptr.get(), m_size * sizeof(vector_t));
+            assert(m_size == 0 || m_ptr);
+
+            if (o.m_ptr && m_size > 0) {
+                std::memcpy(
+                    m_ptr.get(), o.m_ptr.get(), m_size * sizeof(vector_t)
+                );
+            }
         }
 
         configuration_t get_configuration() const
@@ -107,18 +121,22 @@ struct array {
 
         void dump(std::ostream & fs) const
         {
+            utility::write_io_header(fs, IO_MAGIC_HEADER);
+
             fs.write(
                 reinterpret_cast<const char *>(&m_size),
-                sizeof(decltype(m_size))
+                sizeof(std::decay_t<decltype(m_size)>)
             );
 
             fs.write(
                 reinterpret_cast<const char *>(m_ptr.get()),
                 m_size * sizeof(vector_t)
             );
+
+            utility::write_io_footer(fs, IO_MAGIC_HEADER);
         }
 
-        std::size_t m_size;
+        uint64_t m_size;
         std::unique_ptr<vector_t[]> m_ptr;
     };
 

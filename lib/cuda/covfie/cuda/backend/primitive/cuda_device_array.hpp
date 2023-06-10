@@ -43,6 +43,8 @@ struct cuda_device_array {
 
     using configuration_t = utility::nd_size<1>;
 
+    static constexpr uint32_t IO_MAGIC_HEADER = 0xAB110000;
+
     struct owning_data_t {
         using parent_t = this_t;
 

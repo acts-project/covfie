@@ -37,6 +37,8 @@ struct clamp {
         typename contravariant_input_t::vector_t min, max;
     };
 
+    static constexpr uint32_t IO_MAGIC_HEADER = 0xAB020002;
+
     struct owning_data_t {
         using parent_t = this_t;
 
@@ -71,14 +73,19 @@ struct clamp {
         }
 
         explicit owning_data_t(std::istream & fs)
-            : m_min(utility::read_binary<decltype(m_min)>(fs))
+            : m_min(utility::read_binary<decltype(m_min)>(
+                  utility::read_io_header(fs, IO_MAGIC_HEADER)
+              ))
             , m_max(utility::read_binary<decltype(m_max)>(fs))
             , m_backend(fs)
         {
+            utility::read_io_footer(fs, IO_MAGIC_HEADER);
         }
 
         void dump(std::ostream & fs) const
         {
+            utility::write_io_header(fs, IO_MAGIC_HEADER);
+
             fs.write(
                 reinterpret_cast<const char *>(&m_min), sizeof(decltype(m_min))
             );
@@ -87,6 +94,8 @@ struct clamp {
             );
 
             m_backend.dump(fs);
+
+            utility::write_io_footer(fs, IO_MAGIC_HEADER);
         }
 
         typename backend_t::owning_data_t & get_backend(void)

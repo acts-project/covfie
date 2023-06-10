@@ -46,6 +46,8 @@ struct cuda_texture {
     template <typename T>
     using linear_tc = linear<T, float>;
 
+    static constexpr uint32_t IO_MAGIC_HEADER = 0xAB110001;
+
     struct owning_data_t {
         template <
             typename T,

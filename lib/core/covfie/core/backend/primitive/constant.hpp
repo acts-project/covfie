@@ -36,6 +36,8 @@ struct constant {
 
     using configuration_t = typename covariant_output_t::vector_t;
 
+    static constexpr uint32_t IO_MAGIC_HEADER = 0xAB010001;
+
     struct owning_data_t {
         using parent_t = this_t;
 
@@ -55,10 +57,12 @@ struct constant {
 
         explicit owning_data_t(std::istream & fs)
             : m_value(
-                  utility::read_binary<typename covariant_output_t::vector_t>(fs
+                  utility::read_binary<typename covariant_output_t::vector_t>(
+                      utility::read_io_header(fs, IO_MAGIC_HEADER)
                   )
               )
         {
+            utility::read_io_footer(fs, IO_MAGIC_HEADER);
         }
 
         configuration_t get_configuration() const
@@ -68,10 +72,14 @@ struct constant {
 
         void dump(std::ostream & fs) const
         {
+            utility::write_io_header(fs, IO_MAGIC_HEADER);
+
             fs.write(
                 reinterpret_cast<const char *>(&m_value),
                 sizeof(decltype(m_value))
             );
+
+            utility::write_io_footer(fs, IO_MAGIC_HEADER);
         }
 
         typename covariant_output_t::vector_t m_value;

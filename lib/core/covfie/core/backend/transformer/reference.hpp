@@ -30,6 +30,8 @@ struct reference {
 
     using configuration_t = std::monostate;
 
+    static constexpr uint32_t IO_MAGIC_HEADER = 0xAB020008;
+
     struct owning_data_t {
         using parent_t = this_t;
 
@@ -38,13 +40,19 @@ struct reference {
         {
         }
 
-        explicit owning_data_t(std::istream &)
+        explicit owning_data_t(std::istream & fs)
         {
+            utility::read_io_header(fs, IO_MAGIC_HEADER);
+            utility::read_io_footer(fs, IO_MAGIC_HEADER);
         }
 
         void dump(std::ostream & fs) const
         {
+            utility::write_io_header(fs, IO_MAGIC_HEADER);
+
             m_backend.dump(fs);
+
+            utility::write_io_footer(fs, IO_MAGIC_HEADER);
         }
 
         typename backend_t::owning_data_t & get_backend(void)

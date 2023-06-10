@@ -20,7 +20,10 @@ namespace covfie::algebra {
 template <std::size_t N, typename T = float, typename I = std::size_t>
 struct affine : public matrix<N, N + 1, T, I> {
     affine() = default;
-    affine(const affine<N, T, I> &) = default;
+    affine(affine &&) = default;
+    affine(const affine &) = default;
+    affine & operator=(const affine &) = default;
+    affine & operator=(affine &&) = default;
 
     COVFIE_DEVICE affine(const matrix<N, N + 1, T, I> & o)
         : matrix<N, N + 1, T, I>(o)
