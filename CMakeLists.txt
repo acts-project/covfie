@@ -13,9 +13,6 @@ project(
     VERSION 0.7.0
 )
 
-# Look for the Boost Endianness package
-find_package(Boost 1.71 REQUIRED)
-
 # Declare options which control the parts of the code being built.
 option(
     COVFIE_BUILD_BENCHMARKS
