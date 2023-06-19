@@ -15,6 +15,28 @@
 #include <memory>
 #include <sstream>
 
+enum class fp_type {
+    IEEE754_SINGLE = 1,
+    IEEE754_DOUBLE = 2
+};
+
+template <typename T>
+class fp_type_id
+{
+};
+
+template <>
+class fp_type_id<float>
+{
+    static constexpr fp_type value = fp_type::IEEE754_SINGLE;
+};
+
+template <>
+class fp_type_id<double>
+{
+    static constexpr fp_type value = fp_type::IEEE754_DOUBLE;
+};
+
 namespace covfie::utility {
 static constexpr uint32_t MAGIC_HEADER = 0xC04F1EAB;
 static constexpr uint32_t MAGIC_FOOTER = 0xC04F1E70;
@@ -22,6 +44,10 @@ static constexpr uint32_t MAGIC_FOOTER = 0xC04F1E70;
 template <typename T>
 T read_binary(std::istream & fs)
 {
+    static_assert(
+        std::is_standard_layout_v<T>, "Binary IO type must be standard layout!"
+    );
+
     assert(fs.good() && !fs.eof() && !fs.fail() && !fs.bad());
 
     T rv;
@@ -29,16 +55,6 @@ T read_binary(std::istream & fs)
     fs.read(reinterpret_cast<char *>(&rv), sizeof(T));
 
     return rv;
-}
-
-template <typename T>
-std::unique_ptr<T[]> read_binary_array(std::istream & fs, std::size_t n)
-{
-    std::unique_ptr<T[]> r = std::make_unique<T[]>(n);
-
-    fs.read(reinterpret_cast<char *>(r.get()), n * sizeof(std::decay_t<T>));
-
-    return r;
 }
 
 inline std::ostream & write_io_header(std::ostream & fs, uint32_t hdr)

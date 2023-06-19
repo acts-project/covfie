@@ -116,7 +116,17 @@ struct array {
 
             auto size =
                 utility::read_binary<std::decay_t<decltype(m_size)>>(fs);
-            auto ptr = utility::read_binary_array<vector_t>(fs, size);
+            std::unique_ptr<vector_t[]> ptr =
+                std::make_unique<vector_t[]>(size);
+
+            for (std::size_t i = 0; i < size; ++i) {
+                for (std::size_t j = 0; j < _output_vector_t::size; ++j) {
+                    fs.read(
+                        reinterpret_cast<char *>(&ptr[i][j]),
+                        sizeof(typename _output_vector_t::type)
+                    );
+                }
+            }
 
             utility::read_io_footer(fs, IO_MAGIC_HEADER);
 
@@ -132,10 +142,14 @@ struct array {
                 sizeof(std::decay_t<decltype(o.m_size)>)
             );
 
-            fs.write(
-                reinterpret_cast<const char *>(o.m_ptr.get()),
-                o.m_size * sizeof(vector_t)
-            );
+            for (std::size_t i = 0; i < o.m_size; ++i) {
+                for (std::size_t j = 0; j < _output_vector_t::size; ++j) {
+                    fs.write(
+                        reinterpret_cast<const char *>(&o.m_ptr[i][j]),
+                        sizeof(typename _output_vector_t::type)
+                    );
+                }
+            }
 
             utility::write_io_footer(fs, IO_MAGIC_HEADER);
         }
