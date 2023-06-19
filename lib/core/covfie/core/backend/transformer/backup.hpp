@@ -52,6 +52,16 @@ struct backup {
         {
         }
 
+        explicit owning_data_t(
+            const configuration_t & c, typename backend_t::owning_data_t && b
+        )
+            : m_min(c.min)
+            , m_max(c.max)
+            , m_default(c.default_value)
+            , m_backend(std::forward<typename backend_t::owning_data_t>(b))
+        {
+        }
+
         template <
             typename... Args,
             typename B = backend_t,
@@ -75,18 +85,37 @@ struct backup {
             );
         }
 
-        explicit owning_data_t(std::istream & fs)
-            : m_min(utility::read_binary<decltype(m_min)>(
-                  utility::read_io_header(fs, IO_MAGIC_HEADER)
-              ))
-            , m_max(utility::read_binary<decltype(m_max)>(fs))
-            , m_default(utility::read_binary<decltype(m_default)>(fs))
-            , m_backend(fs)
+        typename backend_t::owning_data_t & get_backend(void)
         {
-            utility::read_io_footer(fs, IO_MAGIC_HEADER);
+            return m_backend;
         }
 
-        void dump(std::ostream & fs) const
+        const typename backend_t::owning_data_t & get_backend(void) const
+        {
+            return m_backend;
+        }
+
+        configuration_t get_configuration(void) const
+        {
+            return {m_min, m_max, m_default};
+        }
+
+        static owning_data_t read_binary(std::istream & fs)
+        {
+            utility::read_io_header(fs, IO_MAGIC_HEADER);
+
+            auto min = utility::read_binary<decltype(m_min)>(fs);
+            auto max = utility::read_binary<decltype(m_min)>(fs);
+            auto def = utility::read_binary<decltype(m_default)>(fs);
+            typename backend_t::owning_data_t be =
+                typename backend_t::owning_data_t::read_binary(fs);
+
+            utility::read_io_footer(fs, IO_MAGIC_HEADER);
+
+            return owning_data_t(configuration_t{min, max, def}, std::move(be));
+        }
+
+        static void write_binary(std::ostream & fs, const owning_data_t & o)
         {
             utility::write_io_header(fs, IO_MAGIC_HEADER);
 
@@ -101,24 +130,9 @@ struct backup {
                 sizeof(decltype(m_default))
             );
 
-            m_backend.dump(fs);
+            backend_t::owning_data_t::write_binary(fs, o.m_backend);
 
             utility::write_io_footer(fs, IO_MAGIC_HEADER);
-        }
-
-        typename backend_t::owning_data_t & get_backend(void)
-        {
-            return m_backend;
-        }
-
-        const typename backend_t::owning_data_t & get_backend(void) const
-        {
-            return m_backend;
-        }
-
-        configuration_t get_configuration(void) const
-        {
-            return {m_min, m_max, m_default};
         }
 
         typename contravariant_input_t::vector_t m_min, m_max;

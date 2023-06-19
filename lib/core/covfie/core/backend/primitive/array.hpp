@@ -78,15 +78,6 @@ struct array {
         {
         }
 
-        explicit owning_data_t(std::istream & fs)
-            : m_size(utility::read_binary<std::decay_t<decltype(m_size)>>(
-                  utility::read_io_header(fs, IO_MAGIC_HEADER)
-              ))
-            , m_ptr(utility::read_binary_array<vector_t>(fs, m_size))
-        {
-            utility::read_io_footer(fs, IO_MAGIC_HEADER);
-        }
-
         owning_data_t(const owning_data_t & o)
             : m_size(o.m_size)
             , m_ptr(std::make_unique<vector_t[]>(m_size))
@@ -119,18 +110,31 @@ struct array {
             return {m_size};
         }
 
-        void dump(std::ostream & fs) const
+        static owning_data_t read_binary(std::istream & fs)
+        {
+            utility::read_io_header(fs, IO_MAGIC_HEADER);
+
+            auto size =
+                utility::read_binary<std::decay_t<decltype(m_size)>>(fs);
+            auto ptr = utility::read_binary_array<vector_t>(fs, size);
+
+            utility::read_io_footer(fs, IO_MAGIC_HEADER);
+
+            return owning_data_t(size, std::move(ptr));
+        }
+
+        static void write_binary(std::ostream & fs, const owning_data_t & o)
         {
             utility::write_io_header(fs, IO_MAGIC_HEADER);
 
             fs.write(
-                reinterpret_cast<const char *>(&m_size),
-                sizeof(std::decay_t<decltype(m_size)>)
+                reinterpret_cast<const char *>(&o.m_size),
+                sizeof(std::decay_t<decltype(o.m_size)>)
             );
 
             fs.write(
-                reinterpret_cast<const char *>(m_ptr.get()),
-                m_size * sizeof(vector_t)
+                reinterpret_cast<const char *>(o.m_ptr.get()),
+                o.m_size * sizeof(vector_t)
             );
 
             utility::write_io_footer(fs, IO_MAGIC_HEADER);

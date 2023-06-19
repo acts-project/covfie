@@ -90,7 +90,24 @@ concept field_backend = requires
      */
     requires requires(std::istream & fs)
     {
-        {typename T::owning_data_t(fs)};
+        {
+            T::owning_data_t::read_binary(fs)
+        } -> std::same_as<typename T::owning_data_t>;
+    };
+
+    requires requires(std::ostream & fs, const typename T::owning_data_t & o)
+    {
+        {
+            T::owning_data_t::write_binary(fs, o)
+        } -> std::same_as<void>;
+    };
+
+    requires T::is_initial || requires(
+                                  const typename T::configuration_t & c,
+                                  typename T::backend_t::owning_data_t & b
+                              )
+    {
+        {typename T::owning_data_t(c, std::move(b))};
     };
 
     {typename T::owning_data_t()};
@@ -122,14 +139,6 @@ concept field_backend = requires
          * owning variant.
          */
         {typename T::non_owning_data_t(d)};
-
-        /*
-         * Check whether an owning data type can be written to disk.
-         */
-        requires requires(std::ostream & fs)
-        {
-            {d.dump(fs)};
-        };
 
         /*
          * Any non-initial backend must allow an accessor method to access the

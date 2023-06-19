@@ -62,18 +62,20 @@ struct identity {
         {
         }
 
-        explicit owning_data_t(std::istream & fs)
-        {
-            utility::read_io_header(fs, IO_MAGIC_HEADER);
-            utility::read_io_footer(fs, IO_MAGIC_HEADER);
-        }
-
         configuration_t get_configuration() const
         {
             return {};
         }
 
-        void dump(std::ostream & fs) const
+        static owning_data_t read_binary(std::istream & fs)
+        {
+            utility::read_io_header(fs, IO_MAGIC_HEADER);
+            utility::read_io_footer(fs, IO_MAGIC_HEADER);
+
+            return owning_data_t();
+        }
+
+        static void write_binary(std::ostream & fs, const owning_data_t & o)
         {
             utility::write_io_header(fs, IO_MAGIC_HEADER);
             utility::write_io_footer(fs, IO_MAGIC_HEADER);

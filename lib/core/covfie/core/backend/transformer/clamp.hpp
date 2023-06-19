@@ -52,6 +52,15 @@ struct clamp {
         {
         }
 
+        explicit owning_data_t(
+            const configuration_t & c, typename backend_t::owning_data_t && b
+        )
+            : m_min(c.min)
+            , m_max(c.max)
+            , m_backend(std::forward<typename backend_t::owning_data_t>(b))
+        {
+        }
+
         template <
             typename... Args,
             typename B = backend_t,
@@ -72,32 +81,6 @@ struct clamp {
             }
         }
 
-        explicit owning_data_t(std::istream & fs)
-            : m_min(utility::read_binary<decltype(m_min)>(
-                  utility::read_io_header(fs, IO_MAGIC_HEADER)
-              ))
-            , m_max(utility::read_binary<decltype(m_max)>(fs))
-            , m_backend(fs)
-        {
-            utility::read_io_footer(fs, IO_MAGIC_HEADER);
-        }
-
-        void dump(std::ostream & fs) const
-        {
-            utility::write_io_header(fs, IO_MAGIC_HEADER);
-
-            fs.write(
-                reinterpret_cast<const char *>(&m_min), sizeof(decltype(m_min))
-            );
-            fs.write(
-                reinterpret_cast<const char *>(&m_max), sizeof(decltype(m_max))
-            );
-
-            m_backend.dump(fs);
-
-            utility::write_io_footer(fs, IO_MAGIC_HEADER);
-        }
-
         typename backend_t::owning_data_t & get_backend(void)
         {
             return m_backend;
@@ -111,6 +94,38 @@ struct clamp {
         configuration_t get_configuration(void) const
         {
             return {m_min, m_max};
+        }
+
+        static owning_data_t read_binary(std::istream & fs)
+        {
+            utility::read_io_header(fs, IO_MAGIC_HEADER);
+
+            auto min = utility::read_binary<decltype(m_min)>(fs);
+            auto max = utility::read_binary<decltype(m_max)>(fs);
+            typename backend_t::owning_data_t be =
+                backend_t::owning_data_t::read_binary(fs);
+
+            utility::read_io_footer(fs, IO_MAGIC_HEADER);
+
+            return owning_data_t(min, max, std::move(be));
+        }
+
+        static void write_binary(std::ostream & fs, const owning_data_t & o)
+        {
+            utility::write_io_header(fs, IO_MAGIC_HEADER);
+
+            fs.write(
+                reinterpret_cast<const char *>(&o.m_min),
+                sizeof(decltype(m_min))
+            );
+            fs.write(
+                reinterpret_cast<const char *>(&o.m_max),
+                sizeof(decltype(m_max))
+            );
+
+            backend_t::owning_data_t::write_binary(fs, o.m_backend);
+
+            utility::write_io_footer(fs, IO_MAGIC_HEADER);
         }
 
         typename contravariant_input_t::vector_t m_min, m_max;

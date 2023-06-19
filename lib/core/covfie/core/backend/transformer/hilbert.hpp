@@ -188,27 +188,12 @@ struct hilbert {
         {
         }
 
-        explicit owning_data_t(std::istream & fs)
-            : m_sizes(utility::read_binary<decltype(m_sizes)>(
-                  utility::read_io_header(fs, IO_MAGIC_HEADER)
-              ))
-            , m_storage(fs)
+        explicit owning_data_t(
+            const configuration_t & c, typename backend_t::owning_data_t && b
+        )
+            : m_sizes(c)
+            , m_backend(std::forward<typename backend_t::owning_data_t>(b))
         {
-            utility::read_io_footer(fs, IO_MAGIC_HEADER);
-        }
-
-        void dump(std::ostream & fs) const
-        {
-            utility::write_io_header(fs, IO_MAGIC_HEADER);
-
-            fs.write(
-                reinterpret_cast<const char *>(&m_sizes),
-                sizeof(decltype(m_sizes))
-            );
-
-            m_storage.dump(fs);
-
-            utility::write_io_footer(fs, IO_MAGIC_HEADER);
         }
 
         typename backend_t::owning_data_t & get_backend(void)
@@ -224,6 +209,32 @@ struct hilbert {
         configuration_t get_configuration(void) const
         {
             return m_sizes;
+        }
+
+        static owning_data_t read_binary(std::istream & fs)
+        {
+            utility::read_io_header(fs, IO_MAGIC_HEADER);
+
+            auto sizes = utility::read_binary<decltype(m_sizes)>(fs);
+            auto be = decltype(m_backend)::read_binary(fs);
+
+            utility::read_io_footer(fs, IO_MAGIC_HEADER);
+
+            return owning_data_t(sizes, std::move(be));
+        }
+
+        static void write_binary(std::ostream & fs, const owning_data_t & o)
+        {
+            utility::write_io_header(fs, IO_MAGIC_HEADER);
+
+            fs.write(
+                reinterpret_cast<const char *>(&m_sizes),
+                sizeof(decltype(m_sizes))
+            );
+
+            decltype(m_backend)::write_binary(fs);
+
+            utility::write_io_footer(fs, IO_MAGIC_HEADER);
         }
 
         configuration_t m_sizes;

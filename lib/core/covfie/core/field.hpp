@@ -54,7 +54,8 @@ public:
     }
 
     explicit field(std::istream & fs)
-        : m_backend(utility::read_io_header(fs, IO_MAGIC_HEADER))
+        : m_backend(decltype(m_backend
+          )::read_binary(utility::read_io_header(fs, IO_MAGIC_HEADER)))
     {
         utility::read_io_footer(fs, IO_MAGIC_HEADER);
     }
@@ -71,7 +72,7 @@ public:
     void dump(std::ostream & fs) const
     {
         utility::write_io_header(fs, IO_MAGIC_HEADER);
-        m_backend.dump(fs);
+        backend_t::owning_data_t::write_binary(fs, m_backend);
         utility::write_io_footer(fs, IO_MAGIC_HEADER);
     }
 

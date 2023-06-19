@@ -55,28 +55,30 @@ struct constant {
 
         owning_data_t(const owning_data_t &) = default;
 
-        explicit owning_data_t(std::istream & fs)
-            : m_value(
-                  utility::read_binary<typename covariant_output_t::vector_t>(
-                      utility::read_io_header(fs, IO_MAGIC_HEADER)
-                  )
-              )
-        {
-            utility::read_io_footer(fs, IO_MAGIC_HEADER);
-        }
-
         configuration_t get_configuration() const
         {
             return m_value;
         }
 
-        void dump(std::ostream & fs) const
+        static owning_data_t read_binary(std::istream & fs)
+        {
+            utility::read_io_header(fs, IO_MAGIC_HEADER);
+
+            auto vec =
+                utility::read_binary<typename covariant_output_t::vector_t>();
+
+            utility::read_io_footer(fs, IO_MAGIC_HEADER);
+
+            return owning_data_t(vec);
+        }
+
+        static void write_binary(std::ostream & fs, const owning_data_t & o)
         {
             utility::write_io_header(fs, IO_MAGIC_HEADER);
 
             fs.write(
-                reinterpret_cast<const char *>(&m_value),
-                sizeof(decltype(m_value))
+                reinterpret_cast<const char *>(&o.m_value),
+                sizeof(decltype(o.m_value))
             );
 
             utility::write_io_footer(fs, IO_MAGIC_HEADER);

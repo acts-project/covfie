@@ -72,27 +72,12 @@ struct affine {
         {
         }
 
-        explicit owning_data_t(std::istream & fs)
-            : m_transform(utility::read_binary<decltype(m_transform)>(
-                  utility::read_io_header(fs, IO_MAGIC_HEADER)
-              ))
-            , m_backend(fs)
+        explicit owning_data_t(
+            const configuration_t & c, typename backend_t::owning_data_t && b
+        )
+            : m_transform(c)
+            , m_backend(std::forward<typename backend_t::owning_data_t>(b))
         {
-            utility::read_io_footer(fs, IO_MAGIC_HEADER);
-        }
-
-        void dump(std::ostream & fs) const
-        {
-            utility::write_io_header(fs, IO_MAGIC_HEADER);
-
-            fs.write(
-                reinterpret_cast<const char *>(&m_transform),
-                sizeof(decltype(m_transform))
-            );
-
-            m_backend.dump(fs);
-
-            utility::write_io_footer(fs, IO_MAGIC_HEADER);
         }
 
         typename backend_t::owning_data_t & get_backend(void)
@@ -108,6 +93,33 @@ struct affine {
         configuration_t get_configuration(void) const
         {
             return m_transform;
+        }
+
+        static owning_data_t read_binary(std::istream & fs)
+        {
+            utility::read_io_header(fs, IO_MAGIC_HEADER);
+
+            configuration_t trans = utility::read_binary<configuration_t>(fs);
+            typename backend_t::owning_data_t be =
+                backend_t::owning_data_t::read_binary(fs);
+
+            utility::read_io_footer(fs, IO_MAGIC_HEADER);
+
+            return owning_data_t(trans, std::move(be));
+        }
+
+        static void write_binary(std::ostream & fs, const owning_data_t & o)
+        {
+            utility::write_io_header(fs, IO_MAGIC_HEADER);
+
+            fs.write(
+                reinterpret_cast<const char *>(&o.m_transform),
+                sizeof(decltype(o.m_transform))
+            );
+
+            backend_t::owning_data_t::write_binary(fs, o.m_backend);
+
+            utility::write_io_footer(fs, IO_MAGIC_HEADER);
         }
 
         matrix_t m_transform;
