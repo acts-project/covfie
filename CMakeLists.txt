@@ -10,7 +10,7 @@ cmake_minimum_required(VERSION 3.18)
 
 project(
     "covfie"
-    VERSION 0.7.3
+    VERSION 0.7.4
 )
 
 # Declare options which control the parts of the code being built.
