@@ -42,6 +42,9 @@ struct constant {
         using parent_t = this_t;
 
         owning_data_t() = default;
+        owning_data_t(const owning_data_t &) = default;
+        owning_data_t & operator=(const owning_data_t &) = default;
+        owning_data_t & operator=(owning_data_t &&) = default;
 
         explicit owning_data_t(configuration_t conf)
             : m_value(conf)
@@ -52,8 +55,6 @@ struct constant {
             : owning_data_t(std::move(conf.x))
         {
         }
-
-        owning_data_t(const owning_data_t &) = default;
 
         configuration_t get_configuration() const
         {
