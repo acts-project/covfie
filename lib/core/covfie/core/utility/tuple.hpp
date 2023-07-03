@@ -15,13 +15,13 @@
 
 namespace covfie::utility {
 template <typename T, typename... Ts>
-std::array<T, sizeof...(Ts) + 1u> to_array(std::tuple<T, Ts...> t)
+std::array<T, sizeof...(Ts) + 1u> to_array(std::tuple<T, Ts...> i)
 {
     return std::apply(
         [](T t, Ts... ts) {
             return std::array<T, sizeof...(Ts) + 1u>{t, ts...};
         },
-        t
+        i
     );
 }
 }

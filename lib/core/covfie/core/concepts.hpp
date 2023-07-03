@@ -18,6 +18,18 @@
 #include <concepts>
 namespace covfie::concepts {
 template <typename T>
+concept is_inital = T::is_initial == true;
+
+template <typename T>
+concept is_constructible_from_config_and_backend = requires(
+    const typename T::configuration_t & c,
+    typename T::backend_t::owning_data_t & b
+)
+{
+    {typename T::owning_data_t(c, std::move(b))};
+};
+
+template <typename T>
 concept field_backend = requires
 {
     /*
@@ -102,13 +114,7 @@ concept field_backend = requires
         } -> std::same_as<void>;
     };
 
-    requires T::is_initial || requires(
-                                  const typename T::configuration_t & c,
-                                  typename T::backend_t::owning_data_t & b
-                              )
-    {
-        {typename T::owning_data_t(c, std::move(b))};
-    };
+    is_inital<T> || is_constructible_from_config_and_backend<T>;
 
     {typename T::owning_data_t()};
 

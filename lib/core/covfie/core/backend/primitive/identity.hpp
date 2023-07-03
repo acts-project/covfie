@@ -75,7 +75,7 @@ struct identity {
             return owning_data_t();
         }
 
-        static void write_binary(std::ostream & fs, const owning_data_t & o)
+        static void write_binary(std::ostream & fs, const owning_data_t &)
         {
             utility::write_io_header(fs, IO_MAGIC_HEADER);
             utility::write_io_footer(fs, IO_MAGIC_HEADER);

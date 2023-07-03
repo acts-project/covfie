@@ -41,7 +41,7 @@ struct shuffle {
         }
 
         explicit owning_data_t(
-            const configuration_t & c, typename backend_t::owning_data_t && b
+            const configuration_t &, typename backend_t::owning_data_t && b
         )
             : m_backend(std::forward<typename backend_t::owning_data_t>(b))
         {

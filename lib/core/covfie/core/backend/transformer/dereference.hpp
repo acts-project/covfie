@@ -41,7 +41,7 @@ struct dereference {
         }
 
         explicit owning_data_t(
-            const configuration_t & c, typename backend_t::owning_data_t && b
+            const configuration_t &, typename backend_t::owning_data_t && b
         )
             : m_backend(b)
         {
@@ -77,7 +77,7 @@ struct dereference {
         {
             utility::write_io_header(fs, IO_MAGIC_HEADER);
 
-            decltype(m_backend)::write_binary(fs);
+            decltype(m_backend)::write_binary(fs, o);
 
             utility::write_io_footer(fs, IO_MAGIC_HEADER);
         }

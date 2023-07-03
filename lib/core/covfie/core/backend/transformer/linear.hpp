@@ -113,7 +113,7 @@ struct linear {
         {
             utility::write_io_header(fs, IO_MAGIC_HEADER);
 
-            decltype(m_backend)::write_binary(fs);
+            decltype(m_backend)::write_binary(fs, o.m_backend);
 
             utility::write_io_footer(fs, IO_MAGIC_HEADER);
         }
