@@ -9,6 +9,9 @@
 # All the tests here will require Google Test, so we will go ahead and find it.
 find_package(GTest CONFIG REQUIRED)
 
+# The testing utils are always built.
+add_subdirectory(utils)
+
 # The core library tests are always built (if tests are built at all).
 add_subdirectory(core)
 

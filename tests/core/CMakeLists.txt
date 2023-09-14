@@ -41,4 +41,5 @@ target_link_libraries(
     GTest::gtest
     GTest::gtest_main
     Boost::filesystem
+    testing_utils
 )

@@ -12,6 +12,7 @@
 
 #include <boost/filesystem.hpp>
 #include <gtest/gtest.h>
+#include <tmp_file.hpp>
 
 #include <covfie/core/backend/primitive/array.hpp>
 #include <covfie/core/field.hpp>
@@ -31,10 +32,7 @@ TEST(TestBinaryIO, WriteRead1DSingleFloatBuilder)
         p[0] = static_cast<float>(i);
     }
 
-    boost::filesystem::path ofile =
-        boost::filesystem::temp_directory_path() /
-        boost::filesystem::unique_path("covfie_test_%%%%_%%%%_%%%%_%%%%.covfie"
-        );
+    boost::filesystem::path ofile = get_tmp_file();
 
     std::ofstream ofs(ofile.native(), std::ofstream::binary);
 
