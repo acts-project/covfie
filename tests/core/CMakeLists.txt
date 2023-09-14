@@ -30,6 +30,7 @@ add_executable(
     test_algebra.cpp
     test_static_permutation.cpp
     test_utility_numeric.cpp
+    test_array_binary_io.cpp
 )
 
 # Ensure that the tests are linked against the required libraries.
