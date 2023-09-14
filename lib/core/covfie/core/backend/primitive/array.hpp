@@ -114,6 +114,15 @@ struct array {
         {
             utility::read_io_header(fs, IO_MAGIC_HEADER);
 
+            uint32_t float_width = utility::read_binary<uint32_t>(fs);
+
+            if (float_width != 4 && float_width != 8) {
+                throw std::runtime_error(
+                    "Float type is neither IEEE 754 single- nor "
+                    "double-precision, binary input is not supported."
+                );
+            }
+
             auto size =
                 utility::read_binary<std::decay_t<decltype(m_size)>>(fs);
             std::unique_ptr<vector_t[]> ptr =
@@ -121,10 +130,13 @@ struct array {
 
             for (std::size_t i = 0; i < size; ++i) {
                 for (std::size_t j = 0; j < _output_vector_t::size; ++j) {
-                    fs.read(
-                        reinterpret_cast<char *>(&ptr[i][j]),
-                        sizeof(typename _output_vector_t::type)
-                    );
+                    if (float_width == 4) {
+                        ptr[i][j] = utility::read_binary<float>(fs);
+                    } else if (float_width == 8) {
+                        ptr[i][j] = utility::read_binary<double>(fs);
+                    } else {
+                        throw std::logic_error("Float width is unexpected.");
+                    }
                 }
             }
 
@@ -136,6 +148,29 @@ struct array {
         static void write_binary(std::ostream & fs, const owning_data_t & o)
         {
             utility::write_io_header(fs, IO_MAGIC_HEADER);
+
+            uint32_t float_width;
+
+            if constexpr (std::
+                              is_same_v<typename _output_vector_t::type, float>)
+            {
+                float_width = 4;
+            } else if constexpr (std::is_same_v<
+                                     typename _output_vector_t::type,
+                                     double>)
+            {
+                float_width = 8;
+            } else {
+                throw std::logic_error(
+                    "Float type is neither IEEE 754 single- nor "
+                    "double-precision, binary output is not supported."
+                );
+            }
+
+            fs.write(
+                reinterpret_cast<const char *>(&float_width),
+                sizeof(std::decay_t<decltype(float_width)>)
+            );
 
             fs.write(
                 reinterpret_cast<const char *>(&o.m_size),
