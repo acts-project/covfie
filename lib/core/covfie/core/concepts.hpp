@@ -114,7 +114,7 @@ concept field_backend = requires
         } -> std::same_as<void>;
     };
 
-    is_inital<T> || is_constructible_from_config_and_backend<T>;
+    requires is_inital<T> || is_constructible_from_config_and_backend<T>;
 
     {typename T::owning_data_t()};
 
