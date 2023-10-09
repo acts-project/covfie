@@ -15,6 +15,12 @@ target_include_directories(
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 
+target_link_libraries(
+    cpu
+    INTERFACE
+    covfie::core
+)
+
 target_compile_features(cpu INTERFACE cxx_std_17)
 
 # Logic to ensure that the CPU module can be installed properly.
@@ -30,3 +36,7 @@ install(
 
 # Hack for compatibility
 add_library(covfie::cpu ALIAS cpu)
+
+# Test the public headers of covfie::cpu.
+include(covfie-functions)
+covfie_test_public_headers(cpu "covfie/cpu/backend/primitive/c_array.hpp")

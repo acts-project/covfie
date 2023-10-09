@@ -17,7 +17,7 @@
 std::filesystem::path get_tmp_file()
 {
     char fname[L_tmpnam];
-    char* dummy = std::tmpnam(fname);
+    char * dummy = std::tmpnam(fname);
     (void)dummy;
     return std::filesystem::temp_directory_path() /
            std::filesystem::path(fname);

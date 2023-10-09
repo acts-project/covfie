@@ -1,7 +1,7 @@
 /*
  * This file is part of covfie, a part of the ACTS project
  *
- * Copyright (c) 2022 CERN
+ * Copyright (c) 2022-2023 CERN
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License,
  * v. 2.0. If a copy of the MPL was not distributed with this file, You can
@@ -42,8 +42,9 @@ struct vector : public matrix<N, 1, T, I> {
     template <
         typename... Args,
         std::enable_if_t<
-            (std::is_scalar_v<Args> && ...) &&
-                (std::is_convertible_v<Args, T> && ...) && sizeof...(Args) == N,
+            std::conjunction_v<std::is_scalar<Args>...> &&
+                std::conjunction_v<std::is_convertible<Args, T>...> &&
+                sizeof...(Args) == N,
             bool> = true>
     COVFIE_DEVICE vector(Args... args)
         : vector(std::array<T, N>{std::forward<Args>(args)...})

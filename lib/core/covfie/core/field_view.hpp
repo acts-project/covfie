@@ -1,7 +1,7 @@
 /*
  * This file is part of covfie, a part of the ACTS project
  *
- * Copyright (c) 2022 CERN
+ * Copyright (c) 2022-2023 CERN
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License,
  * v. 2.0. If a copy of the MPL was not distributed with this file, You can
@@ -45,10 +45,9 @@ public:
         typename... Args,
         typename Q = coordinate_t,
         std::enable_if_t<
-            (std::is_convertible_v<
-                 Args,
-                 typename backend_t::contravariant_input_t::scalar_t> &&
-             ...),
+            std::conjunction_v<std::is_convertible<
+                Args,
+                typename backend_t::contravariant_input_t::scalar_t>...>,
             bool> = true,
         std::enable_if_t<
             sizeof...(Args) == backend_t::contravariant_input_t::dimensions,
@@ -56,7 +55,9 @@ public:
         std::enable_if_t<!std::is_scalar_v<Q>, bool> = true>
     COVFIE_DEVICE output_t at(Args... c) const
     {
-        return m_storage.at(coordinate_t{c...});
+        return m_storage.at(coordinate_t{
+            static_cast<typename backend_t::contravariant_input_t::scalar_t>(c
+            )...});
     }
 
     template <
