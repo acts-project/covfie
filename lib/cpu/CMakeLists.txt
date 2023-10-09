@@ -36,3 +36,21 @@ target_link_libraries(
 
 # Hack for compatibility
 add_library(covfie::cpu ALIAS cpu)
+
+# Test the public headers of covfie::cpu.
+if(COVFIE_TEST_HEADERS)
+    include(covfie-functions)
+
+    file(
+        GLOB_RECURSE
+        public_headers
+        RELATIVE
+        "${CMAKE_CURRENT_SOURCE_DIR}"
+        "${CMAKE_CURRENT_SOURCE_DIR}/covfie/*.hpp"
+    )
+
+    covfie_test_public_headers(
+        cpu
+        "${public_headers}"
+    )
+endif()

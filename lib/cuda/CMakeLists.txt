@@ -39,3 +39,21 @@ install(
 
 # Hack for compatibility
 add_library(covfie::cuda ALIAS cuda)
+
+# Test the public headers of covfie::cuda.
+if(COVFIE_TEST_HEADERS)
+    include(covfie-functions)
+
+    file(
+        GLOB_RECURSE
+        public_headers
+        RELATIVE
+        "${CMAKE_CURRENT_SOURCE_DIR}"
+        "${CMAKE_CURRENT_SOURCE_DIR}/covfie/*.hpp"
+    )
+
+    covfie_test_public_headers(
+        cuda
+        "${public_headers}"
+    )
+endif()

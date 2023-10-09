@@ -64,6 +64,7 @@ jobs:
         -DCOVFIE_BUILD_TESTS=On
         -DCOVFIE_BUILD_EXAMPLES=On
         -DCOVFIE_BUILD_BENCHMARKS=On
+        -DCOVFIE_TEST_HEADERS=On
         -DCMAKE_CXX_STANDARD=${{ matrix.CXX_STANDARD }}
         -DCMAKE_PREFIX_PATH="$GITHUB_WORKSPACE/.prefixes/gtest/"
         -S $GITHUB_WORKSPACE
@@ -127,6 +128,7 @@ jobs:
         -DCOVFIE_BUILD_BENCHMARKS=On
         -DCOVFIE_PLATFORM_CUDA=On
         -DCOVFIE_PLATFORM_CPU=On
+        -DCOVFIE_TEST_HEADERS=On
         -DCMAKE_CXX_STANDARD=${{ matrix.CXX_STANDARD }}
         -DCMAKE_PREFIX_PATH="$GITHUB_WORKSPACE/.prefixes/gtest/"
         -S $GITHUB_WORKSPACE
@@ -181,6 +183,7 @@ jobs:
         -DCOVFIE_BUILD_BENCHMARKS=On
         -DCOVFIE_PLATFORM_CPU=On
         -DCOVFIE_QUIET=On
+        -DCOVFIE_TEST_HEADERS=On
         -DCMAKE_CXX_STANDARD=${{ matrix.CXX_STANDARD }}
         -DCMAKE_PREFIX_PATH="${{ github.workspace }}\.prefix"
         -S ${{ github.workspace }}
