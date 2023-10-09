@@ -91,10 +91,13 @@ struct RandomIntegral : covfie::benchmark::AccessPattern<RandomIntegral> {
         std::random_device rd;
         std::minstd_rand e(rd());
 
-        std::uniform_int_distribution<ulong> xy_dist(0, 200);
-        std::uniform_int_distribution<ulong> z_dist(0, 300);
+        using scalar_t = typename backend_t::contravariant_input_t::scalar_t;
 
-        std::vector<covfie::benchmark::random_agent<ulong, 3>> objs(p.agents);
+        std::uniform_int_distribution<scalar_t> xy_dist(0, 200);
+        std::uniform_int_distribution<scalar_t> z_dist(0, 300);
+
+        std::vector<covfie::benchmark::random_agent<scalar_t, 3>> objs(p.agents
+        );
 
         for (std::size_t i = 0; i < objs.size(); ++i) {
             objs[i].pos[0] = xy_dist(e);

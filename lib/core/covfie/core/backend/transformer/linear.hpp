@@ -17,6 +17,7 @@
 #include <variant>
 
 #include <covfie/core/concepts.hpp>
+#include <covfie/core/definitions.hpp>
 #include <covfie/core/qualifiers.hpp>
 #include <covfie/core/vector.hpp>
 
@@ -151,9 +152,18 @@ struct linear {
 
                 for (std::size_t n = 0; n < 8; ++n) {
                     pc[n] = m_backend.at(
-                        {i + ((n & 4) ? 1 : 0),
-                         j + ((n & 2) ? 1 : 0),
-                         k + ((n & 1) ? 1 : 0)}
+                        {static_cast<typename decltype(m_backend
+                         )::parent_t::contravariant_input_t::scalar_t>(
+                             i + ((n & 4) ? 1 : 0)
+                         ),
+                         static_cast<typename decltype(m_backend
+                         )::parent_t::contravariant_input_t::scalar_t>(
+                             j + ((n & 2) ? 1 : 0)
+                         ),
+                         static_cast<typename decltype(m_backend
+                         )::parent_t::contravariant_input_t::scalar_t>(
+                             k + ((n & 1) ? 1 : 0)
+                         )}
                     );
                 }
 
@@ -168,9 +178,9 @@ struct linear {
                 }
 
                 return rv;
+            } else {
+                return {};
             }
-
-            return {};
         }
 
         typename backend_t::non_owning_data_t & get_backend(void)

@@ -25,6 +25,7 @@
 
 #include <covfie/core/backend/primitive/array.hpp>
 #include <covfie/core/concepts.hpp>
+#include <covfie/core/definitions.hpp>
 #include <covfie/core/qualifiers.hpp>
 #include <covfie/core/utility/binary_io.hpp>
 #include <covfie/core/utility/nd_map.hpp>
@@ -94,14 +95,14 @@ struct morton {
     using covariant_input_t = typename backend_t::covariant_output_t;
     using covariant_output_t = covariant_input_t;
 
-    using coordinate_t = typename contravariant_input_t::vector_t;
     using array_t = backend_t;
 
     using configuration_t = utility::nd_size<contravariant_input_t::dimensions>;
 
     static constexpr uint32_t IO_MAGIC_HEADER = 0xAB020006;
 
-    COVFIE_DEVICE static std::size_t calculate_index(coordinate_t c)
+    COVFIE_DEVICE static std::size_t
+    calculate_index(typename contravariant_input_t::vector_t c)
     {
 #ifdef HAVE_BMI2
         if constexpr (use_bmi2) {
@@ -136,14 +137,12 @@ struct morton {
         {
             for (std::size_t j = 0; j < contravariant_input_t::dimensions; ++j)
             {
-                idx |= (c[j] & (1UL << i))
+                idx |= (c[j] & (static_cast<std::size_t>(1) << i))
                        << (i * (contravariant_input_t::dimensions - 1) + j);
             }
         }
         return idx;
 #endif
-
-        __builtin_unreachable();
     }
 
     template <typename T>
@@ -165,20 +164,19 @@ struct morton {
             );
         typename T::parent_t::non_owning_data_t nother(other);
 
-        using tuple_t = decltype(std::tuple_cat(
-            std::declval<std::array<
-                typename contravariant_input_t::scalar_t,
-                contravariant_input_t::dimensions>>()
-        ));
+        using tuple_t = decltype(std::tuple_cat(sizes));
 
         utility::nd_map<tuple_t>(
             [&nother, &res](tuple_t t) {
                 auto old_c = utility::to_array(t);
-                coordinate_t c;
+                typename contravariant_input_t::vector_t c;
 
                 for (std::size_t i = 0; i < contravariant_input_t::dimensions;
                      ++i) {
-                    c[i] = old_c[i];
+                    c[i] = static_cast<
+                        typename contravariant_input_t::vector_t::value_type>(
+                        old_c[i]
+                    );
                 }
 
                 std::size_t idx = calculate_index(c);
@@ -308,8 +306,8 @@ struct morton {
         {
         }
 
-        COVFIE_DEVICE typename covariant_output_t::vector_t at(coordinate_t c
-        ) const
+        COVFIE_DEVICE typename covariant_output_t::vector_t
+        at(typename contravariant_input_t::vector_t c) const
         {
             return m_storage.at(calculate_index(c));
         }

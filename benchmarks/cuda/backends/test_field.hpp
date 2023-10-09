@@ -56,12 +56,12 @@ struct InterpolateLin {
 
 struct LayoutStride {
     template <typename T>
-    using apply = covfie::backend::strided<covfie::vector::ulong3, T>;
+    using apply = covfie::backend::strided<covfie::vector::size3, T>;
 };
 
 struct LayoutMortonNaive {
     template <typename T>
-    using apply = covfie::backend::morton<covfie::vector::ulong3, T, false>;
+    using apply = covfie::backend::morton<covfie::vector::size3, T, false>;
 };
 
 template <typename Interpolator, typename Layout>

@@ -38,7 +38,7 @@ example is included in the repository as
 
 ```cpp
 using field_t = covfie::field<covfie::backend::strided<
-    covfie::vector::ulong2,
+    covfie::vector::size2,
     covfie::backend::array<covfie::vector::float2>>>;
 
 int main(void)
@@ -74,11 +74,11 @@ we can simply add a linear interpolator:
 
 ```cpp
 using builder_t = covfie::field<covfie::backend::strided<
-    covfie::vector::ulong2,
+    covfie::vector::size2,
     covfie::backend::array<covfie::vector::float2>>>;
 
 using field_t = covfie::field<covfie::backend::linear<covfie::backend::strided<
-    covfie::vector::ulong2,
+    covfie::vector::size2,
     covfie::backend::array<covfie::vector::float2>>>>;
 
 int main(void)

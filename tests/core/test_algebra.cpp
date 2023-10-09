@@ -1,7 +1,7 @@
 /*
  * This file is part of covfie, a part of the ACTS project
  *
- * Copyright (c) 2022 CERN
+ * Copyright (c) 2022-2023 CERN
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License,
  * v. 2.0. If a copy of the MPL was not distributed with this file, You can
@@ -32,14 +32,14 @@ TEST(TestAlgebra, VectorArrayInit1D)
 {
     covfie::algebra::vector<1, double> v(std::array<double, 1>{21.5});
 
-    EXPECT_FLOAT_EQ(v(0), 21.5);
+    EXPECT_DOUBLE_EQ(v(0), 21.5);
 }
 
 TEST(TestAlgebra, VectorVariadicInit1D)
 {
     covfie::algebra::vector<1, double> v(84.2);
 
-    EXPECT_FLOAT_EQ(v(0), 84.2);
+    EXPECT_DOUBLE_EQ(v(0), 84.2);
 }
 
 TEST(TestAlgebra, VectorArrayInit2F)
@@ -62,16 +62,16 @@ TEST(TestAlgebra, VectorArrayInit2D)
 {
     covfie::algebra::vector<2, double> v(std::array<double, 2>{21.5, 11.8});
 
-    EXPECT_FLOAT_EQ(v(0), 21.5);
-    EXPECT_FLOAT_EQ(v(1), 11.8);
+    EXPECT_DOUBLE_EQ(v(0), 21.5);
+    EXPECT_DOUBLE_EQ(v(1), 11.8);
 }
 
 TEST(TestAlgebra, VectorVariadicInit2D)
 {
     covfie::algebra::vector<2, double> v(84.2, 77.3);
 
-    EXPECT_FLOAT_EQ(v(0), 84.2);
-    EXPECT_FLOAT_EQ(v(1), 77.3);
+    EXPECT_DOUBLE_EQ(v(0), 84.2);
+    EXPECT_DOUBLE_EQ(v(1), 77.3);
 }
 
 TEST(TestAlgebra, VectorArrayInit3F)
@@ -98,18 +98,18 @@ TEST(TestAlgebra, VectorArrayInit3D)
     covfie::algebra::vector<3, double> v(std::array<double, 3>{21.5, 11.8, 28.2}
     );
 
-    EXPECT_FLOAT_EQ(v(0), 21.5);
-    EXPECT_FLOAT_EQ(v(1), 11.8);
-    EXPECT_FLOAT_EQ(v(2), 28.2);
+    EXPECT_DOUBLE_EQ(v(0), 21.5);
+    EXPECT_DOUBLE_EQ(v(1), 11.8);
+    EXPECT_DOUBLE_EQ(v(2), 28.2);
 }
 
 TEST(TestAlgebra, VectorVariadicInit3D)
 {
     covfie::algebra::vector<3, double> v(84.2, 77.3, 66.1);
 
-    EXPECT_FLOAT_EQ(v(0), 84.2);
-    EXPECT_FLOAT_EQ(v(1), 77.3);
-    EXPECT_FLOAT_EQ(v(2), 66.1);
+    EXPECT_DOUBLE_EQ(v(0), 84.2);
+    EXPECT_DOUBLE_EQ(v(1), 77.3);
+    EXPECT_DOUBLE_EQ(v(2), 66.1);
 }
 
 TEST(TestAlgebra, VectorAssignment1F)
@@ -127,7 +127,7 @@ TEST(TestAlgebra, VectorAssignment1D)
 
     v(0) = 5.3;
 
-    EXPECT_FLOAT_EQ(v(0), 5.3);
+    EXPECT_DOUBLE_EQ(v(0), 5.3);
 }
 
 TEST(TestAlgebra, VectorAssignment2F)
@@ -148,8 +148,8 @@ TEST(TestAlgebra, VectorAssignment2D)
     v(0) = 5.3;
     v(1) = 5.5;
 
-    EXPECT_FLOAT_EQ(v(0), 5.3);
-    EXPECT_FLOAT_EQ(v(1), 5.5);
+    EXPECT_DOUBLE_EQ(v(0), 5.3);
+    EXPECT_DOUBLE_EQ(v(1), 5.5);
 }
 
 TEST(TestAlgebra, VectorAssignment3F)
@@ -173,9 +173,9 @@ TEST(TestAlgebra, VectorAssignment3D)
     v(1) = 6.3;
     v(2) = 7.3;
 
-    EXPECT_FLOAT_EQ(v(0), 5.3);
-    EXPECT_FLOAT_EQ(v(1), 6.3);
-    EXPECT_FLOAT_EQ(v(2), 7.3);
+    EXPECT_DOUBLE_EQ(v(0), 5.3);
+    EXPECT_DOUBLE_EQ(v(1), 6.3);
+    EXPECT_DOUBLE_EQ(v(2), 7.3);
 }
 
 TEST(TestAlgebra, MatrixInit1x1F)

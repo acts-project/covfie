@@ -1,7 +1,7 @@
 /*
  * This file is part of covfie, a part of the ACTS project
  *
- * Copyright (c) 2022 CERN
+ * Copyright (c) 2022-2023 CERN
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License,
  * v. 2.0. If a copy of the MPL was not distributed with this file, You can
@@ -130,10 +130,15 @@ struct array {
 
             for (std::size_t i = 0; i < size; ++i) {
                 for (std::size_t j = 0; j < _output_vector_t::size; ++j) {
+                    using scalar_t = typename _output_vector_t::type;
                     if (float_width == 4) {
-                        ptr[i][j] = utility::read_binary<float>(fs);
+                        ptr[i][j] =
+                            static_cast<scalar_t>(utility::read_binary<float>(fs
+                            ));
                     } else if (float_width == 8) {
-                        ptr[i][j] = utility::read_binary<double>(fs);
+                        ptr[i][j] = static_cast<scalar_t>(
+                            utility::read_binary<double>(fs)
+                        );
                     } else {
                         throw std::logic_error("Float width is unexpected.");
                     }

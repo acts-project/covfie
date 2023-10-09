@@ -26,12 +26,12 @@
 
 using cpu_field_t = covfie::field<
     covfie::backend::affine<covfie::backend::linear<covfie::backend::strided<
-        covfie::vector::ulong3,
+        covfie::vector::size3,
         covfie::backend::array<covfie::vector::float3>>>>>;
 
 using cuda_field_t = covfie::field<
     covfie::backend::affine<covfie::backend::linear<covfie::backend::strided<
-        covfie::vector::ulong3,
+        covfie::vector::size3,
         covfie::backend::cuda_device_array<covfie::vector::float3>>>>>;
 
 void parse_opts(
@@ -48,10 +48,10 @@ void parse_opts(
       boost::program_options::value<std::string>()->required(),
       "output bitmap image to write"
     )("height,h",
-      boost::program_options::value<uint>()->default_value(1024),
+      boost::program_options::value<unsigned int>()->default_value(1024),
       "height of the output image"
     )("width,w",
-      boost::program_options::value<uint>()->default_value(1024),
+      boost::program_options::value<unsigned int>()->default_value(1024),
       "width of the output image"
     )("z",
       boost::program_options::value<float>()->default_value(0.f),
@@ -79,7 +79,11 @@ void parse_opts(
 
 template <typename field_t>
 __global__ void render(
-    typename field_t::view_t vf, char * out, uint width, uint height, float z
+    typename field_t::view_t vf,
+    char * out,
+    unsigned int width,
+    unsigned int height,
+    float z
 )
 {
     int x = blockDim.x * blockIdx.x + threadIdx.x;
@@ -103,8 +107,8 @@ int main(int argc, char ** argv)
     boost::program_options::variables_map vm;
     parse_opts(argc, argv, vm);
 
-    uint width = vm["width"].as<uint>();
-    uint height = vm["height"].as<uint>();
+    unsigned int width = vm["width"].as<unsigned int>();
+    unsigned int height = vm["height"].as<unsigned int>();
 
     BOOST_LOG_TRIVIAL(info) << "Welcome to the covfie CUDA field renderer!";
     BOOST_LOG_TRIVIAL(info) << "Using magnetic field file \""

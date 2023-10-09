@@ -19,7 +19,8 @@ std::array<T, sizeof...(Ts) + 1u> to_array(std::tuple<T, Ts...> i)
 {
     return std::apply(
         [](T t, Ts... ts) {
-            return std::array<T, sizeof...(Ts) + 1u>{t, ts...};
+            return std::array<T, sizeof...(Ts) + 1u>{
+                static_cast<T>(t), static_cast<T>(ts)...};
         },
         i
     );

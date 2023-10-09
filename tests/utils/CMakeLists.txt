@@ -34,3 +34,9 @@ target_include_directories(
 
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
 )
+
+target_compile_definitions(
+    testing_utils
+    PRIVATE
+    _CRT_SECURE_NO_WARNINGS
+)

@@ -86,12 +86,12 @@ void parse_opts(
 int main(int argc, char ** argv)
 {
     using core_t = covfie::backend::strided<
-        covfie::vector::ulong3,
+        covfie::vector::size3,
         covfie::backend::array<covfie::vector::float3>>;
     using field_t1 =
         covfie::field<covfie::backend::affine<covfie::backend::linear<core_t>>>;
     using field_t2 = covfie::field<covfie::backend::strided<
-        covfie::vector::ulong2,
+        covfie::vector::size2,
         covfie::backend::array<covfie::vector::float3>>>;
 
     boost::program_options::variables_map vm;
@@ -142,22 +142,25 @@ int main(int argc, char ** argv)
 
     BOOST_LOG_TRIVIAL(info) << "Slicing vector field...";
 
+    using scalar_t =
+        decltype(ofv)::field_t::backend_t::contravariant_input_t::scalar_t;
+
     if (vm["axis"].as<std::string>() == "x") {
-        for (unsigned long x = 0; x < out_size[0]; ++x) {
-            for (unsigned long y = 0; y < out_size[1]; ++y) {
-                ofv.at(x, y) = cfv.at(vm["slice"].as<unsigned long>(), x, y);
+        for (scalar_t x = 0; x < out_size[0]; ++x) {
+            for (scalar_t y = 0; y < out_size[1]; ++y) {
+                ofv.at(x, y) = cfv.at(vm["slice"].as<scalar_t>(), x, y);
             }
         }
     } else if (vm["axis"].as<std::string>() == "y") {
-        for (unsigned long x = 0; x < out_size[0]; ++x) {
-            for (unsigned long y = 0; y < out_size[1]; ++y) {
-                ofv.at(x, y) = cfv.at(x, vm["slice"].as<unsigned long>(), y);
+        for (scalar_t x = 0; x < out_size[0]; ++x) {
+            for (scalar_t y = 0; y < out_size[1]; ++y) {
+                ofv.at(x, y) = cfv.at(x, vm["slice"].as<scalar_t>(), y);
             }
         }
     } else if (vm["axis"].as<std::string>() == "z") {
-        for (unsigned long x = 0; x < out_size[0]; ++x) {
-            for (unsigned long y = 0; y < out_size[1]; ++y) {
-                ofv.at(x, y) = cfv.at(x, y, vm["slice"].as<unsigned long>());
+        for (scalar_t x = 0; x < out_size[0]; ++x) {
+            for (scalar_t y = 0; y < out_size[1]; ++y) {
+                ofv.at(x, y) = cfv.at(x, y, vm["slice"].as<scalar_t>());
             }
         }
     }

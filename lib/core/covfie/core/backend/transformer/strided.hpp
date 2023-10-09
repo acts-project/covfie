@@ -1,7 +1,7 @@
 /*
  * This file is part of covfie, a part of the ACTS project
  *
- * Copyright (c) 2022 CERN
+ * Copyright (c) 2022-2023 CERN
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License,
  * v. 2.0. If a copy of the MPL was not distributed with this file, You can
@@ -154,7 +154,7 @@ struct strided {
             , m_storage(std::accumulate(
                   std::begin(m_sizes),
                   std::end(m_sizes),
-                  1,
+                  static_cast<std::size_t>(1),
                   std::multiplies<std::size_t>()
               ))
         {
@@ -253,7 +253,10 @@ struct strided {
                      l < contravariant_input_t::dimensions;
                      ++l)
                 {
-                    tmp *= m_sizes[l];
+                    tmp *=
+                        static_cast<typename contravariant_input_t::scalar_t>(
+                            m_sizes[l]
+                        );
                 }
 
                 idx += tmp;

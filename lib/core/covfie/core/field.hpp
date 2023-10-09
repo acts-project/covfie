@@ -1,7 +1,7 @@
 /*
  * This file is part of covfie, a part of the ACTS project
  *
- * Copyright (c) 2022 CERN
+ * Copyright (c) 2022-2023 CERN
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License,
  * v. 2.0. If a copy of the MPL was not distributed with this file, You can
@@ -31,7 +31,6 @@ public:
     static constexpr uint32_t IO_MAGIC_HEADER = 0xAB000000;
 
     field() = default;
-    field(field &) = default;
     field(const field &) = default;
     field(field &&) = default;
 

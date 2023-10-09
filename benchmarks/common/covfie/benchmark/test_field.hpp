@@ -20,7 +20,7 @@
 
 using data_field_t = covfie::field<covfie::backend::affine<
     covfie::backend::nearest_neighbour<covfie::backend::strided<
-        covfie::vector::ulong3,
+        covfie::vector::size3,
         covfie::backend::array<covfie::vector::float3>>>>>;
 
 extern std::unique_ptr<data_field_t> TEST_FIELD;

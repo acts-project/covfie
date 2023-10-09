@@ -58,7 +58,7 @@ void parse_opts(
 }
 
 using inner_backend_t = covfie::backend::strided<
-    covfie::vector::ulong3,
+    covfie::vector::size3,
     covfie::backend::array<covfie::vector::float3>>;
 
 using input_field_t = covfie::field<
