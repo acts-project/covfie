@@ -6,8 +6,21 @@
 # v. 2.0. If a copy of the MPL was not distributed with this file, You can
 # obtain one at http://mozilla.org/MPL/2.0/.
 
-# All the tests here will require Google Test, so we will go ahead and find it.
-find_package(GTest CONFIG REQUIRED)
+# All the tests here will require Google Test, so we will go ahead and set it
+# up.
+# Set up GoogleTest.
+option(COVFIE_SETUP_GOOGLETEST "Set up the GoogleTest targets explicitly"
+    TRUE)
+option(COVFIE_USE_SYSTEM_GOOGLETEST
+    "Pick up an existing installation of GoogleTest from the build environment"
+    TRUE)
+if(COVFIE_SETUP_GOOGLETEST)
+    if(COVFIE_USE_SYSTEM_GOOGLETEST)
+        find_package(GTest CONFIG REQUIRED)
+    else()
+        add_subdirectory(googletest)
+    endif()
+endif()
 
 # Set up the C++ compiler flags for the tests.
 include(covfie-compiler-options-cpp)
