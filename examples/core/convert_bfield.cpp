@@ -197,9 +197,9 @@ field_t read_bfield(const std::string & fn)
         while (f >> xp >> yp >> zp >> Bx >> By >> Bz) {
             field_t::view_t::output_t & p = fv.at(xp, yp, zp);
 
-            p[0] = Bx;
-            p[1] = By;
-            p[2] = Bz;
+            p[0] = Bx * 0.000299792458;
+            p[1] = By * 0.000299792458;
+            p[2] = Bz * 0.000299792458;
         }
 
         BOOST_LOG_TRIVIAL(info)
