@@ -1,6 +1,6 @@
 # This file is part of covfie, a part of the ACTS project
 #
-# Copyright (c) 2022 CERN
+# Copyright (c) 2022-2023 CERN
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License,
 # v. 2.0. If a copy of the MPL was not distributed with this file, You can
@@ -9,6 +9,9 @@
 # First, we need to make sure that we have a CUDA compiler, and that all the
 # necessary tooling is set up.
 enable_language(CUDA)
+
+# Set up the CUDA compiler flags for the examples.
+include(covfie-compiler-options-cuda)
 
 # Add the 3D field slice rendering tool based on CUDA.
 add_executable(

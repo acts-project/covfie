@@ -1,6 +1,6 @@
 # This file is part of covfie, a part of the ACTS project
 #
-# Copyright (c) 2022 CERN
+# Copyright (c) 2022-2023 CERN
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License,
 # v. 2.0. If a copy of the MPL was not distributed with this file, You can
@@ -49,6 +49,14 @@ option(
     COVFIE_QUIET
     "Disable warnings about missing C++ features. Enabling this is strongly discouraged."
 )
+
+option(
+    COVFIE_FAIL_ON_WARNINGS
+    "Treat compiler warnings as errors."
+)
+
+# Make the CMake modules in the cmake/ directory visible to the project.
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 # The core library should always be built.
 add_subdirectory(lib)

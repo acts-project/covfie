@@ -1,10 +1,13 @@
 # This file is part of covfie, a part of the ACTS project
 #
-# Copyright (c) 2022 CERN
+# Copyright (c) 2022-2023 CERN
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License,
 # v. 2.0. If a copy of the MPL was not distributed with this file, You can
 # obtain one at http://mozilla.org/MPL/2.0/.
+
+# Set up the C++ compiler flags for the examples.
+include(covfie-compiler-options-cpp)
 
 # The common tools should be available for examples on all platforms.
 add_subdirectory(common)

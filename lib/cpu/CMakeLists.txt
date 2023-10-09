@@ -1,6 +1,6 @@
 # This file is part of covfie, a part of the ACTS project
 #
-# Copyright (c) 2022 CERN
+# Copyright (c) 2022-2023 CERN
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License,
 # v. 2.0. If a copy of the MPL was not distributed with this file, You can
@@ -14,9 +14,6 @@ target_include_directories(
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
-
-# Remove this line!
-target_compile_options(cpu INTERFACE "-Wall" "-Wextra")
 
 target_compile_features(cpu INTERFACE cxx_std_17)
 
