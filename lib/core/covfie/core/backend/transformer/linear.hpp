@@ -1,7 +1,7 @@
 /*
  * This file is part of covfie, a part of the ACTS project
  *
- * Copyright (c) 2022 CERN
+ * Copyright (c) 2022-2023 CERN
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License,
  * v. 2.0. If a copy of the MPL was not distributed with this file, You can
@@ -18,6 +18,7 @@
 
 #include <covfie/core/concepts.hpp>
 #include <covfie/core/qualifiers.hpp>
+#include <covfie/core/utility/binary_io.hpp>
 #include <covfie/core/vector.hpp>
 
 namespace covfie::backend {
