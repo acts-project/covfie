@@ -43,6 +43,12 @@ struct backup {
     struct owning_data_t {
         using parent_t = this_t;
 
+        owning_data_t() = default;
+        owning_data_t(const owning_data_t &) = default;
+        owning_data_t(owning_data_t &&) = default;
+        owning_data_t & operator=(const owning_data_t &) = default;
+        owning_data_t & operator=(owning_data_t &&) = default;
+
         template <typename... Args>
         explicit owning_data_t(configuration_t conf, Args... args)
             : m_min(conf.min)
@@ -108,7 +114,7 @@ struct backup {
             auto max = utility::read_binary<decltype(m_min)>(fs);
             auto def = utility::read_binary<decltype(m_default)>(fs);
             typename backend_t::owning_data_t be =
-                typename backend_t::owning_data_t::read_binary(fs);
+                backend_t::owning_data_t::read_binary(fs);
 
             utility::read_io_footer(fs, IO_MAGIC_HEADER);
 
@@ -120,13 +126,15 @@ struct backup {
             utility::write_io_header(fs, IO_MAGIC_HEADER);
 
             fs.write(
-                reinterpret_cast<const char *>(&m_min), sizeof(decltype(m_min))
+                reinterpret_cast<const char *>(&o.m_min),
+                sizeof(decltype(m_min))
             );
             fs.write(
-                reinterpret_cast<const char *>(&m_max), sizeof(decltype(m_max))
+                reinterpret_cast<const char *>(&o.m_max),
+                sizeof(decltype(m_max))
             );
             fs.write(
-                reinterpret_cast<const char *>(&m_default),
+                reinterpret_cast<const char *>(&o.m_default),
                 sizeof(decltype(m_default))
             );
 
