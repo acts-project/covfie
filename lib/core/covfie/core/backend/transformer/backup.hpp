@@ -121,13 +121,15 @@ struct backup {
             utility::write_io_header(fs, IO_MAGIC_HEADER);
 
             fs.write(
-                reinterpret_cast<const char *>(&m_min), sizeof(decltype(m_min))
+                reinterpret_cast<const char *>(&(o.m_min)),
+                sizeof(decltype(m_min))
             );
             fs.write(
-                reinterpret_cast<const char *>(&m_max), sizeof(decltype(m_max))
+                reinterpret_cast<const char *>(&(o.m_max)),
+                sizeof(decltype(m_max))
             );
             fs.write(
-                reinterpret_cast<const char *>(&m_default),
+                reinterpret_cast<const char *>(&(o.m_default)),
                 sizeof(decltype(m_default))
             );
 

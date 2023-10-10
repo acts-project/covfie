@@ -143,7 +143,11 @@ struct morton {
         return idx;
 #endif
 
+#ifdef _WIN32
+        __assume(0);
+#else
         __builtin_unreachable();
+#endif // _WIN32
     }
 
     template <typename T>

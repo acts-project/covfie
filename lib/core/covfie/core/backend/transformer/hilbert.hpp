@@ -1,7 +1,7 @@
 /*
  * This file is part of covfie, a part of the ACTS project
  *
- * Copyright (c) 2022 CERN
+ * Copyright (c) 2022-2023 CERN
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License,
  * v. 2.0. If a copy of the MPL was not distributed with this file, You can
@@ -74,17 +74,17 @@ struct hilbert {
         }
     }
 
-    COVFIE_DEVICE static std::size_t calculate_index(coordinate_t c)
+    COVFIE_DEVICE static std::size_t
+    calculate_index(coordinate_t c, std::size_t n = 2)
     {
         // Borrowed from https://en.wikipedia.org/wiki/Hilbert_curve
 
         std::size_t rx, ry, s, d = 0;
 
         std::size_t x = c[0];
-        std::size_t y = c[1]
+        std::size_t y = c[1];
 
-            for (s = n / 2; s > 0; s /= 2)
-        {
+        for (s = n / 2; s > 0; s /= 2) {
             rx = (x & s) > 0;
             ry = (y & s) > 0;
             d += s * s * ((3 * rx) ^ ry);
@@ -192,7 +192,7 @@ struct hilbert {
             const configuration_t & c, typename backend_t::owning_data_t && b
         )
             : m_sizes(c)
-            , m_backend(std::forward<typename backend_t::owning_data_t>(b))
+            , m_storage(std::forward<typename backend_t::owning_data_t>(b))
         {
         }
 
@@ -216,7 +216,7 @@ struct hilbert {
             utility::read_io_header(fs, IO_MAGIC_HEADER);
 
             auto sizes = utility::read_binary<decltype(m_sizes)>(fs);
-            auto be = decltype(m_backend)::read_binary(fs);
+            auto be = decltype(m_storage)::read_binary(fs);
 
             utility::read_io_footer(fs, IO_MAGIC_HEADER);
 
@@ -228,11 +228,11 @@ struct hilbert {
             utility::write_io_header(fs, IO_MAGIC_HEADER);
 
             fs.write(
-                reinterpret_cast<const char *>(&m_sizes),
+                reinterpret_cast<const char *>(&(o.m_sizes)),
                 sizeof(decltype(m_sizes))
             );
 
-            decltype(m_backend)::write_binary(fs);
+            decltype(m_storage)::write_binary(fs, o);
 
             utility::write_io_footer(fs, IO_MAGIC_HEADER);
         }

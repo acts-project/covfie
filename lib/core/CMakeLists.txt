@@ -49,7 +49,7 @@ install(
 add_library(covfie::core ALIAS core)
 
 # Test the public headers of covfie::core.
-#include(covfie-functions)
-#file(GLOB_RECURSE public_headers RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
-#     "${CMAKE_CURRENT_SOURCE_DIR}/covfie/*.hpp")
-#covfie_test_public_headers(core "${public_headers}")
+include(covfie-functions)
+file(GLOB_RECURSE public_headers RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
+     "${CMAKE_CURRENT_SOURCE_DIR}/covfie/*.hpp")
+covfie_test_public_headers(core "${public_headers}")
