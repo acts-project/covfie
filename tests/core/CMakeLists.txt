@@ -31,6 +31,7 @@ add_executable(
     test_static_permutation.cpp
     test_utility_numeric.cpp
     test_array_binary_io.cpp
+    test_build.cpp
 )
 
 # Ensure that the tests are linked against the required libraries.
