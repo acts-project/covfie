@@ -74,21 +74,24 @@ struct hilbert {
         }
     }
 
-    COVFIE_DEVICE static std::size_t calculate_index(coordinate_t c)
+    COVFIE_DEVICE static std::size_t calculate_index(
+        coordinate_t c,
+        utility::nd_size<contravariant_input_t::dimensions> sizes
+    )
     {
         // Borrowed from https://en.wikipedia.org/wiki/Hilbert_curve
 
         std::size_t rx, ry, s, d = 0;
 
         std::size_t x = c[0];
-        std::size_t y = c[1]
+        std::size_t y = c[1];
 
-            for (s = n / 2; s > 0; s /= 2)
-        {
+        // TODO: `sizes[0]` has to equal `sizes[1]`.
+        for (s = sizes[0] / 2; s > 0; s /= 2) {
             rx = (x & s) > 0;
             ry = (y & s) > 0;
             d += s * s * ((3 * rx) ^ ry);
-            rot(n, &x, &y, rx, ry);
+            rot(sizes[0], &x, &y, rx, ry);
         }
 
         return d;
@@ -146,6 +149,12 @@ struct hilbert {
     struct owning_data_t {
         using parent_t = this_t;
 
+        owning_data_t() = default;
+        owning_data_t(const owning_data_t &) = default;
+        owning_data_t(owning_data_t &&) = default;
+        owning_data_t & operator=(const owning_data_t &) = default;
+        owning_data_t & operator=(owning_data_t &&) = default;
+
         template <
             typename T,
             typename B = backend_t,
@@ -192,7 +201,7 @@ struct hilbert {
             const configuration_t & c, typename backend_t::owning_data_t && b
         )
             : m_sizes(c)
-            , m_backend(std::forward<typename backend_t::owning_data_t>(b))
+            , m_storage(std::forward<typename backend_t::owning_data_t>(b))
         {
         }
 
@@ -216,7 +225,7 @@ struct hilbert {
             utility::read_io_header(fs, IO_MAGIC_HEADER);
 
             auto sizes = utility::read_binary<decltype(m_sizes)>(fs);
-            auto be = decltype(m_backend)::read_binary(fs);
+            auto be = decltype(m_storage)::read_binary(fs);
 
             utility::read_io_footer(fs, IO_MAGIC_HEADER);
 
@@ -228,11 +237,11 @@ struct hilbert {
             utility::write_io_header(fs, IO_MAGIC_HEADER);
 
             fs.write(
-                reinterpret_cast<const char *>(&m_sizes),
+                reinterpret_cast<const char *>(&o.m_sizes),
                 sizeof(decltype(m_sizes))
             );
 
-            decltype(m_backend)::write_binary(fs);
+            decltype(m_storage)::write_binary(fs, o.m_storage);
 
             utility::write_io_footer(fs, IO_MAGIC_HEADER);
         }

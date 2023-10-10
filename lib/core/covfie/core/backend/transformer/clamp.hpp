@@ -107,7 +107,7 @@ struct clamp {
 
             utility::read_io_footer(fs, IO_MAGIC_HEADER);
 
-            return owning_data_t(min, max, std::move(be));
+            return owning_data_t(configuration_t{min, max}, std::move(be));
         }
 
         static void write_binary(std::ostream & fs, const owning_data_t & o)
