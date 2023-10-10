@@ -48,6 +48,34 @@ struct cuda_device_array {
     struct owning_data_t {
         using parent_t = this_t;
 
+        owning_data_t()
+            : m_size(0)
+            , m_ptr({})
+        {
+        }
+
+        owning_data_t(owning_data_t &&) = default;
+        owning_data_t & operator=(owning_data_t &&) = default;
+
+        owning_data_t & operator=(const owning_data_t & o)
+        {
+            m_size = o.m_size;
+            m_ptr = utility::cuda::device_copy_d2d(o.m_ptr, m_size);
+        }
+
+        owning_data_t(const owning_data_t & o)
+            : m_size(o.m_size)
+            , m_ptr(utility::cuda::device_copy_d2d(o.m_ptr, m_size))
+        {
+            assert(m_size == 0 || m_ptr);
+
+            if (o.m_ptr && m_size > 0) {
+                std::memcpy(
+                    m_ptr.get(), o.m_ptr.get(), m_size * sizeof(vector_t)
+                );
+            }
+        }
+
         explicit owning_data_t(parameter_pack<configuration_t> && args)
             : m_size(args.x[0])
             , m_ptr(utility::cuda::device_allocate<vector_t[]>(m_size))
@@ -58,13 +86,92 @@ struct cuda_device_array {
             std::size_t size, std::unique_ptr<vector_t[]> && ptr
         )
             : m_size(size)
-            , m_ptr(utility::cuda::device_copy(std::move(ptr), size))
+            , m_ptr(utility::cuda::device_copy_h2d(ptr.get(), size))
         {
         }
 
         configuration_t get_configuration() const
         {
             return {m_size};
+        }
+
+        static owning_data_t read_binary(std::istream & fs)
+        {
+            utility::read_io_header(fs, IO_MAGIC_HEADER);
+
+            uint32_t float_width = utility::read_binary<uint32_t>(fs);
+
+            if (float_width != 4 && float_width != 8) {
+                throw std::runtime_error(
+                    "Float type is neither IEEE 754 single- nor "
+                    "double-precision, binary input is not supported."
+                );
+            }
+
+            auto size =
+                utility::read_binary<std::decay_t<decltype(m_size)>>(fs);
+            std::unique_ptr<vector_t[]> ptr =
+                std::make_unique<vector_t[]>(size);
+
+            for (std::size_t i = 0; i < size; ++i) {
+                for (std::size_t j = 0; j < _output_vector_t::size; ++j) {
+                    if (float_width == 4) {
+                        ptr[i][j] = utility::read_binary<float>(fs);
+                    } else if (float_width == 8) {
+                        ptr[i][j] = utility::read_binary<double>(fs);
+                    } else {
+                        throw std::logic_error("Float width is unexpected.");
+                    }
+                }
+            }
+
+            utility::read_io_footer(fs, IO_MAGIC_HEADER);
+
+            return owning_data_t(size, std::move(ptr));
+        }
+
+        static void write_binary(std::ostream & fs, const owning_data_t & o)
+        {
+            utility::write_io_header(fs, IO_MAGIC_HEADER);
+
+            uint32_t float_width;
+
+            if constexpr (std::
+                              is_same_v<typename _output_vector_t::type, float>)
+            {
+                float_width = 4;
+            } else if constexpr (std::is_same_v<
+                                     typename _output_vector_t::type,
+                                     double>)
+            {
+                float_width = 8;
+            } else {
+                throw std::logic_error(
+                    "Float type is neither IEEE 754 single- nor "
+                    "double-precision, binary output is not supported."
+                );
+            }
+
+            fs.write(
+                reinterpret_cast<const char *>(&float_width),
+                sizeof(std::decay_t<decltype(float_width)>)
+            );
+
+            fs.write(
+                reinterpret_cast<const char *>(&o.m_size),
+                sizeof(std::decay_t<decltype(o.m_size)>)
+            );
+
+            for (std::size_t i = 0; i < o.m_size; ++i) {
+                for (std::size_t j = 0; j < _output_vector_t::size; ++j) {
+                    fs.write(
+                        reinterpret_cast<const char *>(&o.m_ptr[i][j]),
+                        sizeof(typename _output_vector_t::type)
+                    );
+                }
+            }
+
+            utility::write_io_footer(fs, IO_MAGIC_HEADER);
         }
 
         std::size_t m_size;

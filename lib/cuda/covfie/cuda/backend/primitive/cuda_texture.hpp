@@ -36,6 +36,11 @@ template <
     cuda_texture_interpolation _interpolation_method =
         cuda_texture_interpolation::LINEAR>
 struct cuda_texture {
+    using this_t =
+        cuda_texture<_input_vector_t, _output_vector_t, _interpolation_method>;
+
+    static constexpr bool is_initial = true;
+
     using contravariant_input_t =
         covfie::vector::array_vector_d<_input_vector_t>;
     using covariant_output_t = covfie::vector::array_vector_d<_output_vector_t>;
@@ -46,9 +51,19 @@ struct cuda_texture {
     template <typename T>
     using linear_tc = linear<T, float>;
 
+    using configuration_t = std::monostate;
+
     static constexpr uint32_t IO_MAGIC_HEADER = 0xAB110001;
 
     struct owning_data_t {
+        using parent_t = this_t;
+
+        owning_data_t() = default;
+        owning_data_t(owning_data_t &&) = default;
+        owning_data_t & operator=(owning_data_t &&) = default;
+        owning_data_t & operator=(const owning_data_t & o) = default;
+        owning_data_t(const owning_data_t & o) = default;
+
         template <
             typename T,
             std::enable_if_t<
@@ -194,11 +209,30 @@ struct cuda_texture {
             cudaErrorCheck(cudaFreeArray(m_array));
         }
 
+        configuration_t get_configuration() const
+        {
+            return {};
+        }
+
+        static owning_data_t read_binary(std::istream & fs)
+        {
+            throw std::invalid_argument("Cannot perform IO on texture memory.");
+
+            return owning_data_t();
+        }
+
+        static void write_binary(std::ostream & fs, const owning_data_t & o)
+        {
+            throw std::invalid_argument("Cannot perform IO on texture memory.");
+        }
+
         cudaArray_t m_array;
         cudaTextureObject_t m_tex;
     };
 
     struct non_owning_data_t {
+        using parent_t = this_t;
+
         non_owning_data_t(const owning_data_t & o)
             : m_tex(o.m_tex)
         {

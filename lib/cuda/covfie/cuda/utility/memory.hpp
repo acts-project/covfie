@@ -57,27 +57,47 @@ unique_device_ptr<T> device_allocate(std::size_t n)
 }
 
 template <typename T>
-unique_device_ptr<T> device_copy(std::unique_ptr<T> && h)
+unique_device_ptr<T[]> device_copy_h2d(const T * h)
 {
-    unique_device_ptr<T> r = device_allocate<T>();
+    unique_device_ptr<T[]> r = device_allocate<T[]>();
 
-    cudaErrorCheck(
-        cudaMemcpy(r.get(), h.get(), sizeof(T), cudaMemcpyHostToDevice)
-    );
+    cudaErrorCheck(cudaMemcpy(r.get(), h, sizeof(T), cudaMemcpyHostToDevice));
 
     return r;
 }
 
 template <typename T>
-unique_device_ptr<T> device_copy(std::unique_ptr<T> && h, std::size_t n)
+unique_device_ptr<T[]> device_copy_h2d(const T * h, std::size_t n)
 {
-    unique_device_ptr<T> r = device_allocate<T>(n);
+    unique_device_ptr<T[]> r = device_allocate<T[]>(n);
+
+    cudaErrorCheck(cudaMemcpy(
+        r.get(), h, n * sizeof(std::remove_extent_t<T>), cudaMemcpyHostToDevice
+    ));
+
+    return r;
+}
+
+template <typename T>
+unique_device_ptr<T[]> device_copy_d2d(const T * h)
+{
+    unique_device_ptr<T[]> r = device_allocate<T[]>();
+
+    cudaErrorCheck(cudaMemcpy(r.get(), h, sizeof(T), cudaMemcpyDeviceToDevice));
+
+    return r;
+}
+
+template <typename T>
+unique_device_ptr<T[]> device_copy_d2d(const T * h, std::size_t n)
+{
+    unique_device_ptr<T[]> r = device_allocate<T[]>(n);
 
     cudaErrorCheck(cudaMemcpy(
         r.get(),
-        h.get(),
+        h,
         n * sizeof(std::remove_extent_t<T>),
-        cudaMemcpyHostToDevice
+        cudaMemcpyDeviceToDevice
     ));
 
     return r;
