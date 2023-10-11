@@ -30,8 +30,8 @@ protected:
     void SetUp() override
     {
         using canonical_backend_t = covfie::backend::strided<
-            covfie::vector::ulong3,
-            covfie::backend::array<covfie::vector::ulong3>>;
+            covfie::vector::size3,
+            covfie::backend::array<covfie::vector::size3>>;
 
         std::array<std::size_t, 3> sizes;
         sizes.fill(10);
@@ -59,8 +59,8 @@ template <typename B>
 using TestCudaLookupIntegerIndexed1D = TestLookupGeneric<1, B>;
 
 using BackendsInteger1D = ::testing::Types<covfie::backend::strided<
-    covfie::vector::ulong1,
-    covfie::backend::cuda_device_array<covfie::vector::ulong1>>>;
+    covfie::vector::size1,
+    covfie::backend::cuda_device_array<covfie::vector::size1>>>;
 
 TYPED_TEST_SUITE(TestCudaLookupIntegerIndexed1D, BackendsInteger1D);
 
@@ -68,8 +68,8 @@ template <typename B>
 using TestCudaLookupIntegerIndexed2D = TestLookupGeneric<2, B>;
 
 using BackendsInteger2D = ::testing::Types<covfie::backend::strided<
-    covfie::vector::ulong2,
-    covfie::backend::cuda_device_array<covfie::vector::ulong2>>>;
+    covfie::vector::size2,
+    covfie::backend::cuda_device_array<covfie::vector::size2>>>;
 
 TYPED_TEST_SUITE(TestCudaLookupIntegerIndexed2D, BackendsInteger2D);
 
@@ -77,8 +77,8 @@ template <typename B>
 using TestCudaLookupIntegerIndexed3D = TestLookupGeneric<3, B>;
 
 using BackendsInteger3D = ::testing::Types<covfie::backend::strided<
-    covfie::vector::ulong3,
-    covfie::backend::cuda_device_array<covfie::vector::ulong3>>>;
+    covfie::vector::size3,
+    covfie::backend::cuda_device_array<covfie::vector::size3>>>;
 
 TYPED_TEST_SUITE(TestCudaLookupIntegerIndexed3D, BackendsInteger3D);
 

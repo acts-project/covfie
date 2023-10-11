@@ -14,6 +14,7 @@
 #include <random>
 
 #include <covfie/benchmark/pattern.hpp>
+#include <covfie/core/definitions.hpp>
 #include <covfie/core/field_view.hpp>
 
 class Euler
@@ -53,8 +54,8 @@ struct Lorentz : covfie::benchmark::AccessPattern<Lorentz<Propagator, Order>> {
         std::random_device rd;
         std::mt19937 e(rd());
 
-        std::uniform_real_distribution<> phi_dist(0.f, 2.f * 3.1415927f);
-        std::uniform_real_distribution<> costheta_dist(-1.f, 1.f);
+        std::uniform_real_distribution<float> phi_dist(0.f, 2.f * 3.1415927f);
+        std::uniform_real_distribution<float> costheta_dist(-1.f, 1.f);
 
         float ss = 0.001f;
 
@@ -95,11 +96,10 @@ struct Lorentz : covfie::benchmark::AccessPattern<Lorentz<Propagator, Order>> {
                     o.pos[1] += o.mom[1] * ss;
                     o.pos[2] += o.mom[2] * ss;
 
-                    if (__builtin_expect(
+                    if (UNLIKELY(
                             o.pos[0] < -9999.f || o.pos[0] > 9999.f ||
-                                o.pos[1] < -9999.f || o.pos[1] > 9999.f ||
-                                o.pos[2] < -14999.f || o.pos[2] > 14999.f,
-                            0
+                            o.pos[1] < -9999.f || o.pos[1] > 9999.f ||
+                            o.pos[2] < -14999.f || o.pos[2] > 14999.f
                         ))
                     {
                         if (o.pos[0] < -9999.f) {
@@ -144,11 +144,10 @@ struct Lorentz : covfie::benchmark::AccessPattern<Lorentz<Propagator, Order>> {
                     o.pos[1] += o.mom[1] * ss;
                     o.pos[2] += o.mom[2] * ss;
 
-                    if (__builtin_expect(
+                    if (UNLIKELY(
                             o.pos[0] < -9999.f || o.pos[0] > 9999.f ||
-                                o.pos[1] < -9999.f || o.pos[1] > 9999.f ||
-                                o.pos[2] < -14999.f || o.pos[2] > 14999.f,
-                            0
+                            o.pos[1] < -9999.f || o.pos[1] > 9999.f ||
+                            o.pos[2] < -14999.f || o.pos[2] > 14999.f
                         ))
                     {
                         if (o.pos[0] < -9999.f) {

@@ -159,27 +159,27 @@ void render_bitmap(
      * code look up the code for HSV to RGB conversion.
      */
     for (unsigned int i = 0; i < 256; ++i) {
-        float s = 0.7;
-        float v = 1.0;
-        float hue = (i / 256.0) * 240.0;
+        float s = 0.7f;
+        float v = 1.0f;
+        float hue = (i / 256.0f) * 240.0f;
         float c = v * s;
-        float hp = hue / 60.0;
+        float hp = hue / 60.0f;
 
-        float x = c * (1 - std::abs(std::fmod(hp, 2.0) - 1.0));
+        float x = c * (1.0f - std::abs(std::fmod(hp, 2.0f) - 1.0f));
 
         float rp = 0.f, gp = 0.f, bp = 0.f;
 
-        if (hp < 1.0) {
+        if (hp < 1.0f) {
             rp = c, gp = x, bp = 0;
-        } else if (hp < 2.0) {
+        } else if (hp < 2.0f) {
             rp = x, gp = c, bp = 0;
-        } else if (hp < 3.0) {
+        } else if (hp < 3.0f) {
             rp = 0, gp = c, bp = x;
-        } else if (hp < 4.0) {
+        } else if (hp < 4.0f) {
             rp = 0, gp = x, bp = c;
-        } else if (hp < 5.0) {
+        } else if (hp < 5.0f) {
             rp = x, gp = 0, bp = c;
-        } else if (hp < 6.0) {
+        } else if (hp < 6.0f) {
             rp = c, gp = 0, bp = x;
         }
 

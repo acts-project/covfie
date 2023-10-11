@@ -8,7 +8,6 @@
 
 add_library(
     benchmark
-    SHARED
     test_field.cpp
 )
 
@@ -22,4 +21,10 @@ target_link_libraries(
     benchmark
     PUBLIC
     core
+)
+
+target_compile_definitions(
+    benchmark
+    PRIVATE
+    _CRT_SECURE_NO_WARNINGS
 )

@@ -60,7 +60,7 @@ void parse_opts(
 int main(int argc, char ** argv)
 {
     using field_t = covfie::field<covfie::backend::strided<
-        covfie::vector::ulong2,
+        covfie::vector::size2,
         covfie::backend::array<covfie::vector::float3>>>;
 
     boost::program_options::variables_map vm;
@@ -112,7 +112,10 @@ int main(int argc, char ** argv)
                             << vm["output"].as<std::string>() << "\"...";
 
     render_bitmap(
-        img.get(), im_size[1], im_size[0], vm["output"].as<std::string>()
+        img.get(),
+        static_cast<unsigned int>(im_size[1]),
+        static_cast<unsigned int>(im_size[0]),
+        vm["output"].as<std::string>()
     );
 
     BOOST_LOG_TRIVIAL(info) << "Procedure complete, goodbye!";

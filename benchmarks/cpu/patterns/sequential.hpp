@@ -25,8 +25,10 @@ struct Sequential1D : covfie::benchmark::AccessPattern<Sequential1D> {
     static void
     iteration(const parameters & p, const covfie::field_view<backend_t> & f, ::benchmark::State &)
     {
-        for (unsigned long x = 0; x < p.xs; ++x) {
-            ::benchmark::DoNotOptimize(f.at(static_cast<float>(x)));
+        using scalar_t = typename backend_t::contravariant_input_t::scalar_t;
+
+        for (std::size_t x = 0; x < p.xs; ++x) {
+            ::benchmark::DoNotOptimize(f.at(static_cast<scalar_t>(x)));
         }
     }
 
@@ -59,10 +61,12 @@ struct Sequential2D : covfie::benchmark::AccessPattern<Sequential2D> {
     static void
     iteration(const parameters & p, const covfie::field_view<backend_t> & f, ::benchmark::State &)
     {
-        for (unsigned long x = 0; x < p.xs; ++x) {
-            for (unsigned long y = 0; y < p.ys; ++y) {
+        using scalar_t = typename backend_t::contravariant_input_t::scalar_t;
+
+        for (std::size_t x = 0; x < p.xs; ++x) {
+            for (std::size_t y = 0; y < p.ys; ++y) {
                 ::benchmark::DoNotOptimize(
-                    f.at(static_cast<float>(x), static_cast<float>(y))
+                    f.at(static_cast<scalar_t>(x), static_cast<scalar_t>(y))
                 );
             }
         }
@@ -99,10 +103,16 @@ struct Sequential3D : covfie::benchmark::AccessPattern<Sequential3D> {
     static void
     iteration(const parameters & p, const covfie::field_view<backend_t> & f, ::benchmark::State &)
     {
-        for (unsigned long x = 0; x < p.xs; ++x) {
-            for (unsigned long y = 0; y < p.ys; ++y) {
-                for (unsigned long z = 0; z < p.zs; ++z) {
-                    ::benchmark::DoNotOptimize(f.at(x, y, z));
+        using scalar_t = typename backend_t::contravariant_input_t::scalar_t;
+
+        for (std::size_t x = 0; x < p.xs; ++x) {
+            for (std::size_t y = 0; y < p.ys; ++y) {
+                for (std::size_t z = 0; z < p.zs; ++z) {
+                    ::benchmark::DoNotOptimize(f.at(
+                        static_cast<scalar_t>(x),
+                        static_cast<scalar_t>(y),
+                        static_cast<scalar_t>(z)
+                    ));
                 }
             }
         }
@@ -140,10 +150,16 @@ struct Sequential3DZYX : covfie::benchmark::AccessPattern<Sequential3DZYX> {
     static void
     iteration(const parameters & p, const covfie::field_view<backend_t> & f, ::benchmark::State &)
     {
-        for (unsigned long z = 0; z < p.zs; ++z) {
-            for (unsigned long y = 0; y < p.ys; ++y) {
-                for (unsigned long x = 0; x < p.xs; ++x) {
-                    ::benchmark::DoNotOptimize(f.at(x, y, z));
+        using scalar_t = typename backend_t::contravariant_input_t::scalar_t;
+
+        for (std::size_t z = 0; z < p.zs; ++z) {
+            for (std::size_t y = 0; y < p.ys; ++y) {
+                for (std::size_t x = 0; x < p.xs; ++x) {
+                    ::benchmark::DoNotOptimize(f.at(
+                        static_cast<scalar_t>(x),
+                        static_cast<scalar_t>(y),
+                        static_cast<scalar_t>(z)
+                    ));
                 }
             }
         }

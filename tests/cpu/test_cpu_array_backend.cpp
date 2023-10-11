@@ -1,7 +1,7 @@
 /*
  * This file is part of covfie, a part of the ACTS project
  *
- * Copyright (c) 2022 CERN
+ * Copyright (c) 2022-2023 CERN
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License,
  * v. 2.0. If a copy of the MPL was not distributed with this file, You can
@@ -23,7 +23,7 @@
 TEST(TestFieldViewCPUArrayBackend, WriteRead1DSingleFloat)
 {
     using field_t = covfie::field<covfie::backend::strided<
-        covfie::vector::ulong1,
+        covfie::vector::size1,
         covfie::backend::array<covfie::vector::float1>>>;
 
     field_t f(covfie::make_parameter_pack(field_t::backend_t::configuration_t{
@@ -32,13 +32,13 @@ TEST(TestFieldViewCPUArrayBackend, WriteRead1DSingleFloat)
 
     for (std::size_t x = 0; x < 5; ++x) {
         for (std::size_t j = 0; j < 1; ++j) {
-            fv.at(x)[j] = 1000. * x + 1. * j;
+            fv.at(x)[j] = 1000.f * x + 1.f * j;
         }
     }
 
     for (std::size_t x = 0; x < 5; ++x) {
         for (std::size_t j = 0; j < 1; ++j) {
-            EXPECT_EQ(fv.at(x)[j], 1000. * x + 1. * j);
+            EXPECT_EQ(fv.at(x)[j], 1000.f * x + 1.f * j);
         }
     }
 }
@@ -46,7 +46,7 @@ TEST(TestFieldViewCPUArrayBackend, WriteRead1DSingleFloat)
 TEST(TestFieldViewCPUArrayBackend, WriteRead1DArrayFloat)
 {
     using field_t = covfie::field<covfie::backend::strided<
-        covfie::vector::ulong1,
+        covfie::vector::size1,
         covfie::backend::array<covfie::vector::float3>>>;
 
     field_t f(covfie::make_parameter_pack(field_t::backend_t::configuration_t{
@@ -55,13 +55,13 @@ TEST(TestFieldViewCPUArrayBackend, WriteRead1DArrayFloat)
 
     for (std::size_t x = 0; x < 5; ++x) {
         for (std::size_t j = 0; j < 3; ++j) {
-            fv.at(x)[j] = 1000. * x + 1. * j;
+            fv.at(x)[j] = 1000.f * x + 1.f * j;
         }
     }
 
     for (std::size_t x = 0; x < 5; ++x) {
         for (std::size_t j = 0; j < 3; ++j) {
-            EXPECT_EQ(fv.at(x)[j], 1000. * x + 1. * j);
+            EXPECT_EQ(fv.at(x)[j], 1000.f * x + 1.f * j);
         }
     }
 }
@@ -69,7 +69,7 @@ TEST(TestFieldViewCPUArrayBackend, WriteRead1DArrayFloat)
 TEST(TestFieldViewCPUArrayBackend, WriteRead2DSingleFloat)
 {
     using field_t = covfie::field<covfie::backend::strided<
-        covfie::vector::ulong2,
+        covfie::vector::size2,
         covfie::backend::array<covfie::vector::float1>>>;
 
     field_t f(covfie::make_parameter_pack(field_t::backend_t::configuration_t{
@@ -79,7 +79,7 @@ TEST(TestFieldViewCPUArrayBackend, WriteRead2DSingleFloat)
     for (std::size_t x = 0; x < 5; ++x) {
         for (std::size_t y = 0; y < 7; ++y) {
             for (std::size_t j = 0; j < 1; ++j) {
-                fv.at(x, y)[j] = 1000. * x + 100. * y + 1. * j;
+                fv.at(x, y)[j] = 1000.f * x + 100.f * y + 1.f * j;
             }
         }
     }
@@ -87,7 +87,7 @@ TEST(TestFieldViewCPUArrayBackend, WriteRead2DSingleFloat)
     for (std::size_t x = 0; x < 5; ++x) {
         for (std::size_t y = 0; y < 7; ++y) {
             for (std::size_t j = 0; j < 1; ++j) {
-                EXPECT_EQ(fv.at(x, y)[j], 1000. * x + 100. * y + 1. * j);
+                EXPECT_EQ(fv.at(x, y)[j], 1000.f * x + 100.f * y + 1.f * j);
             }
         }
     }
@@ -96,7 +96,7 @@ TEST(TestFieldViewCPUArrayBackend, WriteRead2DSingleFloat)
 TEST(TestFieldViewCPUArrayBackend, WriteRead2DArrayFloat)
 {
     using field_t = covfie::field<covfie::backend::strided<
-        covfie::vector::ulong2,
+        covfie::vector::size2,
         covfie::backend::array<covfie::vector::float3>>>;
 
     field_t f(covfie::make_parameter_pack(field_t::backend_t::configuration_t{
@@ -106,7 +106,7 @@ TEST(TestFieldViewCPUArrayBackend, WriteRead2DArrayFloat)
     for (std::size_t x = 0; x < 5; ++x) {
         for (std::size_t y = 0; y < 7; ++y) {
             for (std::size_t j = 0; j < 3; ++j) {
-                fv.at(x, y)[j] = 1000. * x + 100. * y + 1. * j;
+                fv.at(x, y)[j] = 1000.f * x + 100.f * y + 1.f * j;
             }
         }
     }
@@ -114,7 +114,7 @@ TEST(TestFieldViewCPUArrayBackend, WriteRead2DArrayFloat)
     for (std::size_t x = 0; x < 5; ++x) {
         for (std::size_t y = 0; y < 7; ++y) {
             for (std::size_t j = 0; j < 3; ++j) {
-                EXPECT_EQ(fv.at(x, y)[j], 1000. * x + 100. * y + 1. * j);
+                EXPECT_EQ(fv.at(x, y)[j], 1000.f * x + 100.f * y + 1.f * j);
             }
         }
     }
@@ -123,7 +123,7 @@ TEST(TestFieldViewCPUArrayBackend, WriteRead2DArrayFloat)
 TEST(TestFieldViewCPUArrayBackend, WriteRead3DSingleFloat)
 {
     using field_t = covfie::field<covfie::backend::strided<
-        covfie::vector::ulong3,
+        covfie::vector::size3,
         covfie::backend::array<covfie::vector::float1>>>;
 
     field_t f(covfie::make_parameter_pack(field_t::backend_t::configuration_t{
@@ -134,7 +134,8 @@ TEST(TestFieldViewCPUArrayBackend, WriteRead3DSingleFloat)
         for (std::size_t y = 0; y < 7; ++y) {
             for (std::size_t z = 0; z < 2; ++z) {
                 for (std::size_t j = 0; j < 1; ++j) {
-                    fv.at(x, y, z)[j] = 1000. * x + 100. * y + 10. * z + 1. * j;
+                    fv.at(x, y, z)[j] =
+                        1000.f * x + 100.f * y + 10.f * z + 1.f * j;
                 }
             }
         }
@@ -146,7 +147,7 @@ TEST(TestFieldViewCPUArrayBackend, WriteRead3DSingleFloat)
                 for (std::size_t j = 0; j < 1; ++j) {
                     EXPECT_EQ(
                         fv.at(x, y, z)[j],
-                        1000. * x + 100. * y + 10. * z + 1. * j
+                        1000.f * x + 100.f * y + 10.f * z + 1.f * j
                     );
                 }
             }
@@ -157,7 +158,7 @@ TEST(TestFieldViewCPUArrayBackend, WriteRead3DSingleFloat)
 TEST(TestFieldViewCPUArrayBackend, WriteRead3DArrayFloat)
 {
     using field_t = covfie::field<covfie::backend::strided<
-        covfie::vector::ulong3,
+        covfie::vector::size3,
         covfie::backend::array<covfie::vector::float3>>>;
 
     field_t f(covfie::make_parameter_pack(field_t::backend_t::configuration_t{
@@ -168,7 +169,8 @@ TEST(TestFieldViewCPUArrayBackend, WriteRead3DArrayFloat)
         for (std::size_t y = 0; y < 7; ++y) {
             for (std::size_t z = 0; z < 2; ++z) {
                 for (std::size_t j = 0; j < 3; ++j) {
-                    fv.at(x, y, z)[j] = 1000. * x + 100. * y + 10. * z + 1. * j;
+                    fv.at(x, y, z)[j] =
+                        1000.f * x + 100.f * y + 10.f * z + 1.f * j;
                 }
             }
         }
@@ -180,7 +182,7 @@ TEST(TestFieldViewCPUArrayBackend, WriteRead3DArrayFloat)
                 for (std::size_t j = 0; j < 3; ++j) {
                     EXPECT_EQ(
                         fv.at(x, y, z)[j],
-                        1000. * x + 100. * y + 10. * z + 1. * j
+                        1000.f * x + 100.f * y + 10.f * z + 1.f * j
                     );
                 }
             }

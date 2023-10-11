@@ -15,9 +15,9 @@
 #include <covfie/core/field_view.hpp>
 
 using backend_base = covfie::backend::strided<
-    covfie::vector::ulong3,
+    covfie::vector::size3,
     covfie::backend::dereference<
-        covfie::backend::array<covfie::vector::ulong3>>>;
+        covfie::backend::array<covfie::vector::size3>>>;
 using backend_shuffle =
     covfie::backend::shuffle<backend_base, std::index_sequence<1, 2, 0>>;
 

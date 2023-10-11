@@ -9,36 +9,61 @@
 
 using backend_t1 = covfie::backend::affine<
     covfie::backend::nearest_neighbour<covfie::backend::strided<
-        covfie::vector::ulong3,
+        covfie::vector::size3,
         covfie::backend::array<covfie::vector::float3>>>>;
 
 using backend_t2 = covfie::backend::nearest_neighbour<covfie::backend::strided<
-    covfie::vector::ulong3,
+    covfie::vector::size3,
     covfie::backend::array<covfie::vector::float3>>>;
 
 using backend_t3 = covfie::backend::strided<
-    covfie::vector::ulong3,
+    covfie::vector::size3,
     covfie::backend::array<covfie::vector::float3>>;
 
 using backend_t4 = covfie::backend::array<covfie::vector::float3>;
 
 using approx_backend_t = covfie::backend::affine<
     covfie::backend::nearest_neighbour<covfie::backend::strided<
-        covfie::vector::ulong3,
+        covfie::vector::size3,
         covfie::backend::
-            constant<covfie::vector::ulong1, covfie::vector::float3>>>>;
+            constant<covfie::vector::size1, covfie::vector::float3>>>>;
 
 template covfie::field_view<approx_backend_t>::output_t
-covfie::field_view<approx_backend_t>::at<float, float, float>(
-    float, float, float
-) const;
+    covfie::field_view<approx_backend_t>::at<
+        approx_backend_t::contravariant_input_t::scalar_t,
+        approx_backend_t::contravariant_input_t::scalar_t,
+        approx_backend_t::contravariant_input_t::scalar_t>(
+        approx_backend_t::contravariant_input_t::scalar_t,
+        approx_backend_t::contravariant_input_t::scalar_t,
+        approx_backend_t::contravariant_input_t::scalar_t
+    ) const;
 template covfie::field_view<backend_t1>::output_t
-covfie::field_view<backend_t1>::at<float, float, float>(float, float, float)
-    const;
+    covfie::field_view<backend_t1>::at<
+        backend_t1::contravariant_input_t::scalar_t,
+        backend_t1::contravariant_input_t::scalar_t,
+        backend_t1::contravariant_input_t::scalar_t>(
+        backend_t1::contravariant_input_t::scalar_t,
+        backend_t1::contravariant_input_t::scalar_t,
+        backend_t1::contravariant_input_t::scalar_t
+    ) const;
 template covfie::field_view<backend_t2>::output_t
-covfie::field_view<backend_t2>::at<float, float, float>(float, float, float)
-    const;
+    covfie::field_view<backend_t2>::at<
+        backend_t2::contravariant_input_t::scalar_t,
+        backend_t2::contravariant_input_t::scalar_t,
+        backend_t2::contravariant_input_t::scalar_t>(
+        backend_t2::contravariant_input_t::scalar_t,
+        backend_t2::contravariant_input_t::scalar_t,
+        backend_t2::contravariant_input_t::scalar_t
+    ) const;
 template covfie::field_view<backend_t3>::output_t
-    covfie::field_view<backend_t3>::at<ulong>(ulong, ulong, ulong) const;
+    covfie::field_view<backend_t3>::at<
+        backend_t3::contravariant_input_t::scalar_t>(
+        backend_t3::contravariant_input_t::scalar_t,
+        backend_t3::contravariant_input_t::scalar_t,
+        backend_t3::contravariant_input_t::scalar_t
+    ) const;
 template covfie::field_view<backend_t4>::output_t
-    covfie::field_view<backend_t4>::at<ulong>(ulong) const;
+    covfie::field_view<backend_t4>::at<
+        backend_t4::contravariant_input_t::scalar_t>(
+        backend_t4::contravariant_input_t::scalar_t
+    ) const;

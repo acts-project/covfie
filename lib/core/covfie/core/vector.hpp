@@ -1,7 +1,7 @@
 /*
  * This file is part of covfie, a part of the ACTS project
  *
- * Copyright (c) 2022 CERN
+ * Copyright (c) 2022-2023 CERN
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License,
  * v. 2.0. If a copy of the MPL was not distributed with this file, You can
@@ -65,10 +65,10 @@ using int2 = vector_d<int, 2>;
 using int3 = vector_d<int, 3>;
 using int4 = vector_d<int, 4>;
 
-using uint1 = vector_d<uint, 1>;
-using uint2 = vector_d<uint, 2>;
-using uint3 = vector_d<uint, 3>;
-using uint4 = vector_d<uint, 4>;
+using uint1 = vector_d<unsigned int, 1>;
+using uint2 = vector_d<unsigned int, 2>;
+using uint3 = vector_d<unsigned int, 3>;
+using uint4 = vector_d<unsigned int, 4>;
 
 using long1 = vector_d<long, 1>;
 using long2 = vector_d<long, 2>;
@@ -79,4 +79,9 @@ using ulong1 = vector_d<unsigned long, 1>;
 using ulong2 = vector_d<unsigned long, 2>;
 using ulong3 = vector_d<unsigned long, 3>;
 using ulong4 = vector_d<unsigned long, 4>;
+
+using size1 = vector_d<std::size_t, 1>;
+using size2 = vector_d<std::size_t, 2>;
+using size3 = vector_d<std::size_t, 3>;
+using size4 = vector_d<std::size_t, 4>;
 }

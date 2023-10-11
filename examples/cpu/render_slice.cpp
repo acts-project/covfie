@@ -37,10 +37,10 @@ void parse_opts(
       boost::program_options::value<std::string>()->required(),
       "output bitmap image to write"
     )("height,h",
-      boost::program_options::value<uint>()->default_value(1024),
+      boost::program_options::value<unsigned int>()->default_value(1024),
       "height of the output image"
     )("width,w",
-      boost::program_options::value<uint>()->default_value(1024),
+      boost::program_options::value<unsigned int>()->default_value(1024),
       "width of the output image"
     )("x",
       boost::program_options::value<float>(),
@@ -81,11 +81,11 @@ int main(int argc, char ** argv)
 {
     using field_t1 = covfie::field<covfie::backend::affine<
         covfie::backend::linear<covfie::backend::strided<
-            covfie::vector::ulong3,
+            covfie::vector::size3,
             covfie::backend::array<covfie::vector::float3>>>>>;
     using field_t2 = covfie::field<covfie::backend::affine<
         covfie::backend::linear<covfie::backend::strided<
-            covfie::vector::ulong3,
+            covfie::vector::size3,
             covfie::backend::array<covfie::vector::float3>>>>>;
 
     boost::program_options::variables_map vm;
@@ -118,7 +118,7 @@ int main(int argc, char ** argv)
     BOOST_LOG_TRIVIAL(info) << "Allocating memory for output image...";
 
     std::unique_ptr<char[]> img = std::make_unique<char[]>(
-        vm["width"].as<uint>() * vm["height"].as<uint>()
+        vm["width"].as<unsigned int>() * vm["height"].as<unsigned int>()
     );
 
     BOOST_LOG_TRIVIAL(info) << "Rendering magnetic field strength to image...";
@@ -126,10 +126,10 @@ int main(int argc, char ** argv)
     std::chrono::high_resolution_clock::time_point t1 =
         std::chrono::high_resolution_clock::now();
 
-    for (uint x = 0; x < vm["width"].as<uint>(); ++x) {
-        for (uint y = 0; y < vm["height"].as<uint>(); ++y) {
-            float fx = x / static_cast<float>(vm["width"].as<uint>());
-            float fy = y / static_cast<float>(vm["height"].as<uint>());
+    for (unsigned int x = 0; x < vm["width"].as<unsigned int>(); ++x) {
+        for (unsigned int y = 0; y < vm["height"].as<unsigned int>(); ++y) {
+            float fx = x / static_cast<float>(vm["width"].as<unsigned int>());
+            float fy = y / static_cast<float>(vm["height"].as<unsigned int>());
 
             decltype(fv)::output_t p;
 
@@ -153,7 +153,7 @@ int main(int argc, char ** argv)
                 );
             }
 
-            img[vm["height"].as<uint>() * x + y] =
+            img[vm["height"].as<unsigned int>() * x + y] =
                 static_cast<char>(std::lround(
                     255.f *
                     std::min(
@@ -176,8 +176,8 @@ int main(int argc, char ** argv)
 
     render_bitmap(
         img.get(),
-        vm["width"].as<uint>(),
-        vm["height"].as<uint>(),
+        vm["width"].as<unsigned int>(),
+        vm["height"].as<unsigned int>(),
         vm["output"].as<std::string>()
     );
 

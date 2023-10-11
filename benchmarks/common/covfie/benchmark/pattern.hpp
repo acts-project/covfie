@@ -33,20 +33,20 @@ struct AccessPattern {
             }
 
             state.counters["AccessCount"] = ::benchmark::Counter(
-                counters.access_per_it,
+                static_cast<double>(counters.access_per_it),
                 ::benchmark::Counter::kIsIterationInvariant
             );
             state.counters["AccessRate"] = ::benchmark::Counter(
-                counters.access_per_it,
+                static_cast<double>(counters.access_per_it),
                 ::benchmark::Counter::kIsRate |
                     ::benchmark::Counter::kIsIterationInvariant
             );
             state.counters["LoadBytes"] = ::benchmark::Counter(
-                counters.bytes_per_it,
+                static_cast<double>(counters.bytes_per_it),
                 ::benchmark::Counter::kIsIterationInvariant
             );
             state.counters["LoadBandwidth"] = ::benchmark::Counter(
-                counters.bytes_per_it,
+                static_cast<double>(counters.bytes_per_it),
                 ::benchmark::Counter::kIsIterationInvariant |
                     ::benchmark::Counter::kIsRate
             );

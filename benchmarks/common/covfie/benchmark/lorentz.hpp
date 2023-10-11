@@ -12,6 +12,7 @@
 
 #include <covfie/benchmark/propagate.hpp>
 #include <covfie/benchmark/types.hpp>
+#include <covfie/core/definitions.hpp>
 #include <covfie/core/field_view.hpp>
 
 #ifdef __CUDACC__
@@ -61,10 +62,9 @@ HOST_DEVICE inline __attribute__((always_inline)) void lorentz_step(
     o.pos[1] += o.mom[1] * s;
     o.pos[2] += o.mom[2] * s;
 
-    if (__builtin_expect(
+    if (UNLIKELY(
             o.pos[0] < -9999.f || o.pos[0] > 9999.f || o.pos[1] < -9999.f ||
-                o.pos[1] > 9999.f || o.pos[2] < -14999.f || o.pos[2] > 14999.f,
-            0
+            o.pos[1] > 9999.f || o.pos[2] < -14999.f || o.pos[2] > 14999.f
         ))
     {
         if (o.pos[0] < -9999.f) {

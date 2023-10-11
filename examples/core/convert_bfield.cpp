@@ -58,7 +58,7 @@ void parse_opts(
 
 using field_t = covfie::field<covfie::backend::affine<
     covfie::backend::nearest_neighbour<covfie::backend::strided<
-        covfie::vector::ulong3,
+        covfie::vector::size3,
         covfie::backend::array<covfie::vector::float3>>>>>;
 
 field_t read_bfield(const std::string & fn)
@@ -197,9 +197,9 @@ field_t read_bfield(const std::string & fn)
         while (f >> xp >> yp >> zp >> Bx >> By >> Bz) {
             field_t::view_t::output_t & p = fv.at(xp, yp, zp);
 
-            p[0] = Bx * 0.000299792458;
-            p[1] = By * 0.000299792458;
-            p[2] = Bz * 0.000299792458;
+            p[0] = Bx * 0.000299792458f;
+            p[1] = By * 0.000299792458f;
+            p[2] = Bz * 0.000299792458f;
         }
 
         BOOST_LOG_TRIVIAL(info)

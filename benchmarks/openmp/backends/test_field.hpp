@@ -43,17 +43,17 @@ struct InterpolateLin {
 
 struct LayoutStride {
     template <typename T>
-    using apply = covfie::backend::strided<covfie::vector::ulong3, T>;
+    using apply = covfie::backend::strided<covfie::vector::size3, T>;
 };
 
 struct LayoutMortonBMI2 {
     template <typename T>
-    using apply = covfie::backend::morton<covfie::vector::ulong3, T, true>;
+    using apply = covfie::backend::morton<covfie::vector::size3, T, true>;
 };
 
 struct LayoutMortonNaive {
     template <typename T>
-    using apply = covfie::backend::morton<covfie::vector::ulong3, T, false>;
+    using apply = covfie::backend::morton<covfie::vector::size3, T, false>;
 };
 
 template <typename Interpolator, typename Layout>
@@ -71,7 +71,7 @@ struct Field {
 
 struct FieldIntBase {
     using backend_t = covfie::backend::strided<
-        covfie::vector::ulong3,
+        covfie::vector::size3,
         covfie::backend::array<covfie::vector::float3>>;
 
     static covfie::field<backend_t> get_field()
@@ -84,7 +84,7 @@ struct FieldIntBase {
 
 struct FieldIntMorton {
     using backend_t = covfie::backend::morton<
-        covfie::vector::ulong3,
+        covfie::vector::size3,
         covfie::backend::array<covfie::vector::float3>>;
 
     static covfie::field<backend_t> get_field()

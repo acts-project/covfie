@@ -18,7 +18,7 @@
 #include <covfie/core/parameter_pack.hpp>
 
 using field_t = covfie::field<covfie::backend::strided<
-    covfie::vector::ulong2,
+    covfie::vector::size2,
     covfie::backend::array<covfie::vector::float2>>>;
 
 int main(void)
