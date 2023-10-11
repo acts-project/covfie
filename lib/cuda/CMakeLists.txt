@@ -23,6 +23,7 @@ target_link_libraries(
     cuda
     INTERFACE
     CUDA::cudart
+    covfie::core
 )
 
 # Logic to ensure that the CUDA module can be installed properly.
