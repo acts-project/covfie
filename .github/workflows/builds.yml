@@ -10,8 +10,12 @@ name: Build Tests
 
 on: [ push, pull_request ]
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
 jobs:
-  native:
+  linux-core:
     strategy:
       matrix:
         BUILD:
@@ -26,7 +30,7 @@ jobs:
           - NAME: "clang"
             CXX: "clang++"
 
-    name: "CPU/${{ matrix.BUILD }}/${{ matrix.COMPILER.NAME }}/C++${{ matrix.CXX_STANDARD }}"
+    name: "Linux/Core/${{ matrix.BUILD }}/${{ matrix.COMPILER.NAME }}/C++${{ matrix.CXX_STANDARD }}"
 
     runs-on: "ubuntu-latest"
 
@@ -46,9 +50,9 @@ jobs:
         clang
     - name: Install Google Test
       run: |
-        wget https://github.com/google/googletest/archive/refs/tags/release-1.11.0.tar.gz
-        tar -xzvf release-1.11.0.tar.gz
-        cmake -S googletest-release-1.11.0 -B gtest_build -DCMAKE_INSTALL_PREFIX=$GITHUB_WORKSPACE/.prefixes/gtest/
+        wget https://github.com/google/googletest/archive/refs/tags/v1.14.0.tar.gz
+        tar -xzvf v1.14.0.tar.gz
+        cmake -S googletest-1.14.0 -B gtest_build -DBUILD_GMOCK=Off -DCMAKE_INSTALL_PREFIX=$GITHUB_WORKSPACE/.prefixes/gtest/
         cmake --build gtest_build
         cmake --install gtest_build
     - name: Configure
@@ -71,7 +75,7 @@ jobs:
     - name: CPU tests
       run: build/tests/cpu/test_cpu
 
-  cuda:
+  linux-cuda:
     strategy:
       matrix:
         BUILD:
@@ -86,7 +90,7 @@ jobs:
           - NAME: "nvcc"
             CUDACC: "nvcc"
 
-    name: "CUDA/${{ matrix.BUILD }}/${{ matrix.COMPILER.NAME }}+${{ matrix.CUDA_COMPILER.NAME }}/C++${{ matrix.CXX_STANDARD }}"
+    name: "Linux/CUDA/${{ matrix.BUILD }}/${{ matrix.COMPILER.NAME }}+${{ matrix.CUDA_COMPILER.NAME }}/C++${{ matrix.CXX_STANDARD }}"
 
     runs-on: "ubuntu-latest"
 
@@ -107,9 +111,9 @@ jobs:
         nvidia-cuda-toolkit
     - name: Install Google Test
       run: |
-        wget https://github.com/google/googletest/archive/refs/tags/release-1.11.0.tar.gz
-        tar -xzvf release-1.11.0.tar.gz
-        cmake -S googletest-release-1.11.0 -B gtest_build -DCMAKE_INSTALL_PREFIX=$GITHUB_WORKSPACE/.prefixes/gtest/
+        wget https://github.com/google/googletest/archive/refs/tags/v1.14.0.tar.gz
+        tar -xzvf v1.14.0.tar.gz
+        cmake -S googletest-1.14.0 -B gtest_build -DBUILD_GMOCK=Off -DCMAKE_INSTALL_PREFIX=$GITHUB_WORKSPACE/.prefixes/gtest/
         cmake --build gtest_build
         cmake --install gtest_build
     - name: Configure
