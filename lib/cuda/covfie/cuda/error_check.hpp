@@ -12,6 +12,8 @@
 
 #include <sstream>
 
+#include <cuda_runtime_api.h>
+
 #define cudaErrorCheck(r)                                                      \
     {                                                                          \
         _cudaErrorCheck((r), __FILE__, __LINE__);                              \
