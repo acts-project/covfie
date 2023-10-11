@@ -135,3 +135,57 @@ jobs:
       run: cmake --build build
     - name: Core tests
       run: build/tests/core/test_core
+
+  windows-core:
+    strategy:
+      matrix:
+        BUILD:
+          - "Release"
+          - "Debug"
+        CXX_STANDARD:
+          - 17
+          - 20
+
+    name: "Windows/Core/${{ matrix.BUILD }}/MSVC/C++${{ matrix.CXX_STANDARD }}"
+
+    runs-on: "windows-latest"
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install Google Test
+      run: |
+        Invoke-WebRequest -Uri "https://github.com/google/googletest/archive/refs/tags/v1.14.0.tar.gz" -OutFile "gtest.tar.gz"
+        tar -xf gtest.tar.gz
+        cmake -S .\googletest-1.14.0 -B .\gtest_build -Dgtest_force_shared_crt=On -DBUILD_GMOCK=Off
+        cmake --build .\gtest_build --config ${{ matrix.BUILD }}
+        cmake --install .\gtest_build --config ${{ matrix.BUILD }} --prefix ${{ github.workspace }}\.prefix
+    - name: Install Google Benchmark
+      run: |
+        Invoke-WebRequest -Uri "https://github.com/google/benchmark/archive/refs/tags/v1.8.3.tar.gz" -OutFile "gbench.tar.gz"
+        tar -xf gbench.tar.gz
+        cmake -S .\benchmark-1.8.3 -B .\gbench_build -DCMAKE_PREFIX_PATH=${{ github.workspace }}\.prefix -DBENCHMARK_ENABLE_TESTING=Off
+        cmake --build .\gbench_build --config ${{ matrix.BUILD }}
+        cmake --install .\gbench_build --config ${{ matrix.BUILD }} --prefix ${{ github.workspace }}\.prefix
+    - name: Install Boost
+      run: |
+        Invoke-WebRequest -Uri "https://boostorg.jfrog.io/artifactory/main/release/1.83.0/source/boost_1_83_0.tar.gz" -OutFile "boost.tar.gz"
+        tar -xf boost.tar.gz
+        cd boost_1_83_0
+        .\bootstrap.bat
+        .\b2 install --with-log --with-program_options --prefix="${{ github.workspace }}\.prefix"
+    - name: Configure
+      run: cmake
+        -DCOVFIE_FAIL_ON_WARNINGS=TRUE
+        -DCOVFIE_BUILD_TESTS=On
+        -DCOVFIE_BUILD_EXAMPLES=On
+        -DCOVFIE_BUILD_BENCHMARKS=On
+        -DCOVFIE_PLATFORM_CPU=On
+        -DCOVFIE_QUIET=On
+        -DCMAKE_CXX_STANDARD=${{ matrix.CXX_STANDARD }}
+        -DCMAKE_PREFIX_PATH="${{ github.workspace }}\.prefix"
+        -S ${{ github.workspace }}
+        -B build
+    - name: Build
+      run: cmake --build build --config ${{ matrix.BUILD }}
+    - name: Core tests
+      run: .\build\tests\core\${{ matrix.BUILD}}\test_core.exe
