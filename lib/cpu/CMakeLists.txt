@@ -28,5 +28,11 @@ install(
     DESTINATION include
 )
 
+target_link_libraries(
+    cpu
+    INTERFACE
+    covfie::core
+)
+
 # Hack for compatibility
 add_library(covfie::cpu ALIAS cpu)
