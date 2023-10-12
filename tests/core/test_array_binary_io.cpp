@@ -1,16 +1,16 @@
 /*
  * This file is part of covfie, a part of the ACTS project
  *
- * Copyright (c) 2022 CERN
+ * Copyright (c) 2022-2023 CERN
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License,
  * v. 2.0. If a copy of the MPL was not distributed with this file, You can
  * obtain one at http://mozilla.org/MPL/2.0/.
  */
 
+#include <filesystem>
 #include <fstream>
 
-#include <boost/filesystem.hpp>
 #include <gtest/gtest.h>
 #include <tmp_file.hpp>
 
@@ -33,7 +33,7 @@ TEST(TestArrayBinaryIO, WriteReadFloatFloat)
         p[0] = static_cast<float>(i);
     }
 
-    boost::filesystem::path ofile = get_tmp_file();
+    std::filesystem::path ofile = get_tmp_file();
 
     std::ofstream ofs(ofile.native(), std::ofstream::binary);
 
@@ -77,7 +77,7 @@ TEST(TestArrayBinaryIO, WriteReadDoubleDouble)
         p[0] = static_cast<double>(i);
     }
 
-    boost::filesystem::path ofile = get_tmp_file();
+    std::filesystem::path ofile = get_tmp_file();
 
     std::ofstream ofs(ofile.native(), std::ofstream::binary);
 
@@ -123,7 +123,7 @@ TEST(TestArrayBinaryIO, WriteReadFloatDouble)
         p[0] = static_cast<float>(i);
     }
 
-    boost::filesystem::path ofile = get_tmp_file();
+    std::filesystem::path ofile = get_tmp_file();
 
     std::ofstream ofs(ofile.native(), std::ofstream::binary);
 
@@ -169,7 +169,7 @@ TEST(TestArrayBinaryIO, WriteReadDoubleFloat)
         p[0] = static_cast<double>(i);
     }
 
-    boost::filesystem::path ofile = get_tmp_file();
+    std::filesystem::path ofile = get_tmp_file();
 
     std::ofstream ofs(ofile.native(), std::ofstream::binary);
 
