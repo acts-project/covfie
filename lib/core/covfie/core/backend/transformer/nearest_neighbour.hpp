@@ -26,17 +26,27 @@
 namespace covfie::backend {
 template <
     CONSTRAINT(concepts::field_backend) _backend_t,
-    typename _input_scalar_type = float>
-struct _nearest_neighbour {
-    using this_t = _nearest_neighbour<_backend_t, _input_scalar_type>;
+    CONSTRAINT(concepts::vector_descriptor) _input_vector_d = covfie::vector::
+        vector_d<float, _backend_t::contravariant_input_t::dimensions>>
+struct nearest_neighbour {
+    using this_t = nearest_neighbour<_backend_t, _input_vector_d>;
     static constexpr bool is_initial = false;
 
     using backend_t = _backend_t;
 
+    static_assert(
+        std::is_floating_point_v<typename _input_vector_d::type>,
+        "Nearest neighbour interpolation contravariant input must have a "
+        "floating point scalar type."
+    );
+    static_assert(
+        _input_vector_d::size == backend_t::contravariant_input_t::dimensions,
+        "Nearest neighbour interpolation contravariant input must have the "
+        "same size as the backend contravariant input."
+    );
+
     using contravariant_input_t =
-        covfie::vector::array_vector_d<covfie::vector::vector_d<
-            _input_scalar_type,
-            backend_t::contravariant_input_t::dimensions>>;
+        covfie::vector::array_vector_d<_input_vector_d>;
     using contravariant_output_t = typename backend_t::contravariant_input_t;
     using covariant_input_t = typename backend_t::covariant_output_t;
     using covariant_output_t = covariant_input_t;
@@ -152,7 +162,4 @@ struct _nearest_neighbour {
         typename backend_t::non_owning_data_t m_backend;
     };
 };
-
-template <CONSTRAINT(concepts::field_backend) _backend_tc>
-using nearest_neighbour = _nearest_neighbour<_backend_tc>;
 }
