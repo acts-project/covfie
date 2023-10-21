@@ -32,6 +32,7 @@ add_executable(
     test_utility_numeric.cpp
     test_array_binary_io.cpp
     test_build.cpp
+    test_canonical.cpp
 )
 
 # Ensure that the tests are linked against the required libraries.
