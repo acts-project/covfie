@@ -69,22 +69,14 @@ struct shuffle {
 
         static owning_data_t read_binary(std::istream & fs)
         {
-            utility::read_io_header(fs, IO_MAGIC_HEADER);
-
             auto be = backend_t::owning_data_t::read_binary(fs);
-
-            utility::read_io_footer(fs, IO_MAGIC_HEADER);
 
             return owning_data_t(configuration_t{}, std::move(be));
         }
 
         static void write_binary(std::ostream & fs, const owning_data_t & o)
         {
-            utility::write_io_header(fs, IO_MAGIC_HEADER);
-
             backend_t::owning_data_t::write_binary(fs, o.m_backend);
-
-            utility::write_io_footer(fs, IO_MAGIC_HEADER);
         }
 
         typename backend_t::owning_data_t m_backend;
