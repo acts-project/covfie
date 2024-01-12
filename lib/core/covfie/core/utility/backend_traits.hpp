@@ -11,6 +11,7 @@
 #pragma once
 
 #include <cstddef>
+#include <variant>
 
 namespace covfie::utility {
 template <typename B, std::size_t N, bool = B::is_initial>
@@ -30,6 +31,7 @@ struct nth_backend<B, 0, true> {
 
 template <typename B, std::size_t N>
 struct nth_backend<B, N, true> {
+    using type = std::monostate;
 };
 
 template <typename B, bool = B::is_initial>
