@@ -33,6 +33,7 @@ add_executable(
     test_array_binary_io.cpp
     test_build.cpp
     test_canonical.cpp
+    test_atlas_like_io.cpp
 )
 
 # Ensure that the tests are linked against the required libraries.
