@@ -153,3 +153,17 @@ want to cite both). To cite the software, use:
 
 All documentation pertaining to covfie can be found on ReadTheDocs at the
 following URL: https://covfie.readthedocs.io/en/latest/
+
+## Use cases
+
+### Converting the ATLAS magnetic field
+
+Given the [ATLAS magnetic field
+file](https://gitlab.cern.ch/acts/acts-data/-/tree/master/MagneticField/ATLAS)
+in text format, it can be converted into a covfie format using the
+`convert_bfield` example (this requires `COVFIE_BUILD_EXAMPLES` to be enabled
+at configuration time):
+
+```bash
+build/examples/core/convert_bfield --input ATLASBField_xyz.txt --output atlas_bfield.cvf
+```
