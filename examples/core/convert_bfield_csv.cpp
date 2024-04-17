@@ -94,6 +94,8 @@ field_t read_bfield(const std::string & fn)
         float xp, yp, zp;
         float Bx, By, Bz;
 
+        (void)Bx, (void)By, (void)Bz;
+
         std::size_t n_lines = 0;
 
         BOOST_LOG_TRIVIAL(info)
