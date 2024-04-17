@@ -59,6 +59,11 @@ struct affine {
         {
         }
 
+        explicit owning_data_t(parameter_pack<owning_data_t> && conf)
+            : owning_data_t(std::move(conf.x))
+        {
+        }
+
         template <
             typename T,
             std::enable_if_t<

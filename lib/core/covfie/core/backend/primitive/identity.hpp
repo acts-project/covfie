@@ -62,6 +62,10 @@ struct identity {
         {
         }
 
+        explicit owning_data_t(parameter_pack<owning_data_t> &&)
+        {
+        }
+
         configuration_t get_configuration() const
         {
             return {};

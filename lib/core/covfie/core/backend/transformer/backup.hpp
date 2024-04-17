@@ -59,6 +59,22 @@ struct backup {
         {
         }
 
+        template <typename... Args>
+        explicit owning_data_t(
+            const parameter_pack<configuration_t, Args...> && args
+        )
+            : m_min(args.x.min)
+            , m_max(args.x.max)
+            , m_default(args.x.default_value)
+            , m_backend(std::move(args.xs))
+        {
+        }
+
+        explicit owning_data_t(parameter_pack<owning_data_t> && conf)
+            : owning_data_t(std::move(conf.x))
+        {
+        }
+
         explicit owning_data_t(
             const configuration_t & c, typename backend_t::owning_data_t && b
         )

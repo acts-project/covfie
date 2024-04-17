@@ -56,6 +56,11 @@ struct constant {
         {
         }
 
+        explicit owning_data_t(parameter_pack<owning_data_t> && conf)
+            : m_value(std::move(conf.x.m_value))
+        {
+        }
+
         configuration_t get_configuration() const
         {
             return m_value;
