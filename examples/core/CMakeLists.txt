@@ -23,6 +23,23 @@ target_link_libraries(
     Boost::program_options
 )
 
+# Add the conversion of B-fields from CSV to our native format.
+add_executable(
+    convert_bfield_csv
+
+    convert_bfield_csv.cpp
+)
+
+target_link_libraries(
+    convert_bfield_csv
+
+    PRIVATE
+    core
+    Boost::log
+    Boost::log_setup
+    Boost::program_options
+)
+
 # Add the first example that can be found in the README.
 add_executable(
     readme_example_1
