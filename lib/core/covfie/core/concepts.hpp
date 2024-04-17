@@ -20,7 +20,7 @@
 #include <concepts>
 namespace covfie::concepts {
 template <typename T>
-concept is_inital = T::is_initial == true;
+concept is_initial = T::is_initial == true;
 
 template <typename T>
 concept is_constructible_from_config_and_backend = requires(
@@ -129,8 +129,8 @@ concept field_backend = requires
     /*
      * Check for additional constructability from parameter packs.
      */
-    requires is_inital<T> || is_constructible_from_parameter_pack_len_gt1<T>;
-    requires !is_inital<T> || is_constructible_from_parameter_pack_len_eq1<T>;
+    requires is_initial<T> || is_constructible_from_parameter_pack_len_gt1<T>;
+    requires !is_initial<T> || is_constructible_from_parameter_pack_len_eq1<T>;
     requires is_constructible_from_parameter_pack_self<T>;
 
     /*
@@ -155,7 +155,7 @@ concept field_backend = requires
         } -> std::same_as<void>;
     };
 
-    requires is_inital<T> || is_constructible_from_config_and_backend<T>;
+    requires is_initial<T> || is_constructible_from_config_and_backend<T>;
 
     {typename T::owning_data_t()};
 
