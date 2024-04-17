@@ -11,8 +11,10 @@
 #pragma once
 
 #include <iostream>
+#include <optional>
 
 #include <covfie/core/definitions.hpp>
+#include <covfie/core/parameter_pack.hpp>
 
 #if __cpp_concepts >= 201907L
 #include <concepts>
@@ -27,6 +29,33 @@ concept is_constructible_from_config_and_backend = requires(
 )
 {
     {typename T::owning_data_t(c, std::move(b))};
+};
+
+template <typename T>
+concept is_constructible_from_parameter_pack_len_gt1 =
+    requires(parameter_pack<typename T::configuration_t, std::monostate> && p)
+{
+    {typename T::owning_data_t(std::move(p))};
+};
+
+template <typename T>
+concept is_constructible_from_parameter_pack_len_eq1 =
+    requires(parameter_pack<typename T::configuration_t> && p)
+{
+    {typename T::owning_data_t(std::move(p))};
+};
+
+template <typename T>
+concept is_constructible_from_parameter_pack_self =
+    requires(parameter_pack<typename T::owning_data_t> && p)
+{
+    {typename T::owning_data_t(std::move(p))};
+};
+
+template <typename T>
+concept is_constructible_from_self_rvalue = requires(T::owning_data_t && p)
+{
+    {typename T::owning_data_t(std::move(p))};
 };
 
 template <typename T>
@@ -96,6 +125,18 @@ concept field_backend = requires
             o.get_configuration()
         } -> std::same_as<typename T::configuration_t>;
     };
+
+    /*
+     * Check for additional constructability from parameter packs.
+     */
+    requires is_inital<T> || is_constructible_from_parameter_pack_len_gt1<T>;
+    requires !is_inital<T> || is_constructible_from_parameter_pack_len_eq1<T>;
+    requires is_constructible_from_parameter_pack_self<T>;
+
+    /*
+     * Check whether the field is constructible from itself.
+     */
+    requires is_constructible_from_self_rvalue<T>;
 
     /*
      * Check whether the owning data type can be read from a file.
