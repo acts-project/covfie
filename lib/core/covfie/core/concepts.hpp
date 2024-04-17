@@ -53,7 +53,8 @@ concept is_constructible_from_parameter_pack_self =
 };
 
 template <typename T>
-concept is_constructible_from_self_rvalue = requires(T::owning_data_t && p)
+concept is_constructible_from_self_rvalue =
+    requires(typename T::owning_data_t && p)
 {
     {typename T::owning_data_t(std::move(p))};
 };
