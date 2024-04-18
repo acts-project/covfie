@@ -109,17 +109,17 @@ field_t read_bfield(const std::string & fn)
             std::string word;
             std::stringstream ss(line);
             std::getline(ss, word, ',');
-            xp = std::atof(word.c_str());
+            xp = static_cast<float>(std::atof(word.c_str()));
             std::getline(ss, word, ',');
-            yp = std::atof(word.c_str());
+            yp = static_cast<float>(std::atof(word.c_str()));
             std::getline(ss, word, ',');
-            zp = std::atof(word.c_str());
+            zp = static_cast<float>(std::atof(word.c_str()));
             std::getline(ss, word, ',');
-            Bx = std::atof(word.c_str());
+            Bx = static_cast<float>(std::atof(word.c_str()));
             std::getline(ss, word, ',');
-            By = std::atof(word.c_str());
+            By = static_cast<float>(std::atof(word.c_str()));
             std::getline(ss, word, ',');
-            Bz = std::atof(word.c_str());
+            Bz = static_cast<float>(std::atof(word.c_str()));
 
             minx = std::min(minx, xp);
             maxx = std::max(maxx, xp);
@@ -212,17 +212,17 @@ field_t read_bfield(const std::string & fn)
             std::string word;
             std::stringstream ss(line);
             std::getline(ss, word, ',');
-            xp = std::atof(word.c_str());
+            xp = static_cast<float>(std::atof(word.c_str()));
             std::getline(ss, word, ',');
-            yp = std::atof(word.c_str());
+            yp = static_cast<float>(std::atof(word.c_str()));
             std::getline(ss, word, ',');
-            zp = std::atof(word.c_str());
+            zp = static_cast<float>(std::atof(word.c_str()));
             std::getline(ss, word, ',');
-            Bx = std::atof(word.c_str());
+            Bx = static_cast<float>(std::atof(word.c_str()));
             std::getline(ss, word, ',');
-            By = std::atof(word.c_str());
+            By = static_cast<float>(std::atof(word.c_str()));
             std::getline(ss, word, ',');
-            Bz = std::atof(word.c_str());
+            Bz = static_cast<float>(std::atof(word.c_str()));
 
             field_t::view_t::output_t & p = fv.at(xp, yp, zp);
 
