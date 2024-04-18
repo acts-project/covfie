@@ -61,9 +61,7 @@ struct backup {
         }
 
         template <typename... Args>
-        explicit owning_data_t(
-            const parameter_pack<configuration_t, Args...> && args
-        )
+        explicit owning_data_t(parameter_pack<configuration_t, Args...> && args)
             : m_min(args.x.min)
             , m_max(args.x.max)
             , m_default(args.x.default_value)

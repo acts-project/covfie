@@ -97,9 +97,7 @@ struct linear {
         }
 
         template <typename... Args>
-        explicit owning_data_t(
-            const parameter_pack<configuration_t, Args...> && args
-        )
+        explicit owning_data_t(parameter_pack<configuration_t, Args...> && args)
             : m_backend(std::move(args.xs))
         {
         }
