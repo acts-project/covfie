@@ -92,8 +92,12 @@ struct Random : covfie::benchmark::AccessPattern<Random> {
         state.ResumeTiming();
 
         random_kernel<<<
-            p.agents / p.block_size + (p.agents % p.block_size != 0 ? 1 : 0),
-            p.block_size>>>(device_agents, device_out, p.agents, f);
+            static_cast<unsigned int>(
+                p.agents / p.block_size + (p.agents % p.block_size != 0 ? 1 : 0)
+            ),
+            static_cast<unsigned int>(p.block_size)>>>(
+            device_agents, device_out, p.agents, f
+        );
 
         cudaErrorCheck(cudaGetLastError());
         cudaErrorCheck(cudaDeviceSynchronize());

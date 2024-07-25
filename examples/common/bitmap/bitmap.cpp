@@ -161,7 +161,7 @@ void render_bitmap(
     for (unsigned int i = 0; i < 256; ++i) {
         float s = 0.7f;
         float v = 1.0f;
-        float hue = (i / 256.0f) * 240.0f;
+        float hue = (static_cast<float>(i) / 256.0f) * 240.0f;
         float c = v * s;
         float hp = hue / 60.0f;
 

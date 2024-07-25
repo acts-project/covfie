@@ -32,13 +32,17 @@ TEST(TestFieldViewCPUArrayBackend, WriteRead1DSingleFloat)
 
     for (std::size_t x = 0; x < 5; ++x) {
         for (std::size_t j = 0; j < 1; ++j) {
-            fv.at(x)[j] = 1000.f * x + 1.f * j;
+            fv.at(x)[j] =
+                1000.f * static_cast<float>(x) + 1.f * static_cast<float>(j);
         }
     }
 
     for (std::size_t x = 0; x < 5; ++x) {
         for (std::size_t j = 0; j < 1; ++j) {
-            EXPECT_EQ(fv.at(x)[j], 1000.f * x + 1.f * j);
+            EXPECT_EQ(
+                fv.at(x)[j],
+                1000.f * static_cast<float>(x) + 1.f * static_cast<float>(j)
+            );
         }
     }
 }
@@ -55,13 +59,17 @@ TEST(TestFieldViewCPUArrayBackend, WriteRead1DArrayFloat)
 
     for (std::size_t x = 0; x < 5; ++x) {
         for (std::size_t j = 0; j < 3; ++j) {
-            fv.at(x)[j] = 1000.f * x + 1.f * j;
+            fv.at(x)[j] =
+                1000.f * static_cast<float>(x) + 1.f * static_cast<float>(j);
         }
     }
 
     for (std::size_t x = 0; x < 5; ++x) {
         for (std::size_t j = 0; j < 3; ++j) {
-            EXPECT_EQ(fv.at(x)[j], 1000.f * x + 1.f * j);
+            EXPECT_EQ(
+                fv.at(x)[j],
+                1000.f * static_cast<float>(x) + 1.f * static_cast<float>(j)
+            );
         }
     }
 }
@@ -79,7 +87,9 @@ TEST(TestFieldViewCPUArrayBackend, WriteRead2DSingleFloat)
     for (std::size_t x = 0; x < 5; ++x) {
         for (std::size_t y = 0; y < 7; ++y) {
             for (std::size_t j = 0; j < 1; ++j) {
-                fv.at(x, y)[j] = 1000.f * x + 100.f * y + 1.f * j;
+                fv.at(x, y)[j] = 1000.f * static_cast<float>(x) +
+                                 100.f * static_cast<float>(y) +
+                                 1.f * static_cast<float>(j);
             }
         }
     }
@@ -87,7 +97,12 @@ TEST(TestFieldViewCPUArrayBackend, WriteRead2DSingleFloat)
     for (std::size_t x = 0; x < 5; ++x) {
         for (std::size_t y = 0; y < 7; ++y) {
             for (std::size_t j = 0; j < 1; ++j) {
-                EXPECT_EQ(fv.at(x, y)[j], 1000.f * x + 100.f * y + 1.f * j);
+                EXPECT_EQ(
+                    fv.at(x, y)[j],
+                    1000.f * static_cast<float>(x) +
+                        100.f * static_cast<float>(y) +
+                        1.f * static_cast<float>(j)
+                );
             }
         }
     }
@@ -106,7 +121,9 @@ TEST(TestFieldViewCPUArrayBackend, WriteRead2DArrayFloat)
     for (std::size_t x = 0; x < 5; ++x) {
         for (std::size_t y = 0; y < 7; ++y) {
             for (std::size_t j = 0; j < 3; ++j) {
-                fv.at(x, y)[j] = 1000.f * x + 100.f * y + 1.f * j;
+                fv.at(x, y)[j] = 1000.f * static_cast<float>(x) +
+                                 100.f * static_cast<float>(y) +
+                                 1.f * static_cast<float>(j);
             }
         }
     }
@@ -114,7 +131,12 @@ TEST(TestFieldViewCPUArrayBackend, WriteRead2DArrayFloat)
     for (std::size_t x = 0; x < 5; ++x) {
         for (std::size_t y = 0; y < 7; ++y) {
             for (std::size_t j = 0; j < 3; ++j) {
-                EXPECT_EQ(fv.at(x, y)[j], 1000.f * x + 100.f * y + 1.f * j);
+                EXPECT_EQ(
+                    fv.at(x, y)[j],
+                    1000.f * static_cast<float>(x) +
+                        100.f * static_cast<float>(y) +
+                        1.f * static_cast<float>(j)
+                );
             }
         }
     }
@@ -134,8 +156,10 @@ TEST(TestFieldViewCPUArrayBackend, WriteRead3DSingleFloat)
         for (std::size_t y = 0; y < 7; ++y) {
             for (std::size_t z = 0; z < 2; ++z) {
                 for (std::size_t j = 0; j < 1; ++j) {
-                    fv.at(x, y, z)[j] =
-                        1000.f * x + 100.f * y + 10.f * z + 1.f * j;
+                    fv.at(x, y, z)[j] = 1000.f * static_cast<float>(x) +
+                                        100.f * static_cast<float>(y) +
+                                        10.f * static_cast<float>(z) +
+                                        1.f * static_cast<float>(j);
                 }
             }
         }
@@ -147,7 +171,10 @@ TEST(TestFieldViewCPUArrayBackend, WriteRead3DSingleFloat)
                 for (std::size_t j = 0; j < 1; ++j) {
                     EXPECT_EQ(
                         fv.at(x, y, z)[j],
-                        1000.f * x + 100.f * y + 10.f * z + 1.f * j
+                        1000.f * static_cast<float>(x) +
+                            100.f * static_cast<float>(y) +
+                            10.f * static_cast<float>(z) +
+                            1.f * static_cast<float>(j)
                     );
                 }
             }
@@ -169,8 +196,10 @@ TEST(TestFieldViewCPUArrayBackend, WriteRead3DArrayFloat)
         for (std::size_t y = 0; y < 7; ++y) {
             for (std::size_t z = 0; z < 2; ++z) {
                 for (std::size_t j = 0; j < 3; ++j) {
-                    fv.at(x, y, z)[j] =
-                        1000.f * x + 100.f * y + 10.f * z + 1.f * j;
+                    fv.at(x, y, z)[j] = 1000.f * static_cast<float>(x) +
+                                        100.f * static_cast<float>(y) +
+                                        10.f * static_cast<float>(z) +
+                                        1.f * static_cast<float>(j);
                 }
             }
         }
@@ -182,7 +211,10 @@ TEST(TestFieldViewCPUArrayBackend, WriteRead3DArrayFloat)
                 for (std::size_t j = 0; j < 3; ++j) {
                     EXPECT_EQ(
                         fv.at(x, y, z)[j],
-                        1000.f * x + 100.f * y + 10.f * z + 1.f * j
+                        1000.f * static_cast<float>(x) +
+                            100.f * static_cast<float>(y) +
+                            10.f * static_cast<float>(z) +
+                            1.f * static_cast<float>(j)
                     );
                 }
             }

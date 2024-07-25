@@ -19,6 +19,8 @@ if( ( "${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU" ) OR
    covfie_add_flag( CMAKE_CXX_FLAGS "-Wshadow" )
    covfie_add_flag( CMAKE_CXX_FLAGS "-Wunused-local-typedefs" )
    covfie_add_flag( CMAKE_CXX_FLAGS "-pedantic" )
+   covfie_add_flag( CMAKE_CXX_FLAGS "-Wfloat-conversion" )
+   covfie_add_flag( CMAKE_CXX_FLAGS "-Wconversion" )
 
    # Fail on warnings, if asked for that behaviour.
    if( COVFIE_FAIL_ON_WARNINGS )
