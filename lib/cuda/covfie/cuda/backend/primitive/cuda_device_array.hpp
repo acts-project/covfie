@@ -76,6 +76,11 @@ struct cuda_device_array {
             }
         }
 
+        explicit owning_data_t(parameter_pack<owning_data_t> && args)
+            : owning_data_t(std::move(args.x))
+        {
+        }
+
         explicit owning_data_t(parameter_pack<configuration_t> && args)
             : m_size(args.x[0])
             , m_ptr(utility::cuda::device_allocate<vector_t[]>(m_size))
