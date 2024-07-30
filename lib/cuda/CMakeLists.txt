@@ -17,7 +17,7 @@ target_include_directories(
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 
-target_compile_features(cuda INTERFACE cxx_std_17)
+target_compile_features(cuda INTERFACE cxx_std_20)
 
 target_link_libraries(
     cuda

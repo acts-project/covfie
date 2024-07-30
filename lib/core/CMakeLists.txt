@@ -15,15 +15,7 @@ target_include_directories(
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 
-target_compile_features(core INTERFACE cxx_std_17)
-
-if(COVFIE_REQUIRE_CXX20)
-    target_compile_definitions(
-        core
-        INTERFACE
-        COVFIE_REQUIRE_CXX20
-    )
-endif()
+target_compile_features(core INTERFACE cxx_std_20)
 
 if(COVFIE_QUIET)
     target_compile_definitions(

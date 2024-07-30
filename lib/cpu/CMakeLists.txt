@@ -15,7 +15,7 @@ target_include_directories(
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 
-target_compile_features(cpu INTERFACE cxx_std_17)
+target_compile_features(cpu INTERFACE cxx_std_20)
 
 # Logic to ensure that the CPU module can be installed properly.
 install(
