@@ -139,9 +139,12 @@ field_t read_bfield(const std::string & fn)
      * Now that we have the limits of our field, compute the size in each
      * dimension.
      */
-    std::size_t sx = std::lround((maxx - minx) / 100.0) + 1;
-    std::size_t sy = std::lround((maxy - miny) / 100.0) + 1;
-    std::size_t sz = std::lround((maxz - minz) / 100.0) + 1;
+    std::size_t sx =
+        static_cast<std::size_t>(std::lround((maxx - minx) / 100.0)) + 1;
+    std::size_t sy =
+        static_cast<std::size_t>(std::lround((maxy - miny) / 100.0)) + 1;
+    std::size_t sz =
+        static_cast<std::size_t>(std::lround((maxz - minz) / 100.0)) + 1;
 
     BOOST_LOG_TRIVIAL(info)
         << "Magnetic field size is " << sx << "x" << sy << "x" << sz;
@@ -151,9 +154,9 @@ field_t read_bfield(const std::string & fn)
     covfie::algebra::affine<3> translation =
         covfie::algebra::affine<3>::translation(-minx, -miny, -minz);
     covfie::algebra::affine<3> scaling = covfie::algebra::affine<3>::scaling(
-        (sx - 1) / (maxx - minx),
-        (sy - 1) / (maxy - miny),
-        (sz - 1) / (maxz - minz)
+        static_cast<float>(sx - 1) / (maxx - minx),
+        static_cast<float>(sy - 1) / (maxy - miny),
+        static_cast<float>(sz - 1) / (maxz - minz)
     );
 
     field_t field(covfie::make_parameter_pack(

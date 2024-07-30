@@ -70,14 +70,26 @@ struct Scan : covfie::benchmark::AccessPattern<Scan> {
 
         state.ResumeTiming();
 
-        dim3 block_size(8, 8, 8);
+        dim3 block_size(8u, 8u, 8u);
         dim3 grid_size(
-            p.x / block_size.x + (p.x % block_size.x != 0 ? 1 : 0),
-            p.y / block_size.y + (p.y % block_size.y != 0 ? 1 : 0),
-            p.z / block_size.z + (p.z % block_size.z != 0 ? 1 : 0)
+            static_cast<unsigned int>(
+                p.x / block_size.x + (p.x % block_size.x != 0 ? 1 : 0)
+            ),
+            static_cast<unsigned int>(
+                p.y / block_size.y + (p.y % block_size.y != 0 ? 1 : 0)
+            ),
+            static_cast<unsigned int>(
+                p.z / block_size.z + (p.z % block_size.z != 0 ? 1 : 0)
+            )
         );
 
-        scan_kernel<<<grid_size, block_size>>>(device_out, f, p.x, p.y, p.z);
+        scan_kernel<<<grid_size, block_size>>>(
+            device_out,
+            f,
+            static_cast<int>(p.x),
+            static_cast<int>(p.y),
+            static_cast<int>(p.z)
+        );
 
         cudaErrorCheck(cudaGetLastError());
         cudaErrorCheck(cudaDeviceSynchronize());

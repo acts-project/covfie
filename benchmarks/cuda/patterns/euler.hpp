@@ -92,8 +92,12 @@ struct EulerPattern : covfie::benchmark::AccessPattern<EulerPattern> {
         state.ResumeTiming();
 
         euler_kernel<<<
-            p.agents / p.block_size + (p.agents % p.block_size != 0 ? 1 : 0),
-            p.block_size>>>(device_agents, p.agents, p.steps, f);
+            static_cast<unsigned int>(
+                p.agents / p.block_size + (p.agents % p.block_size != 0 ? 1 : 0)
+            ),
+            static_cast<unsigned int>(p.block_size)>>>(
+            device_agents, p.agents, p.steps, f
+        );
 
         cudaErrorCheck(cudaGetLastError());
         cudaErrorCheck(cudaDeviceSynchronize());

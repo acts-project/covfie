@@ -108,13 +108,13 @@ struct cuda_texture {
                     typename T::parent_t::covariant_output_t::vector_t v =
                         no.at(ia);
 
-                    typename contravariant_input_t::scalar_t idx = 0;
+                    std::size_t idx = 0;
 
                     for (std::size_t k = contravariant_input_t::dimensions - 1;
                          k <= contravariant_input_t::dimensions;
                          --k)
                     {
-                        typename contravariant_input_t::scalar_t tmp = ia[k];
+                        std::size_t tmp = ia[k];
 
                         for (std::size_t l = k - 1; l < k; --l) {
                             tmp *= srcSize[l];
@@ -123,21 +123,26 @@ struct cuda_texture {
                         idx += tmp;
                     }
 
+                    std::size_t idx2 = static_cast<std::size_t>(idx);
+
+                    using stage_scalar_t =
+                        typename covariant_output_t::scalar_t;
+
                     if constexpr (covariant_output_t::dimensions == 1) {
-                        stage[idx] = v[0];
+                        stage[idx2] = static_cast<stage_scalar_t>(v[0]);
                     } else if constexpr (covariant_output_t::dimensions == 2) {
-                        stage[idx].x = v[0];
-                        stage[idx].y = v[1];
+                        stage[idx2].x = static_cast<stage_scalar_t>(v[0]);
+                        stage[idx2].y = static_cast<stage_scalar_t>(v[1]);
                     } else if constexpr (covariant_output_t::dimensions == 3) {
-                        stage[idx].x = v[0];
-                        stage[idx].y = v[1];
-                        stage[idx].z = v[2];
-                        stage[idx].w = 0.f;
+                        stage[idx2].x = static_cast<stage_scalar_t>(v[0]);
+                        stage[idx2].y = static_cast<stage_scalar_t>(v[1]);
+                        stage[idx2].z = static_cast<stage_scalar_t>(v[2]);
+                        stage[idx2].w = static_cast<stage_scalar_t>(0.f);
                     } else if constexpr (covariant_output_t::dimensions == 4) {
-                        stage[idx].x = v[0];
-                        stage[idx].y = v[1];
-                        stage[idx].z = v[2];
-                        stage[idx].w = v[3];
+                        stage[idx2].x = static_cast<stage_scalar_t>(v[0]);
+                        stage[idx2].y = static_cast<stage_scalar_t>(v[1]);
+                        stage[idx2].z = static_cast<stage_scalar_t>(v[2]);
+                        stage[idx2].w = static_cast<stage_scalar_t>(v[3]);
                     }
                 }),
                 std::tuple_cat(srcSize)

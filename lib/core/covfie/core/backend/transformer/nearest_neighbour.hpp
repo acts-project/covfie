@@ -140,7 +140,9 @@ struct nearest_neighbour {
 
             for (std::size_t i = 0; i < contravariant_output_t::dimensions; ++i)
             {
-                nc[i] = std::lrintf(c[i]);
+                nc[i] = static_cast<typename contravariant_output_t::scalar_t>(
+                    std::lrintf(c[i])
+                );
             }
 
             return m_backend.at(nc);

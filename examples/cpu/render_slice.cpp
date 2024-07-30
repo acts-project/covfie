@@ -128,8 +128,10 @@ int main(int argc, char ** argv)
 
     for (unsigned int x = 0; x < vm["width"].as<unsigned int>(); ++x) {
         for (unsigned int y = 0; y < vm["height"].as<unsigned int>(); ++y) {
-            float fx = x / static_cast<float>(vm["width"].as<unsigned int>());
-            float fy = y / static_cast<float>(vm["height"].as<unsigned int>());
+            float fx = static_cast<float>(x) /
+                       static_cast<float>(vm["width"].as<unsigned int>());
+            float fy = static_cast<float>(y) /
+                       static_cast<float>(vm["height"].as<unsigned int>());
 
             decltype(fv)::output_t p;
 

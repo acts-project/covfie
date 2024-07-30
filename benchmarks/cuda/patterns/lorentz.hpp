@@ -70,8 +70,8 @@ struct Lorentz : covfie::benchmark::AccessPattern<Lorentz<Propagator>> {
         std::vector<covfie::benchmark::lorentz_agent<3>> objs(p.particles);
 
         for (std::size_t i = 0; i < p.particles; ++i) {
-            float theta = std::acos(costheta_dist(e));
-            float phi = phi_dist(e);
+            float theta = std::acos(static_cast<float>(costheta_dist(e)));
+            float phi = static_cast<float>(phi_dist(e));
 
             objs[i].pos[0] = 0.f;
             objs[i].pos[1] = 0.f;
@@ -103,9 +103,13 @@ struct Lorentz : covfie::benchmark::AccessPattern<Lorentz<Propagator>> {
         state.ResumeTiming();
 
         lorentz_kernel<Propagator>
-            <<<p.particles / p.block_size +
-                   (p.particles % p.block_size != 0 ? 1 : 0),
-               p.block_size>>>(device_agents, p.particles, p.steps, f);
+            <<<static_cast<unsigned int>(
+                   p.particles / p.block_size +
+                   (p.particles % p.block_size != 0 ? 1 : 0)
+               ),
+               static_cast<unsigned int>(p.block_size)>>>(
+                device_agents, p.particles, p.steps, f
+            );
 
         cudaErrorCheck(cudaGetLastError());
         cudaErrorCheck(cudaDeviceSynchronize());

@@ -111,14 +111,14 @@ int main(int argc, char ** argv)
         for (std::size_t y = 0; y < 601; ++y) {
             for (std::size_t z = 0; z < 901; ++z) {
                 ov.at(
-                    -10000.f + x * 33.333333333f,
-                    -10000.f + y * 33.333333333f,
-                    -15000.f + z * 33.333333333f
+                    -10000.f + static_cast<float>(x) * 33.333333333f,
+                    -10000.f + static_cast<float>(y) * 33.333333333f,
+                    -15000.f + static_cast<float>(z) * 33.333333333f
                 ) =
                     iv.at(
-                        -10000.f + x * 33.333333333f,
-                        -10000.f + y * 33.333333333f,
-                        -15000.f + z * 33.333333333f
+                        -10000.f + static_cast<float>(x) * 33.333333333f,
+                        -10000.f + static_cast<float>(y) * 33.333333333f,
+                        -15000.f + static_cast<float>(z) * 33.333333333f
                     );
             }
         }

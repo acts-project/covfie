@@ -33,6 +33,9 @@ if( "${CMAKE_CUDA_COMPILER_ID}" MATCHES "NVIDIA" )
    covfie_add_flag( CMAKE_CUDA_FLAGS "--expt-relaxed-constexpr" )
 endif()
 
+covfie_add_flag( CMAKE_CUDA_FLAGS "-Wfloat-conversion" )
+covfie_add_flag( CMAKE_CUDA_FLAGS "-Wconversion" )
+
 # Fail on warnings, if asked for that behaviour.
 if( COVFIE_FAIL_ON_WARNINGS )
    if( ( "${CUDAToolkit_VERSION}" VERSION_GREATER_EQUAL "10.2" ) AND

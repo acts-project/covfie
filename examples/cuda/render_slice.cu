@@ -90,8 +90,8 @@ __global__ void render(
     int y = blockDim.y * blockIdx.y + threadIdx.y;
 
     if (x < width && y < height) {
-        float fx = x / static_cast<float>(width);
-        float fy = y / static_cast<float>(height);
+        float fx = static_cast<float>(x) / static_cast<float>(width);
+        float fy = static_cast<float>(y) / static_cast<float>(height);
 
         typename field_t::output_t p =
             vf.at(fx * 20000.f - 10000.f, fy * 20000.f - 10000.f, z);
