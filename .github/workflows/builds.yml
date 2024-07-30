@@ -22,7 +22,6 @@ jobs:
           - "Release"
           - "Debug"
         CXX_STANDARD:
-          - 17
           - 20
         COMPILER:
           - NAME: "gcc"
@@ -34,7 +33,7 @@ jobs:
 
     runs-on: "ubuntu-latest"
 
-    container: ubuntu:22.04
+    container: ubuntu:24.04
 
     steps:
     - uses: actions/checkout@v3
@@ -83,7 +82,7 @@ jobs:
           - "Release"
           - "Debug"
         CXX_STANDARD:
-          - 17
+          - 20
         COMPILER:
           - NAME: "gcc"
             CXX: "g++"
@@ -95,7 +94,7 @@ jobs:
 
     runs-on: "ubuntu-latest"
 
-    container: ubuntu:22.04
+    container: ubuntu:24.04
 
     steps:
     - uses: actions/checkout@v3
@@ -145,7 +144,6 @@ jobs:
           - "Release"
           - "Debug"
         CXX_STANDARD:
-          - 17
           - 20
 
     name: "Windows/Core/${{ matrix.BUILD }}/MSVC/C++${{ matrix.CXX_STANDARD }}"

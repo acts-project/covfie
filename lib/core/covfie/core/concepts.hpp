@@ -10,14 +10,12 @@
 
 #pragma once
 
+#include <concepts>
 #include <iostream>
 #include <optional>
 
 #include <covfie/core/definitions.hpp>
 #include <covfie/core/parameter_pack.hpp>
-
-#if __cpp_concepts >= 201907L
-#include <concepts>
 namespace covfie::concepts {
 template <typename T>
 concept is_initial = T::is_initial == true;
@@ -243,4 +241,3 @@ concept field_backend = requires
 template <typename T>
 concept vector_descriptor = true;
 }
-#endif
