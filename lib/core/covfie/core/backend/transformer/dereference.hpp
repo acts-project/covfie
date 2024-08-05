@@ -21,7 +21,7 @@
 #include <covfie/core/vector.hpp>
 
 namespace covfie::backend {
-template <CONSTRAINT(concepts::field_backend) _backend_t>
+template <concepts::field_backend _backend_t>
 struct dereference {
     using this_t = dereference<_backend_t>;
     static constexpr bool is_initial = false;

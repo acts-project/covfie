@@ -31,8 +31,8 @@ enum class cuda_texture_interpolation {
 };
 
 template <
-    CONSTRAINT(concepts::vector_descriptor) _input_vector_t,
-    CONSTRAINT(concepts::vector_descriptor) _output_vector_t,
+    concepts::vector_descriptor _input_vector_t,
+    concepts::vector_descriptor _output_vector_t,
     cuda_texture_interpolation _interpolation_method =
         cuda_texture_interpolation::LINEAR>
 struct cuda_texture {

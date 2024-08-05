@@ -81,8 +81,8 @@ struct morton_pdep_mask {
 #endif
 
 template <
-    CONSTRAINT(concepts::vector_descriptor) _input_vector_t,
-    CONSTRAINT(concepts::field_backend) _storage_t,
+    concepts::vector_descriptor _input_vector_t,
+    concepts::field_backend _storage_t,
     bool use_bmi2 = true>
 struct morton {
     using this_t = morton<_input_vector_t, _storage_t>;

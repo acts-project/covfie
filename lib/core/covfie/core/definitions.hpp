@@ -10,8 +10,6 @@
 
 #pragma once
 
-#define CONSTRAINT(x) x
-
 #ifdef _MSC_VER
 #define UNLIKELY(x) x
 #else

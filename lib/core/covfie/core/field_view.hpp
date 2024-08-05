@@ -16,10 +16,10 @@
 #include <covfie/core/qualifiers.hpp>
 
 namespace covfie {
-template <CONSTRAINT(concepts::field_backend) _backend>
+template <concepts::field_backend _backend>
 class field;
 
-template <CONSTRAINT(concepts::field_backend) _backend_tc>
+template <concepts::field_backend _backend_tc>
 class field_view
 {
 public:

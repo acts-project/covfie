@@ -21,8 +21,8 @@
 
 namespace covfie::backend {
 template <
-    CONSTRAINT(concepts::vector_descriptor) _input_vector_t,
-    CONSTRAINT(concepts::vector_descriptor) _output_vector_t>
+    concepts::vector_descriptor _input_vector_t,
+    concepts::vector_descriptor _output_vector_t>
 struct constant {
     using this_t = constant<_input_vector_t, _output_vector_t>;
     static constexpr bool is_initial = true;

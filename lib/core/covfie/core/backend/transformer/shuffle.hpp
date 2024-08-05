@@ -20,7 +20,7 @@
 #include <covfie/core/utility/binary_io.hpp>
 
 namespace covfie::backend {
-template <CONSTRAINT(concepts::field_backend) _backend_t, typename _shuffle>
+template <concepts::field_backend _backend_t, typename _shuffle>
 struct shuffle {
     using this_t = shuffle<_backend_t, _shuffle>;
     static constexpr bool is_initial = false;

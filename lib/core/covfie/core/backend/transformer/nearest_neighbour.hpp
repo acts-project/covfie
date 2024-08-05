@@ -25,8 +25,8 @@
 
 namespace covfie::backend {
 template <
-    CONSTRAINT(concepts::field_backend) _backend_t,
-    CONSTRAINT(concepts::vector_descriptor) _input_vector_d = covfie::vector::
+    concepts::field_backend _backend_t,
+    concepts::vector_descriptor _input_vector_d = covfie::vector::
         vector_d<float, _backend_t::contravariant_input_t::dimensions>>
 struct nearest_neighbour {
     using this_t = nearest_neighbour<_backend_t, _input_vector_d>;
