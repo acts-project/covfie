@@ -30,8 +30,8 @@
 
 namespace covfie::backend {
 template <
-    CONSTRAINT(concepts::vector_descriptor) _input_vector_t,
-    CONSTRAINT(concepts::field_backend) _storage_t>
+    concepts::vector_descriptor _input_vector_t,
+    concepts::field_backend _storage_t>
 struct hilbert {
     using this_t = hilbert<_input_vector_t, _storage_t>;
     static constexpr bool is_initial = false;

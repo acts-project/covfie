@@ -24,7 +24,7 @@
 
 namespace covfie::backend {
 template <
-    CONSTRAINT(concepts::vector_descriptor) _output_vector_t,
+    concepts::vector_descriptor _output_vector_t,
     typename _index_t = std::size_t>
 struct cuda_device_array {
     using this_t = cuda_device_array<_output_vector_t, _index_t>;

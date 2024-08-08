@@ -21,7 +21,7 @@
 #include <covfie/core/utility/binary_io.hpp>
 
 namespace covfie::backend {
-template <CONSTRAINT(concepts::field_backend) _backend_t>
+template <concepts::field_backend _backend_t>
 struct affine {
     using this_t = affine<_backend_t>;
     static constexpr bool is_initial = false;

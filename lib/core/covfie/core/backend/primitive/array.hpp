@@ -25,7 +25,7 @@
 
 namespace covfie::backend {
 template <
-    CONSTRAINT(concepts::vector_descriptor) _output_vector_t,
+    concepts::vector_descriptor _output_vector_t,
     typename _index_t = std::size_t>
 struct array {
     using this_t = array<_output_vector_t, _index_t>;

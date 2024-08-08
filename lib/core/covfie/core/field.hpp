@@ -18,7 +18,7 @@
 #include <covfie/core/utility/binary_io.hpp>
 
 namespace covfie {
-template <CONSTRAINT(concepts::field_backend) _backend_t>
+template <concepts::field_backend _backend_t>
 class field
 {
 public:
@@ -34,13 +34,13 @@ public:
     field(const field &) = default;
     field(field &&) = default;
 
-    template <CONSTRAINT(concepts::field_backend) other_backend>
+    template <concepts::field_backend other_backend>
     explicit field(field<other_backend> && other)
         : m_backend(std::move(other.m_backend))
     {
     }
 
-    template <CONSTRAINT(concepts::field_backend) other_backend>
+    template <concepts::field_backend other_backend>
     explicit field(const field<other_backend> & other)
         : m_backend(other.m_backend)
     {
@@ -80,7 +80,7 @@ private:
 
     friend class field_view<_backend_t>;
 
-    template <CONSTRAINT(concepts::field_backend) other_backend>
+    template <concepts::field_backend other_backend>
     friend class field;
 };
 }

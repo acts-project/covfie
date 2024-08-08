@@ -22,7 +22,7 @@
 #include <covfie/core/vector.hpp>
 
 namespace covfie::backend {
-template <CONSTRAINT(concepts::field_backend) _backend_t>
+template <concepts::field_backend _backend_t>
 struct backup {
     using this_t = backup<_backend_t>;
     static constexpr bool is_initial = false;

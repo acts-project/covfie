@@ -20,7 +20,7 @@
 #include <covfie/core/vector.hpp>
 
 namespace covfie::backend {
-template <CONSTRAINT(concepts::vector_descriptor) _vector_t>
+template <concepts::vector_descriptor _vector_t>
 struct identity {
     using this_t = identity<_vector_t>;
     static constexpr bool is_initial = true;
