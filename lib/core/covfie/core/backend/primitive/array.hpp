@@ -207,16 +207,19 @@ struct array {
         using parent_t = this_t;
 
         non_owning_data_t(const owning_data_t & o)
-            : m_ptr(o.m_ptr.get())
+            : m_size(o.m_size)
+            , m_ptr(o.m_ptr.get())
         {
         }
 
         COVFIE_DEVICE typename covariant_output_t::vector_t
         at(typename contravariant_input_t::vector_t i) const
         {
+            assert(i < m_size);
             return m_ptr[i];
         }
 
+        uint64_t m_size;
         typename decltype(owning_data_t::m_ptr)::pointer m_ptr;
     };
 };

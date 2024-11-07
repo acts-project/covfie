@@ -245,6 +245,13 @@ struct strided {
         {
             typename contravariant_input_t::scalar_t idx = 0;
 
+#ifndef NDEBUG
+            for (std::size_t i = 0; i < contravariant_input_t::dimensions; ++i)
+            {
+                assert(c[i] < m_sizes[i]);
+            }
+#endif
+
             for (std::size_t k = 0; k < contravariant_input_t::dimensions; ++k)
             {
                 typename contravariant_input_t::scalar_t tmp = c[k];
