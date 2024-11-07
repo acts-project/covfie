@@ -27,7 +27,6 @@ template class covfie::field<covfie::backend::backup<base_field>>;
 template class covfie::field<covfie::backend::clamp<base_field>>;
 template class covfie::field<
     covfie::backend::hilbert<covfie::vector::uint2, base_field>>;
-template class covfie::field<covfie::backend::linear<base_field>>;
 template class covfie::field<
     covfie::backend::morton<covfie::vector::uint2, base_field>>;
 template class covfie::field<covfie::backend::nearest_neighbour<base_field>>;
