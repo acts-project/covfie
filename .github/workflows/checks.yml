@@ -11,16 +11,23 @@ name: Code Checks
 on: [ push, pull_request ]
 
 jobs:
-  native:
-    runs-on: "ubuntu-20.04"
+  lint:
+    runs-on: ubuntu-latest
+    env:
+      PRE_COMMIT_HOME: '/tmp/pre-commit'
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Install clang-format
-      run: |
-        wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
-        echo "deb http://apt.llvm.org/focal/ llvm-toolchain-focal-16 main" | sudo tee /etc/apt/sources.list
-        sudo apt update
-        sudo apt install clang-format-16
-    - name: clang-format
-      run: clang-format-16 -Werror -n --verbose -i --style=file $(find tests lib examples benchmarks -name "*.cpp" -o -name "*.hpp" -o -name "*.cu")
+      - name: Checkout
+        uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ${{ env.PRE_COMMIT_HOME }}
+          key: ${{ runner.os }}-${{ hashFiles('.pre-commit-config.yaml') }}
+      - name: Install pre-commit
+        run: pip install pre-commit
+      - name: Run pre-commit
+        run: pre-commit run --all-files --show-diff-on-failure
