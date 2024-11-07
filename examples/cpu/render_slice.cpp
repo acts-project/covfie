@@ -157,10 +157,14 @@ int main(int argc, char ** argv)
 
             img[vm["height"].as<unsigned int>() * x + y] =
                 static_cast<char>(std::lround(
-                    255.f *
-                    std::min(
-                        std::sqrt(p[0] * p[0] + p[1] * p[1] + p[2] * p[2]), 1.0f
-                    )
+                    255.f * std::min(
+                                std::sqrt(
+                                    std::pow(p[0] / 0.000299792458f, 2.f) +
+                                    std::pow(p[1] / 0.000299792458f, 2.f) +
+                                    std::pow(p[2] / 0.000299792458f, 2.f)
+                                ),
+                                1.0f
+                            )
                 ));
         }
     }
