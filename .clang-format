@@ -17,14 +17,13 @@ BraceWrapping:
   AfterClass: true
   AfterControlStatement: MultiLine
   AfterFunction: true
-PointerAlignment: Left
+PointerAlignment: Middle
 BinPackParameters: false
 BinPackArguments: false
 EmptyLineAfterAccessModifier: Never
 EmptyLineBeforeAccessModifier: Always
 FixNamespaceComments: false
 PackConstructorInitializers: Never
-PointerAlignment: Middle
 IndentWidth: 4
 ColumnLimit: 80
 IncludeBlocks: Regroup
