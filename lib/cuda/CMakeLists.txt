@@ -13,8 +13,8 @@ add_library(cuda INTERFACE)
 target_include_directories(
     cuda
     INTERFACE
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 
 target_compile_features(cuda INTERFACE cxx_std_20)
@@ -22,20 +22,14 @@ target_compile_features(cuda INTERFACE cxx_std_20)
 target_link_libraries(
     cuda
     INTERFACE
-    CUDA::cudart
-    covfie::core
+        CUDA::cudart
+        covfie::core
 )
 
 # Logic to ensure that the CUDA module can be installed properly.
-install(
-    TARGETS cuda
-    EXPORT ${PROJECT_NAME}Targets
-)
+install(TARGETS cuda EXPORT ${PROJECT_NAME}Targets)
 
-install(
-    DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/covfie
-    DESTINATION include
-)
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/covfie DESTINATION include)
 
 # Hack for compatibility
 add_library(covfie::cuda ALIAS cuda)
@@ -45,10 +39,8 @@ if(COVFIE_TEST_HEADERS)
     include(covfie-functions)
 
     file(
-        GLOB_RECURSE
-        public_headers
-        RELATIVE
-        "${CMAKE_CURRENT_SOURCE_DIR}"
+        GLOB_RECURSE public_headers
+        RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
         "${CMAKE_CURRENT_SOURCE_DIR}/covfie/*.hpp"
     )
 

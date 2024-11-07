@@ -8,41 +8,19 @@
 
 cmake_minimum_required(VERSION 3.18)
 
-project(
-    "covfie"
-    VERSION 0.10.0
-)
+project("covfie" VERSION 0.10.0)
 
 # Declare options which control the parts of the code being built.
-option(
-    COVFIE_BUILD_BENCHMARKS
-    "Build benchmark executables."
-)
-option(
-    COVFIE_BUILD_TESTS
-    "Build test executables."
-)
-option(
-    COVFIE_BUILD_EXAMPLES
-    "Build example executables."
-)
+option(COVFIE_BUILD_BENCHMARKS "Build benchmark executables.")
+option(COVFIE_BUILD_TESTS "Build test executables.")
+option(COVFIE_BUILD_EXAMPLES "Build example executables.")
 
 # Declare option to enable header completeness tests.
-option(
-    COVFIE_TEST_HEADERS
-    "Enable header completeness tests."
-)
+option(COVFIE_TEST_HEADERS "Enable header completeness tests.")
 
 # Declare options for the different platforms that we wish to support.
-option(
-    COVFIE_PLATFORM_CPU
-    "Enable building of CPU code."
-    On
-)
-option(
-    COVFIE_PLATFORM_CUDA
-    "Enable building of CUDA code."
-)
+option(COVFIE_PLATFORM_CPU "Enable building of CPU code." On)
+option(COVFIE_PLATFORM_CUDA "Enable building of CUDA code.")
 
 # Additional options that may be useful in some cases, such as CI.
 option(
@@ -56,10 +34,7 @@ option(
     "Disable warnings about missing C++ features. Enabling this is strongly discouraged."
 )
 
-option(
-    COVFIE_FAIL_ON_WARNINGS
-    "Treat compiler warnings as errors."
-)
+option(COVFIE_FAIL_ON_WARNINGS "Treat compiler warnings as errors.")
 
 # Make the CMake modules in the cmake/ directory visible to the project.
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")

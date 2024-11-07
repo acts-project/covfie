@@ -11,28 +11,18 @@ add_library(cpu INTERFACE)
 target_include_directories(
     cpu
     INTERFACE
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 
 target_compile_features(cpu INTERFACE cxx_std_20)
 
 # Logic to ensure that the CPU module can be installed properly.
-install(
-    TARGETS cpu
-    EXPORT ${PROJECT_NAME}Targets
-)
+install(TARGETS cpu EXPORT ${PROJECT_NAME}Targets)
 
-install(
-    DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/covfie
-    DESTINATION include
-)
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/covfie DESTINATION include)
 
-target_link_libraries(
-    cpu
-    INTERFACE
-    covfie::core
-)
+target_link_libraries(cpu INTERFACE covfie::core)
 
 # Hack for compatibility
 add_library(covfie::cpu ALIAS cpu)
@@ -42,10 +32,8 @@ if(COVFIE_TEST_HEADERS)
     include(covfie-functions)
 
     file(
-        GLOB_RECURSE
-        public_headers
-        RELATIVE
-        "${CMAKE_CURRENT_SOURCE_DIR}"
+        GLOB_RECURSE public_headers
+        RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
         "${CMAKE_CURRENT_SOURCE_DIR}/covfie/*.hpp"
     )
 

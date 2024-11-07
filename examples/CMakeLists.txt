@@ -22,9 +22,9 @@ find_package(
     1.71.0
     REQUIRED
     COMPONENTS
-    log
-    log_setup
-    program_options
+        log
+        log_setup
+        program_options
 )
 
 # As always, the core examples are built any time the examples are.

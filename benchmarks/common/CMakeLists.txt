@@ -6,25 +6,10 @@
 # v. 2.0. If a copy of the MPL was not distributed with this file, You can
 # obtain one at http://mozilla.org/MPL/2.0/.
 
-add_library(
-    benchmark
-    test_field.cpp
-)
+add_library(benchmark test_field.cpp)
 
-target_include_directories(
-    benchmark
-    PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}
-)
+target_include_directories(benchmark PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
-target_link_libraries(
-    benchmark
-    PUBLIC
-    core
-)
+target_link_libraries(benchmark PUBLIC core)
 
-target_compile_definitions(
-    benchmark
-    PRIVATE
-    _CRT_SECURE_NO_WARNINGS
-)
+target_compile_definitions(benchmark PRIVATE _CRT_SECURE_NO_WARNINGS)

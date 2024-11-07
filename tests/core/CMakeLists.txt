@@ -8,18 +8,11 @@
 
 # We use the Boost filesystem for the creation of some temporary files, so
 # we'll load that as well.
-find_package(
-    Boost
-    1.71.0
-    REQUIRED
-    COMPONENTS
-    filesystem
-)
+find_package(Boost 1.71.0 REQUIRED COMPONENTS filesystem)
 
 # Create the test executable from the individual test groups.
 add_executable(
     test_core
-
     test_utility.cpp
     test_constant_field.cpp
     test_transformer_affine.cpp
@@ -41,11 +34,10 @@ add_executable(
 # Ensure that the tests are linked against the required libraries.
 target_link_libraries(
     test_core
-
     PUBLIC
-    core
-    GTest::gtest
-    GTest::gtest_main
-    Boost::filesystem
-    testing_utils
+        core
+        GTest::gtest
+        GTest::gtest_main
+        Boost::filesystem
+        testing_utils
 )

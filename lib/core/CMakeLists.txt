@@ -11,30 +11,20 @@ add_library(core INTERFACE)
 target_include_directories(
     core
     INTERFACE
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 
 target_compile_features(core INTERFACE cxx_std_20)
 
 if(COVFIE_QUIET)
-    target_compile_definitions(
-        core
-        INTERFACE
-        COVFIE_QUIET
-    )
+    target_compile_definitions(core INTERFACE COVFIE_QUIET)
 endif()
 
 # Logic to ensure that the core module can be installed properly.
-install(
-    TARGETS core
-    EXPORT ${PROJECT_NAME}Targets
-)
+install(TARGETS core EXPORT ${PROJECT_NAME}Targets)
 
-install(
-    DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/covfie
-    DESTINATION include
-)
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/covfie DESTINATION include)
 
 # Hack for people using the disgusting mal-practice of pullling in external
 # projects via "add_subdirectory"...
@@ -45,10 +35,8 @@ if(COVFIE_TEST_HEADERS)
     include(covfie-functions)
 
     file(
-        GLOB_RECURSE
-        public_headers
-        RELATIVE
-        "${CMAKE_CURRENT_SOURCE_DIR}"
+        GLOB_RECURSE public_headers
+        RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
         "${CMAKE_CURRENT_SOURCE_DIR}/covfie/*.hpp"
     )
 

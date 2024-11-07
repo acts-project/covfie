@@ -6,14 +6,6 @@
 # v. 2.0. If a copy of the MPL was not distributed with this file, You can
 # obtain one at http://mozilla.org/MPL/2.0/.
 
-add_library(
-    bitmap
+add_library(bitmap bitmap.cpp)
 
-    bitmap.cpp
-)
-
-target_include_directories(
-    bitmap
-    PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}
-)
+target_include_directories(bitmap PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

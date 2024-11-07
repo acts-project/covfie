@@ -7,38 +7,28 @@
 # obtain one at http://mozilla.org/MPL/2.0/.
 
 # Add the 3D field slice rendering tool.
-add_executable(
-    render_slice_cpu
-
-    render_slice.cpp
-)
+add_executable(render_slice_cpu render_slice.cpp)
 
 target_link_libraries(
     render_slice_cpu
-
     PRIVATE
-    core
-    cpu
-    bitmap
-    Boost::log
-    Boost::log_setup
-    Boost::program_options
+        core
+        cpu
+        bitmap
+        Boost::log
+        Boost::log_setup
+        Boost::program_options
 )
 
-add_executable(
-    render_image_cpu
-
-    render_image.cpp
-)
+add_executable(render_image_cpu render_image.cpp)
 
 target_link_libraries(
     render_image_cpu
-
     PRIVATE
-    core
-    cpu
-    bitmap
-    Boost::log
-    Boost::log_setup
-    Boost::program_options
+        core
+        cpu
+        bitmap
+        Boost::log
+        Boost::log_setup
+        Boost::program_options
 )

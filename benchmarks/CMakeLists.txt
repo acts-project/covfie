@@ -10,11 +10,7 @@
 find_package(benchmark CONFIG REQUIRED)
 
 # All of these benchmarks rely on the Boost MP11 library.
-find_package(
-    Boost
-    1.71.0
-    REQUIRED
-)
+find_package(Boost 1.71.0 REQUIRED)
 
 # Set up the C++ compiler flags for the benchmarks.
 include(covfie-compiler-options-cpp)
