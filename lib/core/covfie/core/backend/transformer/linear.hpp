@@ -157,7 +157,7 @@ struct linear {
         {
             return {static_cast<typename decltype(m_backend
             )::parent_t::contravariant_input_t::scalar_t>(
-                coord[Is] + ((n & (1 << Is)) ? 1 : 0)
+                coord[Is] + ((n & (std::size_t(1) << Is)) ? 1 : 0)
             )...};
         }
 
@@ -323,9 +323,10 @@ struct linear {
                 }
 
                 std::remove_reference_t<typename covariant_output_t::vector_t>
-                    pc[1 << covariant_output_t::dimensions];
+                    pc[std::size_t(1) << covariant_output_t::dimensions];
 
-                for (std::size_t n = 0; n < 1 << covariant_output_t::dimensions;
+                for (std::size_t n = 0;
+                     n < std::size_t(1) << covariant_output_t::dimensions;
                      ++n)
                 {
                     pc[n] = m_backend.at(_backend_index_helper(
@@ -343,7 +344,7 @@ struct linear {
                     rv[q] = 0.f;
 
                     for (std::size_t n = 0;
-                         n < 1 << covariant_output_t::dimensions;
+                         n < std::size_t(1) << covariant_output_t::dimensions;
                          ++n)
                     {
                         input_scalar_type f{1.};
@@ -352,7 +353,7 @@ struct linear {
                              m < covariant_output_t::dimensions;
                              ++m)
                         {
-                            if (n & (1 << m)) {
+                            if (n & (std::size_t(1) << m)) {
                                 f *= vs[m];
                             } else {
                                 f *= rs[m];
