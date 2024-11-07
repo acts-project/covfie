@@ -23,3 +23,8 @@ repos:
       language: system
       entry: ci/check_license.py
       files: \.(cpp|hpp|ipp|cu|cuh)$
+
+  - repo: https://github.com/BlankSpruce/gersemi
+    rev: "0.17.0"
+    hooks:
+    - id: gersemi

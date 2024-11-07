@@ -10,21 +10,16 @@
 find_package(OpenMP COMPONENTS CXX REQUIRED)
 
 # Create the benchmark executable from the individual files.
-add_executable(
-    benchmark_openmp
-
-    benchmark_openmp.cpp
-)
+add_executable(benchmark_openmp benchmark_openmp.cpp)
 
 # Ensure that the tests are linked against the required libraries.
 target_link_libraries(
     benchmark_openmp
-
     PUBLIC
-    core
-    cpu
-    benchmark
-    OpenMP::OpenMP_CXX
-    benchmark::benchmark
-    Boost::headers
+        core
+        cpu
+        benchmark
+        OpenMP::OpenMP_CXX
+        benchmark::benchmark
+        Boost::headers
 )

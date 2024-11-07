@@ -7,19 +7,14 @@
 # obtain one at http://mozilla.org/MPL/2.0/.
 
 # Create the test executable from the individual test groups.
-add_executable(
-    test_cpu
-
-    test_cpu_array_backend.cpp
-)
+add_executable(test_cpu test_cpu_array_backend.cpp)
 
 # Ensure that the tests are linked against the required libraries.
 target_link_libraries(
     test_cpu
-
     PUBLIC
-    core
-    cpu
-    GTest::gtest
-    GTest::gtest_main
+        core
+        cpu
+        GTest::gtest
+        GTest::gtest_main
 )
