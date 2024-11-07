@@ -111,14 +111,14 @@ TEST(TestAtlasLikeIO, WriteReadAtlasLikeChangeInterpolation)
 {
     covfie::field<basic_backend_t> bf(
         covfie::make_parameter_pack_for<covfie::field<basic_backend_t>>(
-            {2, 2, 2}, {8}
+            {3, 3, 3}, {27}
         )
     );
     covfie::field<basic_backend_t>::view_t bv(bf);
 
-    for (int x = 0; x < 2; x++) {
-        for (int y = 0; y < 2; y++) {
-            for (int z = 0; z < 2; z++) {
+    for (int x = 0; x < 3; x++) {
+        for (int y = 0; y < 3; y++) {
+            for (int z = 0; z < 3; z++) {
                 bv.at(x, y, z) = {
                     static_cast<float>(x),
                     static_cast<float>(y),
@@ -127,9 +127,9 @@ TEST(TestAtlasLikeIO, WriteReadAtlasLikeChangeInterpolation)
         }
     }
 
-    for (int x = 0; x < 2; x++) {
-        for (int y = 0; y < 2; y++) {
-            for (int z = 0; z < 2; z++) {
+    for (int x = 0; x < 3; x++) {
+        for (int y = 0; y < 3; y++) {
+            for (int z = 0; z < 3; z++) {
                 covfie::field<field_nn_backend_t>::output_t p = bv.at(x, y, z);
                 EXPECT_EQ(p[0], static_cast<float>(x));
                 EXPECT_EQ(p[1], static_cast<float>(y));
@@ -169,14 +169,14 @@ TEST(TestAtlasLikeIO, WriteReadAtlasLikeChangeInterpolation)
 
     covfie::field<field_li_backend_t>::view_t nnnv(nnnf);
 
-    for (int x = 0; x < 2; x++) {
-        for (int y = 0; y < 2; y++) {
-            for (int z = 0; z < 2; z++) {
+    for (float x = 0.f; x < 2.f; x += 0.321f) {
+        for (float y = 0.f; y < 2.f; y += 0.321f) {
+            for (float z = 0.f; z < 2.f; z += 0.321f) {
                 covfie::field<field_li_backend_t>::output_t p =
                     nnnv.at(x, y, z);
-                EXPECT_EQ(p[0], static_cast<float>(x));
-                EXPECT_EQ(p[1], static_cast<float>(y));
-                EXPECT_EQ(p[2], static_cast<float>(z));
+                EXPECT_NEAR(p[0], x, 0.01f);
+                EXPECT_NEAR(p[1], y, 0.01f);
+                EXPECT_NEAR(p[2], z, 0.01f);
             }
         }
     }

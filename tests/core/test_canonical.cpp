@@ -25,7 +25,7 @@ TEST(TestCanonicalLayout, Canonical1D)
         covfie::backend::identity<covfie::vector::size1>>>;
 
     field_t f(covfie::make_parameter_pack(
-        field_t::backend_t::configuration_t{4},
+        field_t::backend_t::configuration_t{16},
         field_t::backend_t::backend_t::configuration_t{}
     ));
     field_t::view_t fv(f);
