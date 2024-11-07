@@ -34,6 +34,7 @@ add_executable(
     test_build.cpp
     test_canonical.cpp
     test_atlas_like_io.cpp
+    test_covariant_cast.cpp
 )
 
 # Ensure that the tests are linked against the required libraries.
