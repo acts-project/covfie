@@ -44,12 +44,17 @@ struct linear {
 
     static_assert(
         std::is_floating_point_v<typename _input_vector_d::type>,
-        "Nearest neighbour interpolation contravariant input must have a "
+        "Linear interpolation contravariant input must have a "
+        "floating point scalar type."
+    );
+    static_assert(
+        std::is_floating_point_v<typename covariant_input_t::scalar_t>,
+        "Linear interpolation covariant input must have a "
         "floating point scalar type."
     );
     static_assert(
         _input_vector_d::size == backend_t::contravariant_input_t::dimensions,
-        "Nearest neighbour interpolation contravariant input must have the "
+        "Linear interpolation contravariant input must have the "
         "same size as the backend contravariant input."
     );
     static_assert(
@@ -145,23 +150,116 @@ struct linear {
         {
         }
 
+        template <std::size_t... Is>
+        COVFIE_DEVICE typename contravariant_output_t::vector_t
+        _backend_index_helper(typename contravariant_output_t::vector_t coord, std::size_t n, std::index_sequence<Is...>)
+            const
+        {
+            return {static_cast<typename decltype(m_backend
+            )::parent_t::contravariant_input_t::scalar_t>(
+                coord[Is] + ((n & (1 << Is)) ? 1 : 0)
+            )...};
+        }
+
         COVFIE_DEVICE typename covariant_output_t::vector_t
         at(typename contravariant_input_t::vector_t coord) const
         {
-            if constexpr (covariant_output_t::dimensions == 3) {
-                std::size_t i = static_cast<std::size_t>(coord[0]);
-                std::size_t j = static_cast<std::size_t>(coord[1]);
-                std::size_t k = static_cast<std::size_t>(coord[2]);
+            if constexpr (covariant_output_t::dimensions == 1) {
+                typename contravariant_output_t::scalar_t i =
+                    static_cast<typename contravariant_output_t::scalar_t>(
+                        coord[0]
+                    );
 
-                input_scalar_type a = coord[0] - std::floor(coord[0]);
-                input_scalar_type b = coord[1] - std::floor(coord[1]);
-                input_scalar_type c = coord[2] - std::floor(coord[2]);
+                input_scalar_type a = coord[0] - std::trunc(coord[0]);
+
+                input_scalar_type ra = static_cast<input_scalar_type>(1.) - a;
+
+                std::remove_reference_t<typename covariant_output_t::vector_t>
+                    pc[2];
+
+                for (std::size_t n = 0; n < 2; ++n) {
+                    pc[n] =
+                        m_backend.at({static_cast<typename decltype(m_backend
+                        )::parent_t::contravariant_input_t::scalar_t>(
+                            i + ((n & 1) ? 1 : 0)
+                        )});
+                }
+
+                typename covariant_output_t::vector_t rv;
+
+                for (std::size_t q = 0; q < covariant_output_t::dimensions; ++q)
+                {
+                    rv[q] = ra * static_cast<input_scalar_type>(pc[0][q]) +
+                            a * static_cast<input_scalar_type>(pc[1][q]);
+                }
+
+                return rv;
+            } else if constexpr (covariant_output_t::dimensions == 2) {
+                typename contravariant_output_t::scalar_t i =
+                    static_cast<typename contravariant_output_t::scalar_t>(
+                        coord[0]
+                    );
+                typename contravariant_output_t::scalar_t j =
+                    static_cast<typename contravariant_output_t::scalar_t>(
+                        coord[1]
+                    );
+
+                input_scalar_type a = coord[0] - std::trunc(coord[0]);
+                input_scalar_type b = coord[1] - std::trunc(coord[1]);
+
+                input_scalar_type ra = static_cast<input_scalar_type>(1.) - a;
+                input_scalar_type rb = static_cast<input_scalar_type>(1.) - b;
+
+                std::remove_reference_t<typename covariant_output_t::vector_t>
+                    pc[4];
+
+                for (std::size_t n = 0; n < 4; ++n) {
+                    pc[n] = m_backend.at(
+                        {static_cast<typename decltype(m_backend
+                         )::parent_t::contravariant_input_t::scalar_t>(
+                             i + ((n & 2) ? 1 : 0)
+                         ),
+                         static_cast<typename decltype(m_backend
+                         )::parent_t::contravariant_input_t::scalar_t>(
+                             j + ((n & 1) ? 1 : 0)
+                         )}
+                    );
+                }
+
+                typename covariant_output_t::vector_t rv;
+
+                for (std::size_t q = 0; q < covariant_output_t::dimensions; ++q)
+                {
+                    rv[q] = ra * rb * static_cast<input_scalar_type>(pc[0][q]) +
+                            ra * b * static_cast<input_scalar_type>(pc[1][q]) +
+                            a * rb * static_cast<input_scalar_type>(pc[2][q]) +
+                            a * b * static_cast<input_scalar_type>(pc[3][q]);
+                }
+
+                return rv;
+            } else if constexpr (covariant_output_t::dimensions == 3) {
+                typename contravariant_output_t::scalar_t i =
+                    static_cast<typename contravariant_output_t::scalar_t>(
+                        coord[0]
+                    );
+                typename contravariant_output_t::scalar_t j =
+                    static_cast<typename contravariant_output_t::scalar_t>(
+                        coord[1]
+                    );
+                typename contravariant_output_t::scalar_t k =
+                    static_cast<typename contravariant_output_t::scalar_t>(
+                        coord[2]
+                    );
+
+                input_scalar_type a = coord[0] - std::trunc(coord[0]);
+                input_scalar_type b = coord[1] - std::trunc(coord[1]);
+                input_scalar_type c = coord[2] - std::trunc(coord[2]);
 
                 input_scalar_type ra = static_cast<input_scalar_type>(1.) - a;
                 input_scalar_type rb = static_cast<input_scalar_type>(1.) - b;
                 input_scalar_type rc = static_cast<input_scalar_type>(1.) - c;
 
-                std::remove_reference_t<typename covariant_input_t::vector_t>
+                std::remove_reference_t<typename covariant_output_t::vector_t>
                     pc[8];
 
                 for (std::size_t n = 0; n < 8; ++n) {
@@ -185,15 +283,87 @@ struct linear {
 
                 for (std::size_t q = 0; q < covariant_output_t::dimensions; ++q)
                 {
-                    rv[q] = ra * rb * rc * pc[0][q] + ra * rb * c * pc[1][q] +
-                            ra * b * rc * pc[2][q] + ra * b * c * pc[3][q] +
-                            a * rb * rc * pc[4][q] + a * rb * c * pc[5][q] +
-                            a * b * rc * pc[6][q] + a * b * c * pc[7][q];
+                    rv[q] =
+                        ra * rb * rc *
+                            static_cast<input_scalar_type>(pc[0][q]) +
+                        ra * rb * c * static_cast<input_scalar_type>(pc[1][q]) +
+                        ra * b * rc * static_cast<input_scalar_type>(pc[2][q]) +
+                        ra * b * c * static_cast<input_scalar_type>(pc[3][q]) +
+                        a * rb * rc * static_cast<input_scalar_type>(pc[4][q]) +
+                        a * rb * c * static_cast<input_scalar_type>(pc[5][q]) +
+                        a * b * rc * static_cast<input_scalar_type>(pc[6][q]) +
+                        a * b * c * static_cast<input_scalar_type>(pc[7][q]);
                 }
 
                 return rv;
             } else {
-                return {};
+                typename contravariant_output_t::vector_t is;
+
+                for (std::size_t n = 0; n < contravariant_output_t::dimensions;
+                     ++n)
+                {
+                    is[n] =
+                        static_cast<contravariant_output_t::scalar_t>(coord[n]);
+                }
+
+                input_scalar_type vs[contravariant_output_t::dimensions];
+
+                for (std::size_t n = 0; n < contravariant_output_t::dimensions;
+                     ++n)
+                {
+                    vs[n] = coord[n] - std::trunc(coord[n]);
+                }
+
+                input_scalar_type rs[contravariant_output_t::dimensions];
+
+                for (std::size_t n = 0; n < contravariant_output_t::dimensions;
+                     ++n)
+                {
+                    rs[n] = static_cast<input_scalar_type>(1.) - vs[n];
+                }
+
+                std::remove_reference_t<typename covariant_output_t::vector_t>
+                    pc[1 << covariant_output_t::dimensions];
+
+                for (std::size_t n = 0; n < 1 << covariant_output_t::dimensions;
+                     ++n)
+                {
+                    pc[n] = m_backend.at(_backend_index_helper(
+                        is,
+                        n,
+                        std::make_index_sequence<
+                            contravariant_input_t::dimensions>{}
+                    ));
+                }
+
+                typename covariant_output_t::vector_t rv;
+
+                for (std::size_t q = 0; q < covariant_output_t::dimensions; ++q)
+                {
+                    rv[q] = 0.f;
+
+                    for (std::size_t n = 0;
+                         n < 1 << covariant_output_t::dimensions;
+                         ++n)
+                    {
+                        input_scalar_type f{1.};
+
+                        for (std::size_t m = 0;
+                             m < covariant_output_t::dimensions;
+                             ++m)
+                        {
+                            if (n & (1 << m)) {
+                                f *= vs[m];
+                            } else {
+                                f *= rs[m];
+                            }
+                        }
+
+                        rv[q] += f * static_cast<input_scalar_type>(pc[n][q]);
+                    }
+                }
+
+                return rv;
             }
         }
 

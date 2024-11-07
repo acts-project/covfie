@@ -27,6 +27,7 @@ add_executable(
     test_binary_io.cpp
     test_identity_backend.cpp
     test_nearest_neighbour_interpolator.cpp
+    test_linear_interpolator.cpp
     test_algebra.cpp
     test_static_permutation.cpp
     test_utility_numeric.cpp
