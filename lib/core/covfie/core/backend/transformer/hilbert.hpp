@@ -275,6 +275,13 @@ struct hilbert {
         COVFIE_DEVICE typename covariant_output_t::vector_t at(coordinate_t c
         ) const
         {
+#ifndef NDEBUG
+            for (std::size_t i = 0; i < contravariant_input_t::dimensions; ++i)
+            {
+                assert(c[i] < m_sizes[i]);
+            }
+#endif
+
             return m_storage.at(calculate_index(c));
         }
 
