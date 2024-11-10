@@ -6,19 +6,26 @@
 # v. 2.0. If a copy of the MPL was not distributed with this file, You can
 # obtain one at http://mozilla.org/MPL/2.0/.
 
-add_library(cpu INTERFACE)
+add_library(covfie_cpu INTERFACE)
 
 target_include_directories(
-    cpu
+    covfie_cpu
     INTERFACE
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
         $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 
-target_compile_features(cpu INTERFACE cxx_std_20)
+target_compile_features(covfie_cpu INTERFACE cxx_std_20)
 
 # Logic to ensure that the CPU module can be installed properly.
-install(TARGETS cpu EXPORT ${PROJECT_NAME}Targets)
+set_target_properties(
+    covfie_cpu
+    PROPERTIES
+        EXPORT_NAME
+            cpu
+)
+
+install(TARGETS covfie_cpu EXPORT ${PROJECT_NAME}Targets)
 
 install(
     DIRECTORY
@@ -26,10 +33,10 @@ install(
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
 
-target_link_libraries(cpu INTERFACE covfie::core)
+target_link_libraries(covfie_cpu INTERFACE covfie::core)
 
 # Hack for compatibility
-add_library(covfie::cpu ALIAS cpu)
+add_library(covfie::cpu ALIAS covfie_cpu)
 
 # Test the public headers of covfie::cpu.
 if(COVFIE_TEST_HEADERS)
@@ -42,7 +49,7 @@ if(COVFIE_TEST_HEADERS)
     )
 
     covfie_test_public_headers(
-        cpu
+        covfie_cpu
         "${public_headers}"
     )
 endif()

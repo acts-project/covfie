@@ -19,8 +19,8 @@ add_executable(test_cuda test_cuda_array.cu)
 target_link_libraries(
     test_cuda
     PUBLIC
-        core
-        cuda
+        covfie::core
+        covfie::cuda
         GTest::gtest
         GTest::gtest_main
 )

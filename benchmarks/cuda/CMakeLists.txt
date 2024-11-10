@@ -12,15 +12,15 @@ enable_language(CUDA)
 include(covfie-compiler-options-cuda)
 
 # Create the benchmark executable from the individual files.
-add_executable(benchmark_cuda benchmark_cuda.cu)
+add_executable(covfie_benchmark_cuda benchmark_cuda.cu)
 
 # Ensure that the tests are linked against the required libraries.
 target_link_libraries(
-    benchmark_cuda
+    covfie_benchmark_cuda
     PUBLIC
-        core
-        cuda
-        benchmark
+        covfie::core
+        covfie::cuda
+        covfie_benchmark
         benchmark::benchmark
         Boost::headers
 )

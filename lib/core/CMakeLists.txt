@@ -6,23 +6,30 @@
 # v. 2.0. If a copy of the MPL was not distributed with this file, You can
 # obtain one at http://mozilla.org/MPL/2.0/.
 
-add_library(core INTERFACE)
+add_library(covfie_core INTERFACE)
 
 target_include_directories(
-    core
+    covfie_core
     INTERFACE
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
         $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 
-target_compile_features(core INTERFACE cxx_std_20)
+target_compile_features(covfie_core INTERFACE cxx_std_20)
 
 if(COVFIE_QUIET)
-    target_compile_definitions(core INTERFACE COVFIE_QUIET)
+    target_compile_definitions(covfie_core INTERFACE COVFIE_QUIET)
 endif()
 
 # Logic to ensure that the core module can be installed properly.
-install(TARGETS core EXPORT ${PROJECT_NAME}Targets)
+set_target_properties(
+    covfie_core
+    PROPERTIES
+        EXPORT_NAME
+            core
+)
+
+install(TARGETS covfie_core EXPORT ${PROJECT_NAME}Targets)
 
 install(
     DIRECTORY
@@ -32,7 +39,7 @@ install(
 
 # Hack for people using the disgusting mal-practice of pullling in external
 # projects via "add_subdirectory"...
-add_library(covfie::core ALIAS core)
+add_library(covfie::core ALIAS covfie_core)
 
 # Test the public headers of covfie::core.
 if(COVFIE_TEST_HEADERS)
@@ -45,7 +52,7 @@ if(COVFIE_TEST_HEADERS)
     )
 
     covfie_test_public_headers(
-        core
+        covfie_core
         "${public_headers}"
     )
 endif()
