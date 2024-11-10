@@ -48,9 +48,5 @@ in which covfie was installed. Variables set are as follows:
 :code:`COVFIE_PLATFORM_CUDA`
     True iff the CUDA-specific headers were installed.
 
-:code:`COVFIE_REQUIRE_CXX20`
-    True iff covfie was configured to reject compilers which do not support
-    C++20 concepts.
-
 :code:`COVFIE_QUIET`
     Silences warnings about missing compiler features.
