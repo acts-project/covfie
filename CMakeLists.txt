@@ -27,12 +27,6 @@ option(COVFIE_PLATFORM_CUDA "Enable building of CUDA code.")
 
 # Additional options that may be useful in some cases, such as CI.
 option(
-    COVFIE_REQUIRE_CXX20
-    "Enforce the availability of C++20 features (especially concepts)."
-    Off
-)
-
-option(
     COVFIE_QUIET
     "Disable warnings about missing C++ features. Enabling this is strongly discouraged."
 )

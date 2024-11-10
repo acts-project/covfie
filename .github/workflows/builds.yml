@@ -58,7 +58,6 @@ jobs:
       run: cmake
         -DCMAKE_CXX_COMPILER=$(which ${{ matrix.COMPILER.CXX }})
         -DCMAKE_BUILD_TYPE=${{ matrix.BUILD }}
-        -DCOVFIE_REQUIRE_CXX20=${{ matrix.CXX_STANDARD == 20 && 'On' || 'Off' }}
         -DCOVFIE_FAIL_ON_WARNINGS=TRUE
         -DCOVFIE_BUILD_TESTS=On
         -DCOVFIE_BUILD_EXAMPLES=On
