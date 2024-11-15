@@ -13,8 +13,8 @@ add_executable(benchmark_cpu benchmark_cpu.cpp)
 target_link_libraries(
     benchmark_cpu
     PUBLIC
-        core
-        cpu
+        covfie_core
+        covfie_cpu
         benchmark
         benchmark::benchmark
         Boost::headers

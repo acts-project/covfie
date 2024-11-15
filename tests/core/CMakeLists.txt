@@ -35,7 +35,7 @@ add_executable(
 target_link_libraries(
     test_core
     PUBLIC
-        core
+        covfie_core
         GTest::gtest
         GTest::gtest_main
         Boost::filesystem

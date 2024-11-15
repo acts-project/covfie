@@ -19,8 +19,8 @@ add_executable(render_slice_cuda render_slice.cu)
 target_link_libraries(
     render_slice_cuda
     PRIVATE
-        core
-        cuda
+        covfie_core
+        covfie_cuda
         bitmap
         Boost::log
         Boost::log_setup
@@ -33,8 +33,8 @@ add_executable(render_slice_texture_cuda render_slice_texture.cu)
 target_link_libraries(
     render_slice_texture_cuda
     PRIVATE
-        core
-        cuda
+        covfie_core
+        covfie_cuda
         bitmap
         Boost::log
         Boost::log_setup

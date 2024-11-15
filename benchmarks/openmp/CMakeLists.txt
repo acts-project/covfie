@@ -16,8 +16,8 @@ add_executable(benchmark_openmp benchmark_openmp.cpp)
 target_link_libraries(
     benchmark_openmp
     PUBLIC
-        core
-        cpu
+        covfie_core
+        covfie_cpu
         benchmark
         OpenMP::OpenMP_CXX
         benchmark::benchmark
