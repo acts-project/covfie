@@ -24,7 +24,11 @@ endif()
 # Logic to ensure that the core module can be installed properly.
 install(TARGETS core EXPORT ${PROJECT_NAME}Targets)
 
-install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/covfie DESTINATION include)
+install(
+    DIRECTORY
+        ${CMAKE_CURRENT_SOURCE_DIR}/covfie
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
 
 # Hack for people using the disgusting mal-practice of pullling in external
 # projects via "add_subdirectory"...

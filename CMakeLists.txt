@@ -10,6 +10,9 @@ cmake_minimum_required(VERSION 3.18)
 
 project("covfie" VERSION 0.10.0)
 
+# Load some dependencies.
+include(GNUInstallDirs)
+
 # Declare options which control the parts of the code being built.
 option(COVFIE_BUILD_BENCHMARKS "Build benchmark executables.")
 option(COVFIE_BUILD_TESTS "Build test executables.")
@@ -59,7 +62,6 @@ endif()
 
 # Installation logic.
 # CMake is hell.
-include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
 
 write_basic_package_version_file(
