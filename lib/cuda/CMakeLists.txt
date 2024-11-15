@@ -29,7 +29,11 @@ target_link_libraries(
 # Logic to ensure that the CUDA module can be installed properly.
 install(TARGETS cuda EXPORT ${PROJECT_NAME}Targets)
 
-install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/covfie DESTINATION include)
+install(
+    DIRECTORY
+        ${CMAKE_CURRENT_SOURCE_DIR}/covfie
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
 
 # Hack for compatibility
 add_library(covfie::cuda ALIAS cuda)

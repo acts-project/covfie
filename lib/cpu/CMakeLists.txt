@@ -20,7 +20,11 @@ target_compile_features(cpu INTERFACE cxx_std_20)
 # Logic to ensure that the CPU module can be installed properly.
 install(TARGETS cpu EXPORT ${PROJECT_NAME}Targets)
 
-install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/covfie DESTINATION include)
+install(
+    DIRECTORY
+        ${CMAKE_CURRENT_SOURCE_DIR}/covfie
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
 
 target_link_libraries(cpu INTERFACE covfie::core)
 
