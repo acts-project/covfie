@@ -18,8 +18,8 @@ add_executable(benchmark_cuda benchmark_cuda.cu)
 target_link_libraries(
     benchmark_cuda
     PUBLIC
-        core
-        cuda
+        covfie_core
+        covfie_cuda
         benchmark
         benchmark::benchmark
         Boost::headers

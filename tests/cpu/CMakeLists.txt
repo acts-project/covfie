@@ -13,8 +13,8 @@ add_executable(test_cpu test_cpu_array_backend.cpp)
 target_link_libraries(
     test_cpu
     PUBLIC
-        core
-        cpu
+        covfie_core
+        covfie_cpu
         GTest::gtest
         GTest::gtest_main
 )
