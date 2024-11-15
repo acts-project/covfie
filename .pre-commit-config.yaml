@@ -22,7 +22,7 @@ repos:
       name: license
       language: system
       entry: ci/check_license.py
-      files: \.(cpp|hpp|ipp|cu|cuh)$
+      files: ((CMakeLists\.txt)|(\.(cpp|hpp|ipp|cu|cuh|cmake)))$
 
   - repo: https://github.com/BlankSpruce/gersemi
     rev: "0.17.0"
