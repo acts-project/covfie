@@ -8,20 +8,7 @@
 
 # All the tests here will require Google Test, so we will go ahead and set it
 # up.
-# Set up GoogleTest.
-option(COVFIE_SETUP_GOOGLETEST "Set up the GoogleTest targets explicitly" TRUE)
-option(
-    COVFIE_USE_SYSTEM_GOOGLETEST
-    "Pick up an existing installation of GoogleTest from the build environment"
-    TRUE
-)
-if(COVFIE_SETUP_GOOGLETEST)
-    if(COVFIE_USE_SYSTEM_GOOGLETEST)
-        find_package(GTest CONFIG REQUIRED)
-    else()
-        add_subdirectory(googletest)
-    endif()
-endif()
+find_package(GTest CONFIG REQUIRED)
 
 # Set up the C++ compiler flags for the tests.
 include(covfie-compiler-options-cpp)

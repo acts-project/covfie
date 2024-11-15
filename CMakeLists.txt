@@ -6,7 +6,7 @@
 # v. 2.0. If a copy of the MPL was not distributed with this file, You can
 # obtain one at http://mozilla.org/MPL/2.0/.
 
-cmake_minimum_required(VERSION 3.18)
+cmake_minimum_required(VERSION 3.21)
 
 project("covfie" VERSION 0.10.0)
 
@@ -41,16 +41,37 @@ add_subdirectory(lib)
 
 # The benchmarks should be build only if requested...
 if(COVFIE_BUILD_BENCHMARKS)
+    if(NOT PROJECT_IS_TOP_LEVEL)
+        message(
+            FATAL_ERROR
+            "Build of benchmarks was requested, but covfie is not the top level project."
+        )
+    endif()
+
     add_subdirectory(benchmarks)
 endif()
 
 # ...the same goes for the tests...
 if(COVFIE_BUILD_TESTS)
+    if(NOT PROJECT_IS_TOP_LEVEL)
+        message(
+            FATAL_ERROR
+            "Build of tests was requested, but covfie is not the top level project."
+        )
+    endif()
+
     add_subdirectory(tests)
 endif()
 
 # ...and the examples.
 if(COVFIE_BUILD_EXAMPLES)
+    if(NOT PROJECT_IS_TOP_LEVEL)
+        message(
+            FATAL_ERROR
+            "Build of examples was requested, but covfie is not the top level project."
+        )
+    endif()
+
     add_subdirectory(examples)
 endif()
 
