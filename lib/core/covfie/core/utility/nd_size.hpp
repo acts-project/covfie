@@ -10,9 +10,9 @@
 
 #pragma once
 
-#include <array>
+#include <covfie/core/array.hpp>
 
 namespace covfie::utility {
 template <std::size_t N>
-using nd_size = std::array<std::size_t, N>;
+using nd_size = array::array<std::size_t, N>;
 }

@@ -19,7 +19,6 @@
 #include <covfie/core/concepts.hpp>
 #include <covfie/core/parameter_pack.hpp>
 #include <covfie/core/utility/nd_map.hpp>
-#include <covfie/core/utility/tuple.hpp>
 #include <covfie/core/vector.hpp>
 #include <covfie/cuda/error_check.hpp>
 #include <covfie/cuda/utility/type_conversion.hpp>
@@ -96,17 +95,11 @@ struct cuda_texture {
                 extent.width * extent.height * extent.depth
             );
 
-            using tuple_t = decltype(std::tuple_cat(
-                std::declval<
-                    std::array<std::size_t, contravariant_input_t::dimensions>>(
-                )
-            ));
             utility::nd_map(
-                std::function<void(tuple_t
-                )>([&no, &stage, &srcSize](tuple_t i) -> void {
-                    auto ia = utility::to_array(i);
+                std::function<void(decltype(srcSize)
+                )>([&no, &stage, &srcSize](decltype(srcSize) i) -> void {
                     typename T::parent_t::covariant_output_t::vector_t v =
-                        no.at(ia);
+                        no.at(i);
 
                     std::size_t idx = 0;
 
@@ -114,7 +107,7 @@ struct cuda_texture {
                          k <= contravariant_input_t::dimensions;
                          --k)
                     {
-                        std::size_t tmp = ia[k];
+                        std::size_t tmp = i[k];
 
                         for (std::size_t l = k - 1; l < k; --l) {
                             tmp *= srcSize[l];
@@ -145,7 +138,7 @@ struct cuda_texture {
                         stage[idx2].w = static_cast<stage_scalar_t>(v[3]);
                     }
                 }),
-                std::tuple_cat(srcSize)
+                srcSize
             );
 
             if constexpr (_input_vector_t::size == 2) {

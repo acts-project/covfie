@@ -25,7 +25,7 @@ TEST(TestCanonicalLayout, Canonical1D)
         covfie::backend::identity<covfie::vector::size1>>>;
 
     field_t f(covfie::make_parameter_pack(
-        field_t::backend_t::configuration_t{16},
+        field_t::backend_t::configuration_t{16u},
         field_t::backend_t::backend_t::configuration_t{}
     ));
     field_t::view_t fv(f);
@@ -42,7 +42,7 @@ TEST(TestCanonicalLayout, Canonical2D)
         covfie::backend::identity<covfie::vector::size1>>>;
 
     field_t f(covfie::make_parameter_pack(
-        field_t::backend_t::configuration_t{4, 4},
+        field_t::backend_t::configuration_t{4u, 4u},
         field_t::backend_t::backend_t::configuration_t{}
     ));
 
@@ -66,7 +66,7 @@ TEST(TestCanonicalLayout, Canonical3D)
         covfie::backend::identity<covfie::vector::size1>>>;
 
     field_t f(covfie::make_parameter_pack(
-        field_t::backend_t::configuration_t{4, 4, 4},
+        field_t::backend_t::configuration_t{4u, 4u, 4u},
         field_t::backend_t::backend_t::configuration_t{}
     ));
 

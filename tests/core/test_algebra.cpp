@@ -16,7 +16,7 @@
 
 TEST(TestAlgebra, VectorArrayInit1F)
 {
-    covfie::algebra::vector<1, float> v(std::array<float, 1>{17.2f});
+    covfie::algebra::vector<1, float> v(covfie::array::array<float, 1>{17.2f});
 
     EXPECT_FLOAT_EQ(v(0), 17.2f);
 }
@@ -30,7 +30,7 @@ TEST(TestAlgebra, VectorVariadicInit1F)
 
 TEST(TestAlgebra, VectorArrayInit1D)
 {
-    covfie::algebra::vector<1, double> v(std::array<double, 1>{21.5});
+    covfie::algebra::vector<1, double> v(covfie::array::array<double, 1>{21.5});
 
     EXPECT_DOUBLE_EQ(v(0), 21.5);
 }
@@ -44,7 +44,8 @@ TEST(TestAlgebra, VectorVariadicInit1D)
 
 TEST(TestAlgebra, VectorArrayInit2F)
 {
-    covfie::algebra::vector<2, float> v(std::array<float, 2>{17.2f, 92.4f});
+    covfie::algebra::vector<2, float> v(covfie::array::array<float, 2>{
+        17.2f, 92.4f});
 
     EXPECT_FLOAT_EQ(v(0), 17.2f);
     EXPECT_FLOAT_EQ(v(1), 92.4f);
@@ -60,7 +61,8 @@ TEST(TestAlgebra, VectorVariadicInit2F)
 
 TEST(TestAlgebra, VectorArrayInit2D)
 {
-    covfie::algebra::vector<2, double> v(std::array<double, 2>{21.5, 11.8});
+    covfie::algebra::vector<2, double> v(covfie::array::array<double, 2>{
+        21.5, 11.8});
 
     EXPECT_DOUBLE_EQ(v(0), 21.5);
     EXPECT_DOUBLE_EQ(v(1), 11.8);
@@ -76,7 +78,7 @@ TEST(TestAlgebra, VectorVariadicInit2D)
 
 TEST(TestAlgebra, VectorArrayInit3F)
 {
-    covfie::algebra::vector<3, float> v(std::array<float, 3>{
+    covfie::algebra::vector<3, float> v(covfie::array::array<float, 3>{
         17.2f, 92.4f, 39.5f});
 
     EXPECT_FLOAT_EQ(v(0), 17.2f);
@@ -95,8 +97,8 @@ TEST(TestAlgebra, VectorVariadicInit3F)
 
 TEST(TestAlgebra, VectorArrayInit3D)
 {
-    covfie::algebra::vector<3, double> v(std::array<double, 3>{21.5, 11.8, 28.2}
-    );
+    covfie::algebra::vector<3, double> v(covfie::array::array<double, 3>{
+        21.5, 11.8, 28.2});
 
     EXPECT_DOUBLE_EQ(v(0), 21.5);
     EXPECT_DOUBLE_EQ(v(1), 11.8);
@@ -180,16 +182,19 @@ TEST(TestAlgebra, VectorAssignment3D)
 
 TEST(TestAlgebra, MatrixInit1x1F)
 {
-    covfie::algebra::matrix<1, 1, float> m(std::array<std::array<float, 1>, 1>{
-        {{5.2f}}});
+    covfie::algebra::matrix<1, 1, float> m(
+        covfie::array::array<covfie::array::array<float, 1>, 1>{{{5.2f}}}
+    );
 
     EXPECT_FLOAT_EQ(m(0, 0), 5.2f);
 }
 
 TEST(TestAlgebra, MatrixInit2x2F)
 {
-    covfie::algebra::matrix<2, 2, float> m(std::array<std::array<float, 2>, 2>{
-        {{0.5f, 10.5f}, {1.5f, 11.5f}}});
+    covfie::algebra::matrix<2, 2, float> m(
+        covfie::array::array<covfie::array::array<float, 2>, 2>{
+            {{0.5f, 10.5f}, {1.5f, 11.5f}}}
+    );
 
     EXPECT_FLOAT_EQ(m(0, 0), 0.5f);
     EXPECT_FLOAT_EQ(m(0, 1), 10.5f);
@@ -199,8 +204,10 @@ TEST(TestAlgebra, MatrixInit2x2F)
 
 TEST(TestAlgebra, MatrixInit3x3F)
 {
-    covfie::algebra::matrix<3, 3, float> m(std::array<std::array<float, 3>, 3>{
-        {{0.5f, 10.5f, 20.5f}, {1.5f, 11.5f, 21.5f}, {2.5f, 12.5f, 22.5f}}});
+    covfie::algebra::matrix<3, 3, float> m(
+        covfie::array::array<covfie::array::array<float, 3>, 3>{
+            {{0.5f, 10.5f, 20.5f}, {1.5f, 11.5f, 21.5f}, {2.5f, 12.5f, 22.5f}}}
+    );
 
     EXPECT_FLOAT_EQ(m(0, 0), 0.5f);
     EXPECT_FLOAT_EQ(m(0, 1), 10.5f);
@@ -215,8 +222,10 @@ TEST(TestAlgebra, MatrixInit3x3F)
 
 TEST(TestAlgebra, MatrixInit3x2F)
 {
-    covfie::algebra::matrix<3, 2, float> m(std::array<std::array<float, 2>, 3>{
-        {{0.5f, 10.5f}, {1.5f, 11.5f}, {2.5f, 12.5f}}});
+    covfie::algebra::matrix<3, 2, float> m(
+        covfie::array::array<covfie::array::array<float, 2>, 3>{
+            {{0.5f, 10.5f}, {1.5f, 11.5f}, {2.5f, 12.5f}}}
+    );
 
     EXPECT_FLOAT_EQ(m(0, 0), 0.5f);
     EXPECT_FLOAT_EQ(m(0, 1), 10.5f);
@@ -228,8 +237,9 @@ TEST(TestAlgebra, MatrixInit3x2F)
 
 TEST(TestAlgebra, AffineInit1F)
 {
-    covfie::algebra::affine<1, float> m(std::array<std::array<float, 2>, 1>{
-        {{0.5f, 10.5f}}});
+    covfie::algebra::affine<1, float> m(
+        covfie::array::array<covfie::array::array<float, 2>, 1>{{{0.5f, 10.5f}}}
+    );
 
     EXPECT_FLOAT_EQ(m(0, 0), 0.5f);
     EXPECT_FLOAT_EQ(m(0, 1), 10.5f);
@@ -237,8 +247,10 @@ TEST(TestAlgebra, AffineInit1F)
 
 TEST(TestAlgebra, AffineInit2F)
 {
-    covfie::algebra::affine<2, float> m(std::array<std::array<float, 3>, 2>{
-        {{0.5f, 10.5f, 20.5f}, {1.5f, 11.5f, 21.5f}}});
+    covfie::algebra::affine<2, float> m(
+        covfie::array::array<covfie::array::array<float, 3>, 2>{
+            {{0.5f, 10.5f, 20.5f}, {1.5f, 11.5f, 21.5f}}}
+    );
 
     EXPECT_FLOAT_EQ(m(0, 0), 0.5f);
     EXPECT_FLOAT_EQ(m(0, 1), 10.5f);
@@ -250,10 +262,12 @@ TEST(TestAlgebra, AffineInit2F)
 
 TEST(TestAlgebra, AffineInit3F)
 {
-    covfie::algebra::affine<3, float> m(std::array<std::array<float, 4>, 3>{
-        {{0.5f, 10.5f, 20.5f, 30.5f},
-         {1.5f, 11.5f, 21.5f, 31.5f},
-         {2.5f, 12.5f, 22.5f, 32.5f}}});
+    covfie::algebra::affine<3, float> m(
+        covfie::array::array<covfie::array::array<float, 4>, 3>{
+            {{0.5f, 10.5f, 20.5f, 30.5f},
+             {1.5f, 11.5f, 21.5f, 31.5f},
+             {2.5f, 12.5f, 22.5f, 32.5f}}}
+    );
 
     EXPECT_FLOAT_EQ(m(0, 0), 0.5f);
     EXPECT_FLOAT_EQ(m(0, 1), 10.5f);
@@ -271,10 +285,12 @@ TEST(TestAlgebra, AffineInit3F)
 
 TEST(TestAlgebra, MatrixMatrixMultiplication1x1x1F)
 {
-    covfie::algebra::matrix<1, 1, float> m1(std::array<std::array<float, 1>, 1>{
-        {{0.5f}}});
-    covfie::algebra::matrix<1, 1, float> m2(std::array<std::array<float, 1>, 1>{
-        {{1.5f}}});
+    covfie::algebra::matrix<1, 1, float> m1(
+        covfie::array::array<covfie::array::array<float, 1>, 1>{{{0.5f}}}
+    );
+    covfie::algebra::matrix<1, 1, float> m2(
+        covfie::array::array<covfie::array::array<float, 1>, 1>{{{1.5f}}}
+    );
 
     covfie::algebra::matrix<1, 1, float> mr1 = m1 * m2;
     covfie::algebra::matrix<1, 1, float> mr2 = m2 * m1;
@@ -285,10 +301,14 @@ TEST(TestAlgebra, MatrixMatrixMultiplication1x1x1F)
 
 TEST(TestAlgebra, MatrixMatrixMultiplication2x2x2F)
 {
-    covfie::algebra::matrix<2, 2, float> m1(std::array<std::array<float, 2>, 2>{
-        {{0.5f, 10.5f}, {1.5f, 11.5f}}});
-    covfie::algebra::matrix<2, 2, float> m2(std::array<std::array<float, 2>, 2>{
-        {{10.5f, 110.5f}, {11.5f, 111.5f}}});
+    covfie::algebra::matrix<2, 2, float> m1(
+        covfie::array::array<covfie::array::array<float, 2>, 2>{
+            {{0.5f, 10.5f}, {1.5f, 11.5f}}}
+    );
+    covfie::algebra::matrix<2, 2, float> m2(
+        covfie::array::array<covfie::array::array<float, 2>, 2>{
+            {{10.5f, 110.5f}, {11.5f, 111.5f}}}
+    );
 
     covfie::algebra::matrix<2, 2, float> mr1 = m1 * m2;
     covfie::algebra::matrix<2, 2, float> mr2 = m2 * m1;
@@ -306,12 +326,16 @@ TEST(TestAlgebra, MatrixMatrixMultiplication2x2x2F)
 
 TEST(TestAlgebra, MatrixMatrixMultiplication3x3x3F)
 {
-    covfie::algebra::matrix<3, 3, float> m1(std::array<std::array<float, 3>, 3>{
-        {{0.5f, 10.5f, 20.5f}, {1.5f, 11.5f, 21.5f}, {2.5f, 12.5f, 22.5f}}});
-    covfie::algebra::matrix<3, 3, float> m2(std::array<std::array<float, 3>, 3>{
-        {{10.5f, 110.5f, 120.5f},
-         {11.5f, 111.5f, 121.5f},
-         {12.5f, 112.5f, 122.5f}}});
+    covfie::algebra::matrix<3, 3, float> m1(
+        covfie::array::array<covfie::array::array<float, 3>, 3>{
+            {{0.5f, 10.5f, 20.5f}, {1.5f, 11.5f, 21.5f}, {2.5f, 12.5f, 22.5f}}}
+    );
+    covfie::algebra::matrix<3, 3, float> m2(
+        covfie::array::array<covfie::array::array<float, 3>, 3>{
+            {{10.5f, 110.5f, 120.5f},
+             {11.5f, 111.5f, 121.5f},
+             {12.5f, 112.5f, 122.5f}}}
+    );
 
     covfie::algebra::matrix<3, 3, float> mr1 = m1 * m2;
     covfie::algebra::matrix<3, 3, float> mr2 = m2 * m1;
@@ -339,10 +363,14 @@ TEST(TestAlgebra, MatrixMatrixMultiplication3x3x3F)
 
 TEST(TestAlgebra, MatrixMatrixMultiplication3x2x4F)
 {
-    covfie::algebra::matrix<3, 2, float> m1(std::array<std::array<float, 2>, 3>{
-        {{0.5f, 10.5f}, {1.5f, 11.5f}, {2.5f, 12.5f}}});
-    covfie::algebra::matrix<2, 4, float> m2(std::array<std::array<float, 4>, 2>{
-        {{10.5f, 110.5f, 120.5f, 130.5f}, {11.5f, 111.5f, 121.5f, 131.5f}}});
+    covfie::algebra::matrix<3, 2, float> m1(
+        covfie::array::array<covfie::array::array<float, 2>, 3>{
+            {{0.5f, 10.5f}, {1.5f, 11.5f}, {2.5f, 12.5f}}}
+    );
+    covfie::algebra::matrix<2, 4, float> m2(
+        covfie::array::array<covfie::array::array<float, 4>, 2>{
+            {{10.5f, 110.5f, 120.5f, 130.5f}, {11.5f, 111.5f, 121.5f, 131.5f}}}
+    );
 
     covfie::algebra::matrix<3, 4, float> mr = m1 * m2;
 
@@ -362,8 +390,10 @@ TEST(TestAlgebra, MatrixMatrixMultiplication3x2x4F)
 
 TEST(TestAlgebra, MatrixVectorMultiplication3x3x1F)
 {
-    covfie::algebra::matrix<3, 3, float> m(std::array<std::array<float, 3>, 3>{
-        {{0.5f, 10.5f, 20.5f}, {1.5f, 11.5f, 21.5f}, {2.5f, 12.5f, 22.5f}}});
+    covfie::algebra::matrix<3, 3, float> m(
+        covfie::array::array<covfie::array::array<float, 3>, 3>{
+            {{0.5f, 10.5f, 20.5f}, {1.5f, 11.5f, 21.5f}, {2.5f, 12.5f, 22.5f}}}
+    );
     covfie::algebra::vector<3, float> v(4.2f, 9.1f, 5.5f);
 
     covfie::algebra::vector<3, float> r = m * v;
@@ -375,8 +405,9 @@ TEST(TestAlgebra, MatrixVectorMultiplication3x3x1F)
 
 TEST(TestAlgebra, AffineVectorMultiplication1F)
 {
-    covfie::algebra::affine<1, float> m(std::array<std::array<float, 2>, 1>{
-        {{0.5f, 10.5f}}});
+    covfie::algebra::affine<1, float> m(
+        covfie::array::array<covfie::array::array<float, 2>, 1>{{{0.5f, 10.5f}}}
+    );
     covfie::algebra::vector<1, float> v(4.2f);
 
     covfie::algebra::vector<1, float> r = m * v;
@@ -386,8 +417,10 @@ TEST(TestAlgebra, AffineVectorMultiplication1F)
 
 TEST(TestAlgebra, AffineVectorMultiplication2F)
 {
-    covfie::algebra::affine<2, float> m(std::array<std::array<float, 3>, 2>{
-        {{0.5f, 10.5f, 20.5f}, {1.5f, 11.5f, 21.5f}}});
+    covfie::algebra::affine<2, float> m(
+        covfie::array::array<covfie::array::array<float, 3>, 2>{
+            {{0.5f, 10.5f, 20.5f}, {1.5f, 11.5f, 21.5f}}}
+    );
     covfie::algebra::vector<2, float> v(4.2f, 7.1f);
 
     covfie::algebra::vector<2, float> r = m * v;
@@ -398,10 +431,12 @@ TEST(TestAlgebra, AffineVectorMultiplication2F)
 
 TEST(TestAlgebra, AffineVectorMultiplication3F)
 {
-    covfie::algebra::affine<3, float> m(std::array<std::array<float, 4>, 3>{
-        {{0.5f, 10.5f, 20.5f, 30.5f},
-         {1.5f, 11.5f, 21.5f, 31.5f},
-         {2.5f, 12.5f, 22.5f, 32.5f}}});
+    covfie::algebra::affine<3, float> m(
+        covfie::array::array<covfie::array::array<float, 4>, 3>{
+            {{0.5f, 10.5f, 20.5f, 30.5f},
+             {1.5f, 11.5f, 21.5f, 31.5f},
+             {2.5f, 12.5f, 22.5f, 32.5f}}}
+    );
     covfie::algebra::vector<3, float> v(4.2f, 7.1f, 5.9f);
 
     covfie::algebra::vector<3, float> r = m * v;

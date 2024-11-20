@@ -22,7 +22,6 @@
 #include <covfie/core/utility/binary_io.hpp>
 #include <covfie/core/utility/nd_map.hpp>
 #include <covfie/core/utility/nd_size.hpp>
-#include <covfie/core/utility/tuple.hpp>
 #include <covfie/core/vector.hpp>
 
 namespace covfie::backend {
@@ -67,19 +66,13 @@ struct strided {
             );
         typename T::parent_t::non_owning_data_t nother(other);
 
-        using tuple_t = decltype(std::tuple_cat(
-            std::declval<
-                std::array<std::size_t, contravariant_input_t::dimensions>>()
-        ));
-
-        utility::nd_map<tuple_t>(
-            [&sizes, &nother, &res](tuple_t t) {
-                coordinate_t c = utility::to_array(t);
+        utility::nd_map<decltype(sizes)>(
+            [&sizes, &nother, &res](decltype(sizes) t) {
                 typename contravariant_input_t::scalar_t idx = 0;
 
                 for (std::size_t k = 0; k < contravariant_input_t::dimensions;
                      ++k) {
-                    typename contravariant_input_t::scalar_t tmp = c[k];
+                    typename contravariant_input_t::scalar_t tmp = t[k];
 
                     for (std::size_t l = k + 1;
                          l < contravariant_input_t::dimensions;
@@ -93,10 +86,10 @@ struct strided {
 
                 for (std::size_t i = 0; i < covariant_output_t::dimensions; ++i)
                 {
-                    res[idx][i] = nother.at(c)[i];
+                    res[idx][i] = nother.at(t)[i];
                 }
             },
-            std::tuple_cat(sizes)
+            sizes
         );
 
         return res;

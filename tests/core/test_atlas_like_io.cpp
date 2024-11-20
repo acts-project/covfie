@@ -35,7 +35,7 @@ TEST(TestAtlasLikeIO, WriteReadAtlasLike)
 {
     covfie::field<basic_backend_t> bf(
         covfie::make_parameter_pack_for<covfie::field<basic_backend_t>>(
-            {2, 2, 2}, {8}
+            {2u, 2u, 2u}, {8u}
         )
     );
     covfie::field<basic_backend_t>::view_t bv(bf);
@@ -111,7 +111,7 @@ TEST(TestAtlasLikeIO, WriteReadAtlasLikeChangeInterpolation)
 {
     covfie::field<basic_backend_t> bf(
         covfie::make_parameter_pack_for<covfie::field<basic_backend_t>>(
-            {3, 3, 3}, {27}
+            {3u, 3u, 3u}, {27u}
         )
     );
     covfie::field<basic_backend_t>::view_t bv(bf);

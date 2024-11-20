@@ -16,6 +16,7 @@
 #include <utility>
 
 #include <covfie/core/algebra/matrix.hpp>
+#include <covfie/core/array.hpp>
 #include <covfie/core/qualifiers.hpp>
 
 namespace covfie::algebra {
@@ -26,7 +27,7 @@ struct vector : public matrix<N, 1, T, I> {
     {
     }
 
-    COVFIE_DEVICE vector(std::array<T, N> l)
+    COVFIE_DEVICE vector(array::array<T, N> l)
         : matrix<N, 1, T, I>()
     {
         for (I i = 0; i < N; ++i) {
@@ -47,7 +48,7 @@ struct vector : public matrix<N, 1, T, I> {
                 sizeof...(Args) == N,
             bool> = true>
     COVFIE_DEVICE vector(Args... args)
-        : vector(std::array<T, N>{std::forward<Args>(args)...})
+        : vector(array::array<T, N>{std::forward<Args>(args)...})
     {
     }
 

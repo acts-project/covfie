@@ -74,7 +74,7 @@ int main(int argc, char ** argv)
     BOOST_LOG_TRIVIAL(info) << "Allocating space for new vector field...";
 
     core_field_t cf(covfie::make_parameter_pack(core_backend_t::configuration_t{
-        201, 201, 301}));
+        201u, 201u, 301u}));
 
     BOOST_LOG_TRIVIAL(info) << "Filling new vector field...";
 

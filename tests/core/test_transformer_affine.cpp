@@ -24,7 +24,7 @@ TEST(TestAffineTransformer, AffineConstant1Dto1D)
 
     field_t f(covfie::make_parameter_pack(
         field_t::backend_t::configuration_t(covfie::algebra::affine<1>(
-            std::array<std::array<float, 2>, 1>({{{0.f, 5.f}}})
+            covfie::array::array<covfie::array::array<float, 2>, 1>{{0.f, 5.f}}
         )),
         field_t::backend_t::backend_t::configuration_t({5.f})
     ));

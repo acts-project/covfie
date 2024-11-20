@@ -32,7 +32,6 @@
 #include <covfie/core/utility/nd_map.hpp>
 #include <covfie/core/utility/nd_size.hpp>
 #include <covfie/core/utility/numeric.hpp>
-#include <covfie/core/utility/tuple.hpp>
 #include <covfie/core/vector.hpp>
 
 namespace covfie::backend {
@@ -165,18 +164,15 @@ struct morton {
             );
         typename T::parent_t::non_owning_data_t nother(other);
 
-        using tuple_t = decltype(std::tuple_cat(sizes));
-
-        utility::nd_map<tuple_t>(
-            [&nother, &res](tuple_t t) {
-                auto old_c = utility::to_array(t);
+        utility::nd_map<decltype(sizes)>(
+            [&nother, &res](decltype(sizes) t) {
                 typename contravariant_input_t::vector_t c;
 
                 for (std::size_t i = 0; i < contravariant_input_t::dimensions;
                      ++i) {
                     c[i] = static_cast<
                         typename contravariant_input_t::vector_t::value_type>(
-                        old_c[i]
+                        t[i]
                     );
                 }
 
@@ -187,7 +183,7 @@ struct morton {
                     res[idx][i] = nother.at(c)[i];
                 }
             },
-            std::tuple_cat(sizes)
+            sizes
         );
 
         return res;
