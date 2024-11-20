@@ -1,4 +1,9 @@
 #!/usr/bin/env python3
+# SPDX-PackageName = "covfie, a part of the ACTS project"
+# SPDX-FileCopyrightText: 2022 CERN
+#
+# SPDX-License-Identifier: MPL-2.0
+
 import argparse
 import os
 import sys
