@@ -13,5 +13,5 @@
 #include <string>
 
 void render_bitmap(
-    char * img, unsigned int w, unsigned int h, std::string fname
+    unsigned char * img, unsigned int w, unsigned int h, std::string fname
 );

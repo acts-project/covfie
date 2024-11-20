@@ -19,7 +19,7 @@
  * the necessary headers to turn it into a bitmap image.
  */
 void render_bitmap(
-    char * img, unsigned int w, unsigned int h, std::string fname
+    unsigned char * img, unsigned int w, unsigned int h, std::string fname
 )
 {
     /*
@@ -51,7 +51,7 @@ void render_bitmap(
      * This is the definition of the BMP header... It's rather esoteric, but it
      * is necessary.
      */
-    char header[54] = {
+    unsigned char header[54] = {
         /*
          * Bytes [0:1]: The BMP magic numbers.
          */
@@ -60,10 +60,10 @@ void render_bitmap(
         /*
          * Bytes [2:5]: The total size of this file.
          */
-        static_cast<char>(filesize),
-        static_cast<char>(filesize >> 8),
-        static_cast<char>(filesize >> 16),
-        static_cast<char>(filesize >> 24),
+        static_cast<unsigned char>(filesize),
+        static_cast<unsigned char>(filesize >> 8),
+        static_cast<unsigned char>(filesize >> 16),
+        static_cast<unsigned char>(filesize >> 24),
         /*
          * Bytes [6:9]: Reserved bytes which nobody uses.
          */
@@ -74,10 +74,10 @@ void render_bitmap(
         /*
          * Bytes [10:13]: The starting position of the image segment.
          */
-        static_cast<char>(offset),
-        static_cast<char>(offset >> 8),
-        static_cast<char>(offset >> 16),
-        static_cast<char>(offset >> 24),
+        static_cast<unsigned char>(offset),
+        static_cast<unsigned char>(offset >> 8),
+        static_cast<unsigned char>(offset >> 16),
+        static_cast<unsigned char>(offset >> 24),
         /*
          * Bytes [14:17]: This identifies the size of the DIB header, which in
          * this case identifies it as BITMAPINFOHEADER.
@@ -89,17 +89,17 @@ void render_bitmap(
         /*
          * Bytes [18:21]: The width of the image.
          */
-        static_cast<char>(w),
-        static_cast<char>(w >> 8),
-        static_cast<char>(w >> 16),
-        static_cast<char>(w >> 24),
+        static_cast<unsigned char>(w),
+        static_cast<unsigned char>(w >> 8),
+        static_cast<unsigned char>(w >> 16),
+        static_cast<unsigned char>(w >> 24),
         /*
          * Bytes [22:25]: The height of the image.
          */
-        static_cast<char>(h),
-        static_cast<char>(h >> 8),
-        static_cast<char>(h >> 16),
-        static_cast<char>(h >> 24),
+        static_cast<unsigned char>(h),
+        static_cast<unsigned char>(h >> 8),
+        static_cast<unsigned char>(h >> 16),
+        static_cast<unsigned char>(h >> 24),
         /*
          * Bytes [26:27]: The number of color planes, which is always 1.
          */
@@ -145,12 +145,12 @@ void render_bitmap(
      * Bitmap rows must be padded to multiples of 4, so we will keep these
      * padding zeros handy for when we need to do that.
      */
-    char padding[3] = {0, 0, 0};
+    unsigned char padding[3] = {0, 0, 0};
 
     /*
      * Start off by writing the 54 byte header to the file.
      */
-    bmp.write(header, 54);
+    bmp.write(reinterpret_cast<char *>(header), 54);
 
     /*
      * Here we compute the colour palette. Each byte identifies one of 256
@@ -189,14 +189,14 @@ void render_bitmap(
          * For each of the 256 colours, write the output RGB colour to the file
          * in four bytes.
          */
-        char cmap[4] = {
-            static_cast<char>((rp + q) * 255),
-            static_cast<char>((gp + q) * 255),
-            static_cast<char>((bp + q) * 255),
+        unsigned char cmap[4] = {
+            static_cast<unsigned char>((rp + q) * 255),
+            static_cast<unsigned char>((gp + q) * 255),
+            static_cast<unsigned char>((bp + q) * 255),
             0,
         };
 
-        bmp.write(cmap, 4);
+        bmp.write(reinterpret_cast<char *>(cmap), 4);
     }
 
     /*
@@ -208,14 +208,14 @@ void render_bitmap(
             /*
              * Retrieve the magnitude from the image, and write it.
              */
-            char r = img[h * x + y];
-            bmp.write(&r, 1);
+            unsigned char r = img[h * x + y];
+            bmp.write(reinterpret_cast<char *>(&r), 1);
         }
 
         /*
          * If necessary, write the appropriate padding to the file.
          */
-        bmp.write(padding, (4 - (w % 4)) % 4);
+        bmp.write(reinterpret_cast<char *>(padding), (4 - (w % 4)) % 4);
     }
 
     bmp.close();

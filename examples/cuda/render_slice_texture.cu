@@ -81,7 +81,7 @@ void parse_opts(
 template <typename field_t>
 __global__ void render(
     typename field_t::view_t vf,
-    char * out,
+    unsigned char * out,
     unsigned int width,
     unsigned int height,
     float z
@@ -96,7 +96,7 @@ __global__ void render(
 
         typename field_t::output_t p =
             vf.at(fx * 20000.f - 10000.f, fy * 20000.f - 10000.f, z);
-        out[height * x + y] = static_cast<char>(std::lround(
+        out[height * x + y] = static_cast<unsigned char>(std::lround(
             255.f * std::min(
                         std::sqrt(
                             std::pow(p[0] / 0.000299792458f, 2.f) +
@@ -141,10 +141,11 @@ int main(int argc, char ** argv)
 
     BOOST_LOG_TRIVIAL(info) << "Allocating device memory for output image...";
 
-    char * img_device;
+    unsigned char * img_device;
 
     cudaErrorCheck(cudaMalloc(
-        reinterpret_cast<void **>(&img_device), width * height * sizeof(char)
+        reinterpret_cast<void **>(&img_device),
+        width * height * sizeof(unsigned char)
     ));
 
     BOOST_LOG_TRIVIAL(info) << "Rendering magnetic field strength to image...";
@@ -175,14 +176,15 @@ int main(int argc, char ** argv)
 
     BOOST_LOG_TRIVIAL(info) << "Allocating host memory for output image...";
 
-    std::unique_ptr<char[]> img_host = std::make_unique<char[]>(width * height);
+    std::unique_ptr<unsigned char[]> img_host =
+        std::make_unique<unsigned char[]>(width * height);
 
     BOOST_LOG_TRIVIAL(info) << "Copying image from device to host...";
 
     cudaErrorCheck(cudaMemcpy(
         img_host.get(),
         img_device,
-        width * height * sizeof(char),
+        width * height * sizeof(unsigned char),
         cudaMemcpyDeviceToHost
     ));
 
