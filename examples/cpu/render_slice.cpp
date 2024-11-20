@@ -117,7 +117,7 @@ int main(int argc, char ** argv)
 
     BOOST_LOG_TRIVIAL(info) << "Allocating memory for output image...";
 
-    std::unique_ptr<char[]> img = std::make_unique<char[]>(
+    std::unique_ptr<unsigned char[]> img = std::make_unique<unsigned char[]>(
         vm["width"].as<unsigned int>() * vm["height"].as<unsigned int>()
     );
 
@@ -156,7 +156,7 @@ int main(int argc, char ** argv)
             }
 
             img[vm["height"].as<unsigned int>() * x + y] =
-                static_cast<char>(std::lround(
+                static_cast<unsigned char>(std::lround(
                     255.f * std::min(
                                 std::sqrt(
                                     std::pow(p[0] / 0.000299792458f, 2.f) +

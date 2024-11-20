@@ -90,8 +90,8 @@ int main(int argc, char ** argv)
 
     covfie::utility::nd_size<2> im_size = f.backend().get_configuration();
 
-    std::unique_ptr<char[]> img =
-        std::make_unique<char[]>(im_size[1] * im_size[0]);
+    std::unique_ptr<unsigned char[]> img =
+        std::make_unique<unsigned char[]>(im_size[1] * im_size[0]);
 
     BOOST_LOG_TRIVIAL(info) << "Rendering vector field to image...";
 
@@ -99,7 +99,7 @@ int main(int argc, char ** argv)
         for (std::size_t y = 0; y < im_size[0]; ++y) {
             field_t::view_t::output_t p = fv.at(x, y);
 
-            img[im_size[1] * y + x] = static_cast<char>(std::lround(
+            img[im_size[1] * y + x] = static_cast<unsigned char>(std::lround(
                 255.f *
                 std::min(
                     std::sqrt(p[0] * p[0] + p[1] * p[1] + p[2] * p[2]), 1.0f
