@@ -107,7 +107,7 @@ struct shuffle {
         shuffle(typename contravariant_input_t::vector_t c, std::index_sequence<Is...>)
             const
         {
-            return {std::get<Is>(c)...};
+            return {c.at(Is)...};
         }
 
         COVFIE_DEVICE typename covariant_output_t::vector_t

@@ -10,8 +10,9 @@
 
 #pragma once
 
-#include <array>
 #include <cstddef>
+
+#include <covfie/core/array.hpp>
 
 namespace covfie::vector {
 template <typename _type, std::size_t _size>
@@ -25,7 +26,7 @@ struct array_vector_d {
     using vector_d = _vector_d;
     using scalar_t = typename vector_d::type;
     static constexpr std::size_t dimensions = vector_d::size;
-    using vector_t = std::array<typename vector_d::type, vector_d::size>;
+    using vector_t = array::array<typename vector_d::type, vector_d::size>;
 };
 
 template <typename _vector_d>
@@ -34,7 +35,7 @@ struct array_reference_vector_d {
     using scalar_t = typename vector_d::type;
     static constexpr std::size_t dimensions = vector_d::size;
     using vector_t = std::add_lvalue_reference_t<
-        std::array<typename vector_d::type, vector_d::size>>;
+        array::array<typename vector_d::type, vector_d::size>>;
 };
 
 template <typename _vector_d>

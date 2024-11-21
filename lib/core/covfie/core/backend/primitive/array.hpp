@@ -13,7 +13,6 @@
 #include <cassert>
 #include <cstring>
 #include <memory>
-#include <tuple>
 #include <utility>
 
 #include <covfie/core/concepts.hpp>

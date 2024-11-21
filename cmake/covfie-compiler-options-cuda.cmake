@@ -31,9 +31,6 @@ if("${CMAKE_CUDA_COMPILER_ID}" MATCHES "NVIDIA")
     # Make CUDA generate debug symbols for the device code as well in a debug
     # build.
     covfie_add_flag( CMAKE_CUDA_FLAGS_DEBUG "-G" )
-    # Allow to use functions in device code that are constexpr, even if they are
-    # not marked with __device__.
-    covfie_add_flag( CMAKE_CUDA_FLAGS "--expt-relaxed-constexpr" )
 endif()
 
 covfie_add_flag( CMAKE_CUDA_FLAGS "-Wfloat-conversion" )

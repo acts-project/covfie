@@ -95,12 +95,12 @@ __global__ void render(
 
         typename field_t::output_t p =
             vf.at(fx * 20000.f - 10000.f, fy * 20000.f - 10000.f, z);
-        out[height * x + y] = static_cast<unsigned char>(std::lround(
-            255.f * std::min(
-                        std::sqrt(
-                            std::pow(p[0] / 0.000299792458f, 2.f) +
-                            std::pow(p[1] / 0.000299792458f, 2.f) +
-                            std::pow(p[2] / 0.000299792458f, 2.f)
+        out[height * x + y] = static_cast<unsigned char>(::lroundf(
+            255.f * ::fmin(
+                        ::sqrtf(
+                            ::powf(p[0] / 0.000299792458f, 2.f) +
+                            ::powf(p[1] / 0.000299792458f, 2.f) +
+                            ::powf(p[2] / 0.000299792458f, 2.f)
                         ),
                         1.0f
                     )

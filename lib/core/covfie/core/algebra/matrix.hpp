@@ -10,9 +10,9 @@
 
 #pragma once
 
-#include <array>
 #include <cstddef>
 
+#include <covfie/core/array.hpp>
 #include <covfie/core/qualifiers.hpp>
 
 namespace covfie::algebra {
@@ -26,7 +26,7 @@ struct matrix {
     {
     }
 
-    COVFIE_DEVICE matrix(std::array<std::array<T, M>, N> l)
+    COVFIE_DEVICE matrix(array::array<array::array<T, M>, N> l)
     {
         for (I i = 0; i < l.size(); ++i) {
             for (I j = 0; j < l[i].size(); ++j) {

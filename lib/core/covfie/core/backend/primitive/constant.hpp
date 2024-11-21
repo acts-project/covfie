@@ -10,7 +10,6 @@
 
 #pragma once
 
-#include <array>
 #include <iostream>
 
 #include <covfie/core/concepts.hpp>

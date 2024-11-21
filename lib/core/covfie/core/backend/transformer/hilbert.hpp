@@ -17,6 +17,7 @@
 #include <numeric>
 #include <type_traits>
 
+#include <covfie/core/array.hpp>
 #include <covfie/core/backend/primitive/array.hpp>
 #include <covfie/core/concepts.hpp>
 #include <covfie/core/parameter_pack.hpp>
@@ -25,7 +26,6 @@
 #include <covfie/core/utility/nd_map.hpp>
 #include <covfie/core/utility/nd_size.hpp>
 #include <covfie/core/utility/numeric.hpp>
-#include <covfie/core/utility/tuple.hpp>
 #include <covfie/core/vector.hpp>
 
 namespace covfie::backend {
@@ -118,20 +118,13 @@ struct hilbert {
             );
         typename T::parent_t::non_owning_data_t nother(other);
 
-        using tuple_t = decltype(std::tuple_cat(
-            std::declval<std::array<
-                typename contravariant_input_t::scalar_t,
-                contravariant_input_t::dimensions>>()
-        ));
-
-        utility::nd_map<tuple_t>(
-            [&nother, &res](tuple_t t) {
-                auto old_c = utility::to_array(t);
+        utility::nd_map<decltype(sizes)>(
+            [&nother, &res](decltype(sizes) t) {
                 coordinate_t c;
 
                 for (std::size_t i = 0; i < contravariant_input_t::dimensions;
                      ++i) {
-                    c[i] = old_c[i];
+                    c[i] = t[i];
                 }
 
                 std::size_t idx = calculate_index(c);
@@ -141,7 +134,7 @@ struct hilbert {
                     res[idx][i] = nother.at(c)[i];
                 }
             },
-            std::tuple_cat(sizes)
+            sizes
         );
 
         return res;

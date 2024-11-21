@@ -17,7 +17,6 @@
 #include <covfie/core/field.hpp>
 #include <covfie/core/field_view.hpp>
 #include <covfie/core/utility/nd_map.hpp>
-#include <covfie/core/utility/tuple.hpp>
 #include <covfie/core/vector.hpp>
 #include <covfie/cuda/backend/primitive/cuda_device_array.hpp>
 
@@ -33,20 +32,15 @@ protected:
             covfie::vector::size3,
             covfie::backend::array<covfie::vector::size3>>;
 
-        std::array<std::size_t, 3> sizes;
-        sizes.fill(10);
+        covfie::array::array<std::size_t, 3> sizes{10UL, 10UL, 10UL};
 
         covfie::field<canonical_backend_t> f(covfie::make_parameter_pack(
             canonical_backend_t::configuration_t{sizes}
         ));
         covfie::field_view<canonical_backend_t> fv(f);
 
-        covfie::utility::nd_map<decltype(std::tuple_cat(sizes))>(
-            [&fv](decltype(std::tuple_cat(sizes)) t) {
-                fv.at(covfie::utility::to_array(t)) =
-                    covfie::utility::to_array(t);
-            },
-            std::tuple_cat(sizes)
+        covfie::utility::nd_map<decltype(sizes)>(
+            [&fv](decltype(sizes) t) { fv.at(t) = t; }, sizes
         );
 
         m_field = covfie::field<B>(f);

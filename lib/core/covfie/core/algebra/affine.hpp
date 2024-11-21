@@ -14,6 +14,7 @@
 
 #include <covfie/core/algebra/matrix.hpp>
 #include <covfie/core/algebra/vector.hpp>
+#include <covfie/core/array.hpp>
 #include <covfie/core/qualifiers.hpp>
 
 namespace covfie::algebra {
@@ -90,7 +91,7 @@ struct affine : public matrix<N, N + 1, T, I> {
             "of the matrix."
         );
 
-        std::array<T, N> arr{args...};
+        array::array<T, N> arr{args...};
 
         matrix<N, N + 1, T, I> result = matrix<N, N + 1, T, I>::identity();
 
@@ -115,7 +116,7 @@ struct affine : public matrix<N, N + 1, T, I> {
             "the matrix."
         );
 
-        std::array<T, N> arr{args...};
+        array::array<T, N> arr{args...};
 
         matrix<N, N + 1, T, I> result = matrix<N, N + 1, T, I>::identity();
 

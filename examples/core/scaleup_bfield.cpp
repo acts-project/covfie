@@ -99,7 +99,7 @@ int main(int argc, char ** argv)
     output_field_t new_field(covfie::make_parameter_pack(
         scaling * translation,
         std::monostate{},
-        covfie::utility::nd_size<3>{601, 601, 901}
+        covfie::utility::nd_size<3>{601u, 601u, 901u}
     ));
 
     BOOST_LOG_TRIVIAL(info) << "Copying data from old field to new field...";

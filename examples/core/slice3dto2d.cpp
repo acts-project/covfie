@@ -122,7 +122,7 @@ int main(int argc, char ** argv)
 
     covfie::utility::nd_size<3> in_size =
         f.backend().get_backend().get_backend().get_configuration();
-    covfie::utility::nd_size<2> out_size{0, 0};
+    covfie::utility::nd_size<2> out_size{0u, 0u};
 
     if (vm["axis"].as<std::string>() == "x") {
         out_size = {in_size[1], in_size[2]};
