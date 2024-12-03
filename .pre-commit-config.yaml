@@ -16,13 +16,10 @@ repos:
     - id: check-yaml
     - id: check-added-large-files
 
-  - repo: local
+  - repo: https://github.com/fsfe/reuse-tool
+    rev: v5.0.2
     hooks:
-    - id: license
-      name: license
-      language: system
-      entry: ci/check_license.py
-      files: ((CMakeLists\.txt)|(\.(cpp|hpp|ipp|cu|cuh|cmake)))$
+    - id: reuse
 
   - repo: https://github.com/BlankSpruce/gersemi
     rev: "0.17.0"
