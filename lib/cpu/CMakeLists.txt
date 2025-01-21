@@ -21,13 +21,15 @@ set_target_properties(
             cpu
 )
 
-install(TARGETS covfie_cpu EXPORT ${PROJECT_NAME}Targets)
+if(PROJECT_IS_TOP_LEVEL)
+    install(TARGETS covfie_cpu EXPORT ${PROJECT_NAME}Targets)
 
-install(
-    DIRECTORY
-        ${CMAKE_CURRENT_SOURCE_DIR}/covfie
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-)
+    install(
+        DIRECTORY
+            ${CMAKE_CURRENT_SOURCE_DIR}/covfie
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+    )
+endif()
 
 target_link_libraries(covfie_cpu INTERFACE covfie_core)
 
