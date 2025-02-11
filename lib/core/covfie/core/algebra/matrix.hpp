@@ -18,11 +18,11 @@ template <
     typename T = float,
     typename I = std::size_t>
 struct matrix {
-    COVFIE_DEVICE matrix()
+    COVFIE_HOST_DEVICE matrix()
     {
     }
 
-    COVFIE_DEVICE matrix(array::array<array::array<T, M>, N> l)
+    COVFIE_HOST_DEVICE matrix(array::array<array::array<T, M>, N> l)
     {
         for (I i = 0; i < l.size(); ++i) {
             for (I j = 0; j < l[i].size(); ++j) {
@@ -33,18 +33,18 @@ struct matrix {
 
     matrix(const matrix<N, M, T, I> &) = default;
 
-    COVFIE_DEVICE T operator()(const I i, const I j) const
+    COVFIE_HOST_DEVICE T operator()(const I i, const I j) const
     {
         return m_elems[i][j];
     }
 
-    COVFIE_DEVICE T & operator()(const I i, const I j)
+    COVFIE_HOST_DEVICE T & operator()(const I i, const I j)
     {
         return m_elems[i][j];
     }
 
     template <std::size_t P>
-    COVFIE_DEVICE matrix<N, P, T, I> operator*(const matrix<M, P, T, I> & o
+    COVFIE_HOST_DEVICE matrix<N, P, T, I> operator*(const matrix<M, P, T, I> & o
     ) const
     {
         matrix<N, P, T, I> r;
@@ -64,7 +64,7 @@ struct matrix {
         return r;
     }
 
-    COVFIE_DEVICE static matrix<N, M, T, I> identity()
+    COVFIE_HOST_DEVICE static matrix<N, M, T, I> identity()
     {
         matrix<N, M, T, I> result;
 

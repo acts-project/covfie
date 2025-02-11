@@ -9,16 +9,12 @@
 #include <covfie/benchmark/propagate.hpp>
 #include <covfie/benchmark/types.hpp>
 #include <covfie/core/definitions.hpp>
+#include <covfie/core/qualifiers.hpp>
 #include <covfie/core/field_view.hpp>
 
-#ifdef __CUDACC__
-#define HOST_DEVICE __host__ __device__
-#else
-#define HOST_DEVICE
-#endif
 
 template <typename propagator_t, typename backend_t>
-HOST_DEVICE inline __attribute__((always_inline)) void lorentz_step(
+COVFIE_HOST_DEVICE inline __attribute__((always_inline)) void lorentz_step(
     const covfie::field_view<backend_t> & f,
     covfie::benchmark::lorentz_agent<3> & o,
     float s

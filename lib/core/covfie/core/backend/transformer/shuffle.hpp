@@ -99,14 +99,14 @@ struct shuffle {
         }
 
         template <std::size_t... Is>
-        COVFIE_DEVICE typename contravariant_input_t::vector_t
+        COVFIE_HOST_DEVICE typename contravariant_input_t::vector_t
         shuffle(typename contravariant_input_t::vector_t c, std::index_sequence<Is...>)
             const
         {
             return {c.at(Is)...};
         }
 
-        COVFIE_DEVICE typename covariant_output_t::vector_t
+        COVFIE_HOST_DEVICE typename covariant_output_t::vector_t
         at(typename contravariant_input_t::vector_t c) const
         {
             return m_backend.at(shuffle(c, indices{}));

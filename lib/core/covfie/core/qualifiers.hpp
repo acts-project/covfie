@@ -6,8 +6,8 @@
 
 #pragma once
 
-#if defined(__CUDACC__)
-#define COVFIE_DEVICE __host__ __device__
+#if defined(__CUDACC__) || defined(__HIP__)
+#define COVFIE_HOST_DEVICE __host__ __device__
 #else
-#define COVFIE_DEVICE
+#define COVFIE_HOST_DEVICE
 #endif

@@ -22,12 +22,12 @@ struct affine : public matrix<N, N + 1, T, I> {
     affine & operator=(const affine &) = default;
     affine & operator=(affine &&) = default;
 
-    COVFIE_DEVICE affine(const matrix<N, N + 1, T, I> & o)
+    COVFIE_HOST_DEVICE affine(const matrix<N, N + 1, T, I> & o)
         : matrix<N, N + 1, T, I>(o)
     {
     }
 
-    COVFIE_DEVICE vector<N, T, I> operator*(const vector<N, T, I> & v) const
+    COVFIE_HOST_DEVICE vector<N, T, I> operator*(const vector<N, T, I> & v) const
     {
         vector<N + 1, T, I> r;
 
@@ -40,7 +40,7 @@ struct affine : public matrix<N, N + 1, T, I> {
         return matrix<N, N + 1, T, I>::operator*(r);
     }
 
-    COVFIE_DEVICE affine<N, T, I> operator*(const affine<N, T, I> & m) const
+    COVFIE_HOST_DEVICE affine<N, T, I> operator*(const affine<N, T, I> & m) const
     {
         matrix<N + 1, N + 1, T, I> m1, m2;
 
@@ -74,7 +74,7 @@ struct affine : public matrix<N, N + 1, T, I> {
     }
 
     template <typename... Args>
-    COVFIE_DEVICE static affine<N, T, I> translation(const Args &... args)
+    COVFIE_HOST_DEVICE static affine<N, T, I> translation(const Args &... args)
     {
         static_assert(
             (std::is_convertible_v<Args, T> && ...),
@@ -99,7 +99,7 @@ struct affine : public matrix<N, N + 1, T, I> {
     }
 
     template <typename... Args>
-    COVFIE_DEVICE static affine<N, T, I> scaling(const Args &... args)
+    COVFIE_HOST_DEVICE static affine<N, T, I> scaling(const Args &... args)
     {
         static_assert(
             (std::is_convertible_v<Args, T> && ...),

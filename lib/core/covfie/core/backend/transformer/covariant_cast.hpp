@@ -101,14 +101,14 @@ struct covariant_cast {
         }
 
         template <std::size_t... Is>
-        COVFIE_DEVICE typename covariant_output_t::vector_t
+        COVFIE_HOST_DEVICE typename covariant_output_t::vector_t
         at_helper(typename contravariant_input_t::vector_t c, std::index_sequence<Is...>)
             const
         {
             return {static_cast<target_type>(m_backend.at(c)[Is])...};
         }
 
-        COVFIE_DEVICE typename covariant_output_t::vector_t
+        COVFIE_HOST_DEVICE typename covariant_output_t::vector_t
         at(typename contravariant_input_t::vector_t c) const
         {
             return at_helper(

@@ -229,7 +229,7 @@ struct strided {
         {
         }
 
-        COVFIE_DEVICE typename covariant_output_t::vector_t at(coordinate_t c
+        COVFIE_HOST_DEVICE typename covariant_output_t::vector_t at(coordinate_t c
         ) const
         {
             typename contravariant_input_t::scalar_t idx = 0;

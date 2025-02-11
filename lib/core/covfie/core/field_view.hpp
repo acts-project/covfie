@@ -49,7 +49,7 @@ public:
             sizeof...(Args) == backend_t::contravariant_input_t::dimensions,
             bool> = true,
         std::enable_if_t<!std::is_scalar_v<Q>, bool> = true>
-    COVFIE_DEVICE output_t at(Args... c) const
+    COVFIE_HOST_DEVICE output_t at(Args... c) const
     {
         return m_storage.at(coordinate_t{
             static_cast<typename backend_t::contravariant_input_t::scalar_t>(c
@@ -59,7 +59,7 @@ public:
     template <
         typename T,
         std::enable_if_t<std::is_same_v<T, coordinate_t>, bool> = true>
-    COVFIE_DEVICE output_t at(T c) const
+    COVFIE_HOST_DEVICE output_t at(T c) const
     {
         return m_storage.at(c);
     }
