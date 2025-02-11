@@ -27,7 +27,8 @@ struct affine : public matrix<N, N + 1, T, I> {
     {
     }
 
-    COVFIE_HOST_DEVICE vector<N, T, I> operator*(const vector<N, T, I> & v) const
+    COVFIE_HOST_DEVICE vector<N, T, I> operator*(const vector<N, T, I> & v
+    ) const
     {
         vector<N + 1, T, I> r;
 
@@ -40,7 +41,8 @@ struct affine : public matrix<N, N + 1, T, I> {
         return matrix<N, N + 1, T, I>::operator*(r);
     }
 
-    COVFIE_HOST_DEVICE affine<N, T, I> operator*(const affine<N, T, I> & m) const
+    COVFIE_HOST_DEVICE affine<N, T, I> operator*(const affine<N, T, I> & m
+    ) const
     {
         matrix<N + 1, N + 1, T, I> m1, m2;
 

@@ -45,7 +45,8 @@ requires(_size > 0) struct array {
         return m_data[n];
     }
 
-    COVFIE_HOST_DEVICE constexpr const scalar_t & at(const std::size_t & n) const
+    COVFIE_HOST_DEVICE constexpr const scalar_t & at(const std::size_t & n
+    ) const
     {
         assert(n < dimensions);
 
@@ -59,8 +60,8 @@ requires(_size > 0) struct array {
         return m_data[n];
     }
 
-    COVFIE_HOST_DEVICE constexpr const scalar_t & operator[](const std::size_t & n
-    ) const
+    COVFIE_HOST_DEVICE constexpr const scalar_t &
+    operator[](const std::size_t & n) const
     {
         assert(n < dimensions);
 

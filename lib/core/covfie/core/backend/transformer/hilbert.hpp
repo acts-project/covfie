@@ -261,8 +261,8 @@ struct hilbert {
         {
         }
 
-        COVFIE_HOST_DEVICE typename covariant_output_t::vector_t at(coordinate_t c
-        ) const
+        COVFIE_HOST_DEVICE typename covariant_output_t::vector_t
+        at(coordinate_t c) const
         {
 #ifndef NDEBUG
             for (std::size_t i = 0; i < contravariant_input_t::dimensions; ++i)

@@ -9,9 +9,8 @@
 #include <covfie/benchmark/propagate.hpp>
 #include <covfie/benchmark/types.hpp>
 #include <covfie/core/definitions.hpp>
-#include <covfie/core/qualifiers.hpp>
 #include <covfie/core/field_view.hpp>
-
+#include <covfie/core/qualifiers.hpp>
 
 template <typename propagator_t, typename backend_t>
 COVFIE_HOST_DEVICE inline __attribute__((always_inline)) void lorentz_step(
