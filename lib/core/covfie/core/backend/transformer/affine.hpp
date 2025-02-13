@@ -136,7 +136,7 @@ struct affine {
         {
         }
 
-        COVFIE_DEVICE typename covariant_output_t::vector_t
+        COVFIE_HOST_DEVICE typename covariant_output_t::vector_t
         at(typename contravariant_input_t::vector_t c) const
         {
             covfie::algebra::vector<

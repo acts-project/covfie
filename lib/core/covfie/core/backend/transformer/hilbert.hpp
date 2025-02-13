@@ -52,7 +52,7 @@ struct hilbert {
         "Number of dimensions for input must be exactly two."
     );
 
-    COVFIE_DEVICE static void
+    COVFIE_HOST_DEVICE static void
     rot(std::size_t n,
         std::size_t * x,
         std::size_t * y,
@@ -71,7 +71,7 @@ struct hilbert {
         }
     }
 
-    COVFIE_DEVICE static std::size_t calculate_index(
+    COVFIE_HOST_DEVICE static std::size_t calculate_index(
         coordinate_t c,
         utility::nd_size<contravariant_input_t::dimensions> sizes
     )
@@ -261,8 +261,8 @@ struct hilbert {
         {
         }
 
-        COVFIE_DEVICE typename covariant_output_t::vector_t at(coordinate_t c
-        ) const
+        COVFIE_HOST_DEVICE typename covariant_output_t::vector_t
+        at(coordinate_t c) const
         {
 #ifndef NDEBUG
             for (std::size_t i = 0; i < contravariant_input_t::dimensions; ++i)

@@ -147,7 +147,7 @@ struct linear {
         }
 
         template <std::size_t... Is>
-        COVFIE_DEVICE typename contravariant_output_t::vector_t
+        COVFIE_HOST_DEVICE typename contravariant_output_t::vector_t
         _backend_index_helper(typename contravariant_output_t::vector_t coord, std::size_t n, std::index_sequence<Is...>)
             const
         {
@@ -157,7 +157,7 @@ struct linear {
             )...};
         }
 
-        COVFIE_DEVICE typename covariant_output_t::vector_t
+        COVFIE_HOST_DEVICE typename covariant_output_t::vector_t
         at(typename contravariant_input_t::vector_t coord) const
         {
             if constexpr (covariant_output_t::dimensions == 1) {

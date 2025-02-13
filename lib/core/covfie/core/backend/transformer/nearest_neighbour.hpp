@@ -129,7 +129,7 @@ struct nearest_neighbour {
         {
         }
 
-        COVFIE_DEVICE typename covariant_output_t::vector_t
+        COVFIE_HOST_DEVICE typename covariant_output_t::vector_t
         at(typename contravariant_input_t::vector_t c) const
         {
             typename contravariant_output_t::vector_t nc;

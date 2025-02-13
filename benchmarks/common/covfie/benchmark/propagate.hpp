@@ -10,12 +10,6 @@
 #include <covfie/core/definitions.hpp>
 #include <covfie/core/field_view.hpp>
 
-#ifdef __CUDACC__
-#define HOST_DEVICE __host__ __device__
-#else
-#define HOST_DEVICE
-#endif
-
 class Wide
 {
 };
@@ -33,7 +27,7 @@ class RungeKutta4
 };
 
 template <typename propagator_t, typename backend_t>
-HOST_DEVICE inline __attribute__((always_inline)) void propagation_step(
+COVFIE_HOST_DEVICE inline __attribute__((always_inline)) void propagation_step(
     const covfie::field_view<backend_t> & f,
     covfie::benchmark::propagation_agent<3> & o,
     float s

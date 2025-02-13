@@ -97,7 +97,7 @@ struct morton {
 
     static constexpr uint32_t IO_MAGIC_HEADER = 0xAB020006;
 
-    COVFIE_DEVICE static std::size_t
+    COVFIE_HOST_DEVICE static std::size_t
     calculate_index(typename contravariant_input_t::vector_t c)
     {
 #ifdef HAVE_BMI2
@@ -299,7 +299,7 @@ struct morton {
         {
         }
 
-        COVFIE_DEVICE typename covariant_output_t::vector_t
+        COVFIE_HOST_DEVICE typename covariant_output_t::vector_t
         at(typename contravariant_input_t::vector_t c) const
         {
 #ifndef NDEBUG
