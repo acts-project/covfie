@@ -30,15 +30,13 @@ set_target_properties(
             cuda
 )
 
-if(PROJECT_IS_TOP_LEVEL)
-    install(TARGETS covfie_cuda EXPORT ${PROJECT_NAME}Targets)
+install(TARGETS covfie_cuda EXPORT ${PROJECT_NAME}Targets)
 
-    install(
-        DIRECTORY
-            ${CMAKE_CURRENT_SOURCE_DIR}/covfie
-        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-    )
-endif()
+install(
+    DIRECTORY
+        ${CMAKE_CURRENT_SOURCE_DIR}/covfie
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
 
 # Hack for compatibility
 if(NOT PROJECT_IS_TOP_LEVEL)
