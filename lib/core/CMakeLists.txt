@@ -25,15 +25,13 @@ set_target_properties(
             core
 )
 
-if(PROJECT_IS_TOP_LEVEL)
-    install(TARGETS covfie_core EXPORT ${PROJECT_NAME}Targets)
+install(TARGETS covfie_core EXPORT ${PROJECT_NAME}Targets)
 
-    install(
-        DIRECTORY
-            ${CMAKE_CURRENT_SOURCE_DIR}/covfie
-        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-    )
-endif()
+install(
+    DIRECTORY
+        ${CMAKE_CURRENT_SOURCE_DIR}/covfie
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
 
 # Hack for people using the disgusting mal-practice of pullling in external
 # projects via "add_subdirectory"...
