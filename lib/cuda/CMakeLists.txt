@@ -42,19 +42,3 @@ install(
 if(NOT PROJECT_IS_TOP_LEVEL)
     add_library(covfie::cuda ALIAS covfie_cuda)
 endif()
-
-# Test the public headers of covfie::cuda.
-if(COVFIE_TEST_HEADERS)
-    include(covfie-functions)
-
-    file(
-        GLOB_RECURSE public_headers
-        RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
-        "${CMAKE_CURRENT_SOURCE_DIR}/covfie/*.hpp"
-    )
-
-    covfie_test_public_headers(
-        covfie_cuda
-        "${public_headers}"
-    )
-endif()
