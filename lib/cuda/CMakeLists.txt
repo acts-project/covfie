@@ -2,8 +2,6 @@
 # SPDX-FileCopyrightText: 2022 CERN
 # SPDX-License-Identifier: MPL-2.0
 
-find_package(CUDAToolkit REQUIRED)
-
 add_library(covfie_cuda INTERFACE)
 
 target_include_directories(
@@ -15,12 +13,7 @@ target_include_directories(
 
 target_compile_features(covfie_cuda INTERFACE cxx_std_20)
 
-target_link_libraries(
-    covfie_cuda
-    INTERFACE
-        CUDA::cudart
-        covfie_core
-)
+target_link_libraries(covfie_cuda INTERFACE covfie_core)
 
 # Logic to ensure that the CUDA module can be installed properly.
 set_target_properties(

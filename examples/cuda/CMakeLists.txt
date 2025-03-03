@@ -17,6 +17,7 @@ target_link_libraries(
     PRIVATE
         covfie_core
         covfie_cuda
+        CUDA::cudart
         bitmap
         Boost::log
         Boost::log_setup
@@ -31,6 +32,7 @@ target_link_libraries(
     PRIVATE
         covfie_core
         covfie_cuda
+        CUDA::cudart
         bitmap
         Boost::log
         Boost::log_setup

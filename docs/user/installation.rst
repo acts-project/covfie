@@ -32,18 +32,3 @@ install covfie, proceed with the following commands:
     $ cmake -S covfie -B covfie_build -DCMAKE_INSTALL_PREFIX=[prefix] -DCOVFIE_PLATFORM_CPU=On -DCOVFIE_PLATFORM_CUDA=On
     $ cmake --build build
     $ cmake --install build
-
-Configuration flags
--------------------
-
-If all went according to plan, covfie is now installed! Please note that we
-only install code for platforms that the user requests. The following flags can
-be passed to CMake (through the :code:`-D[FLAG]=On` flags):
-
-:code:`COVFIE_PLATFORM_CPU`
-    Install the relevant headers for the CPU-specific parts of the library
-    (enabled by default)
-
-:code:`COVFIE_PLATFORM_CUDA`
-    Install the relevant headers for the CUDA-specific parts of the library
-    (disabled by default)
