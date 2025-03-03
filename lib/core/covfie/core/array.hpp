@@ -19,7 +19,7 @@ requires(_size > 0) struct array {
     using value_type = _scalar_t;
     static constexpr std::size_t dimensions = _size;
 
-    COVFIE_HOST_DEVICE array() = default;
+    array() = default;
 
     COVFIE_HOST_DEVICE array(const scalar_t (&arr)[dimensions])
         requires(dimensions > 1)
