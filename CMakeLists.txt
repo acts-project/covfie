@@ -99,3 +99,9 @@ install(
         ${PROJECT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
     DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME}/cmake
 )
+
+# Export all targets for FetchContent builds
+export(
+    EXPORT ${PROJECT_NAME}Targets
+    FILE "${CMAKE_BINARY_DIR}/${PROJECT_NAME}Targets.cmake"
+)
