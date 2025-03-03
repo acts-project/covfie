@@ -1,0 +1,13 @@
+# SPDX-PackageName: "covfie, a part of the ACTS project"
+# SPDX-FileCopyrightText: 2022 CERN
+# SPDX-License-Identifier: MPL-2.0
+spack:
+  specs:
+    - "cmake@3.26:"
+    - "cuda@12.5:"
+    - "boost@1.85.0: +log+program_options"
+    - "benchmark@1.9: ~performance_counters"
+    - "googletest@1.14:"
+  view: true
+  concretizer:
+    unify: true

@@ -114,6 +114,19 @@ covfie types can seem intimidating at first, but they are quite friendly! Also,
 you only really need to worry about them once, and you can hide them away in a
 typedef.
 
+## Installing dependencies
+
+A full build of covfie requires a few dependencies, including a CUDA compiler,
+Google Test, and Google Benchmark. The easiest way to install these is to use
+the included Spack environment:
+
+```
+spack env create covfie spack.yaml
+spack -e covfie concretize -f
+spack -e covfie install
+spack env activate covfie
+```
+
 ## Citation
 
 If you use covfie in your research, please cite the following paper:
