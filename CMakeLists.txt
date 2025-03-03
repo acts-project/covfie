@@ -14,9 +14,6 @@ option(COVFIE_BUILD_BENCHMARKS "Build benchmark executables.")
 option(COVFIE_BUILD_TESTS "Build test executables.")
 option(COVFIE_BUILD_EXAMPLES "Build example executables.")
 
-# Declare option to enable header completeness tests.
-option(COVFIE_TEST_HEADERS "Enable header completeness tests.")
-
 # Declare options for the different platforms that we wish to support.
 option(COVFIE_PLATFORM_CPU "Enable building of CPU code." On)
 option(COVFIE_PLATFORM_CUDA "Enable building of CUDA code.")

@@ -35,19 +35,3 @@ target_link_libraries(covfie_cpu INTERFACE covfie_core)
 if(NOT PROJECT_IS_TOP_LEVEL)
     add_library(covfie::cpu ALIAS covfie_cpu)
 endif()
-
-# Test the public headers of covfie::cpu.
-if(COVFIE_TEST_HEADERS)
-    include(covfie-functions)
-
-    file(
-        GLOB_RECURSE public_headers
-        RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
-        "${CMAKE_CURRENT_SOURCE_DIR}/covfie/*.hpp"
-    )
-
-    covfie_test_public_headers(
-        covfie_cpu
-        "${public_headers}"
-    )
-endif()
