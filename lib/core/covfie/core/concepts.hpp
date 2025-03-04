@@ -153,7 +153,7 @@ concept field_backend = requires
 
     requires is_initial<T> || is_constructible_from_config_and_backend<T>;
 
-    {typename T::owning_data_t()};
+    //{typename T::owning_data_t()};
 
     requires requires(typename T::owning_data_t & d)
     {

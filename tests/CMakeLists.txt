@@ -24,3 +24,8 @@ endif()
 if(COVFIE_PLATFORM_CUDA)
     add_subdirectory(cuda)
 endif()
+
+# The SYCL tests are only built if requested.
+if(COVFIE_PLATFORM_SYCL)
+    add_subdirectory(sycl)
+endif()

@@ -5,3 +5,4 @@
 add_subdirectory(core)
 add_subdirectory(cpu)
 add_subdirectory(cuda)
+add_subdirectory(sycl)
