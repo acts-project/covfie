@@ -62,15 +62,12 @@ struct clamp {
         {
         }
 
-        template <
-            typename... Args,
-            typename B = backend_t,
-            std::enable_if_t<
-                std::is_same_v<
-                    typename B::configuration_t,
-                    utility::nd_size<B::contravariant_input_t::dimensions>>,
-                bool> = true>
-        explicit owning_data_t(Args... args)
+        template <typename... Args>
+        requires(std::same_as<
+                 typename backend_t::configuration_t,
+                 utility::nd_size<
+                     backend_t::contravariant_input_t::
+                         dimensions>>) explicit owning_data_t(Args... args)
             : m_backend(std::forward<Args>(args)...)
         {
             m_min.fill(static_cast<typename contravariant_input_t::scalar_t>(0)

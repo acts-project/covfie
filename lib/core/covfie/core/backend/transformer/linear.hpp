@@ -73,14 +73,10 @@ struct linear {
         {
         }
 
-        template <
-            typename T,
-            std::enable_if_t<
-                std::is_same_v<
-                    typename T::parent_t::configuration_t,
-                    configuration_t>,
-                bool> = true>
-        explicit owning_data_t(const T & o)
+        template <typename T>
+        requires(std::same_as<
+                 typename T::parent_t::configuration_t,
+                 configuration_t>) explicit owning_data_t(const T & o)
             : m_backend(o.m_backend)
         {
         }

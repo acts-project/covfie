@@ -145,22 +145,17 @@ struct hilbert {
         owning_data_t & operator=(const owning_data_t &) = default;
         owning_data_t & operator=(owning_data_t &&) = default;
 
-        template <
-            typename T,
-            typename B = backend_t,
-            std::enable_if_t<
-                std::is_same_v<
-                    typename T::parent_t::configuration_t,
-                    configuration_t>,
-                bool> = true,
-            std::enable_if_t<
-                std::is_constructible_v<
-                    typename B::owning_data_t,
-                    std::size_t,
-                    std::add_rvalue_reference_t<std::unique_ptr<std::decay_t<
-                        typename B::covariant_output_t::vector_t>[]>>>,
-                bool> = true>
-        explicit owning_data_t(const T & o)
+        template <typename T>
+        requires(std::same_as<
+                 typename T::parent_t::configuration_t,
+                 configuration_t> &&
+                     std::constructible_from<
+                         typename backend_t::owning_data_t,
+                         std::size_t,
+                         std::add_rvalue_reference_t<std::unique_ptr<std::decay_t<
+                             typename backend_t::covariant_output_t::
+                                 vector_t>[]>>>) explicit owning_data_t(const T &
+                                                                            o)
             : m_sizes(o.get_configuration())
             , m_storage(
                   utility::ipow(
@@ -174,14 +169,11 @@ struct hilbert {
         {
         }
 
-        template <
-            typename... Args,
-            typename B = backend_t,
-            std::enable_if_t<
-                !std::
-                    is_constructible_v<typename B::owning_data_t, std::size_t>,
-                bool> = true>
-        explicit owning_data_t(configuration_t conf, Args... args)
+        template <typename... Args>
+        requires(std::constructible_from<
+                 typename backend_t::owning_data_t,
+                 std::
+                     size_t>) explicit owning_data_t(configuration_t conf, Args... args)
             : m_sizes(conf)
             , m_storage(std::forward<Args>(args)...)
         {

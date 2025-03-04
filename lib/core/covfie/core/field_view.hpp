@@ -37,29 +37,16 @@ public:
         return m_storage;
     }
 
-    template <
-        typename... Args,
-        typename Q = coordinate_t,
-        std::enable_if_t<
-            std::conjunction_v<std::is_convertible<
-                Args,
-                typename backend_t::contravariant_input_t::scalar_t>...>,
-            bool> = true,
-        std::enable_if_t<
-            sizeof...(Args) == backend_t::contravariant_input_t::dimensions,
-            bool> = true,
-        std::enable_if_t<!std::is_scalar_v<Q>, bool> = true>
-    COVFIE_HOST_DEVICE output_t at(Args... c) const
+    template <typename... Args>
+    requires((std::convertible_to<Args, typename backend_t::contravariant_input_t::scalar_t> && ...) && (sizeof...(Args) == backend_t::contravariant_input_t::dimensions) && !std::is_scalar_v<coordinate_t>)
+        COVFIE_HOST_DEVICE output_t at(Args... c) const
     {
         return m_storage.at(coordinate_t{
             static_cast<typename backend_t::contravariant_input_t::scalar_t>(c
             )...});
     }
 
-    template <
-        typename T,
-        std::enable_if_t<std::is_same_v<T, coordinate_t>, bool> = true>
-    COVFIE_HOST_DEVICE output_t at(T c) const
+    COVFIE_HOST_DEVICE output_t at(const coordinate_t & c) const
     {
         return m_storage.at(c);
     }

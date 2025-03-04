@@ -59,17 +59,13 @@ struct cuda_texture {
         owning_data_t & operator=(const owning_data_t & o) = default;
         owning_data_t(const owning_data_t & o) = default;
 
-        template <
-            typename T,
-            std::enable_if_t<
-                std::is_unsigned_v<
-                    typename T::parent_t::contravariant_input_t::scalar_t>,
-                bool> = true,
-            std::enable_if_t<
-                T::parent_t::contravariant_input_t::dimensions ==
-                    contravariant_input_t::dimensions,
-                bool> = true>
-        owning_data_t(const T & o)
+        template <typename T>
+        requires(
+            std::unsigned_integral<
+                typename T::parent_t::contravariant_input_t::scalar_t> &&
+            (T::parent_t::contravariant_input_t::dimensions ==
+             contravariant_input_t::dimensions)
+        ) owning_data_t(const T & o)
         {
             cudaChannelFormatDesc channelDesc =
                 cudaCreateChannelDesc<channel_t>();

@@ -48,14 +48,12 @@ parameter_pack<Ts...> make_parameter_pack(Ts &&... args)
 // WARNING: These functions are automatically generated. Best not edit them
 // by hand.
 
-template <
-    typename F,
-    std::enable_if_t<
-        utility::backend_depth<typename F::backend_t>::value == 1,
-        bool> = true>
-auto make_parameter_pack_for(typename utility::nth_backend<
-                             typename F::backend_t,
-                             0>::type::configuration_t && a0)
+template <typename F>
+requires(
+    utility::backend_depth<typename F::backend_t>::value == 1
+) auto make_parameter_pack_for(typename utility::
+                                   nth_backend<typename F::backend_t, 0>::type::
+                                       configuration_t && a0)
 {
     return make_parameter_pack(
         std::forward<typename utility::nth_backend<typename F::backend_t, 0>::
@@ -63,12 +61,8 @@ auto make_parameter_pack_for(typename utility::nth_backend<
     );
 }
 
-template <
-    typename F,
-    std::enable_if_t<
-        utility::backend_depth<typename F::backend_t>::value == 2,
-        bool> = true>
-auto make_parameter_pack_for(
+template <typename F>
+requires(utility::backend_depth<typename F::backend_t>::value == 2) auto make_parameter_pack_for(
     typename utility::nth_backend<typename F::backend_t, 0>::type::
         configuration_t && a0,
     typename utility::nth_backend<typename F::backend_t, 1>::type::
@@ -83,12 +77,8 @@ auto make_parameter_pack_for(
     );
 }
 
-template <
-    typename F,
-    std::enable_if_t<
-        utility::backend_depth<typename F::backend_t>::value == 3,
-        bool> = true>
-auto make_parameter_pack_for(
+template <typename F>
+requires(utility::backend_depth<typename F::backend_t>::value == 3) auto make_parameter_pack_for(
     typename utility::nth_backend<typename F::backend_t, 0>::type::
         configuration_t && a0,
     typename utility::nth_backend<typename F::backend_t, 1>::type::
@@ -107,12 +97,8 @@ auto make_parameter_pack_for(
     );
 }
 
-template <
-    typename F,
-    std::enable_if_t<
-        utility::backend_depth<typename F::backend_t>::value == 4,
-        bool> = true>
-auto make_parameter_pack_for(
+template <typename F>
+requires(utility::backend_depth<typename F::backend_t>::value == 4) auto make_parameter_pack_for(
     typename utility::nth_backend<typename F::backend_t, 0>::type::
         configuration_t && a0,
     typename utility::nth_backend<typename F::backend_t, 1>::type::
@@ -135,12 +121,8 @@ auto make_parameter_pack_for(
     );
 }
 
-template <
-    typename F,
-    std::enable_if_t<
-        utility::backend_depth<typename F::backend_t>::value == 5,
-        bool> = true>
-auto make_parameter_pack_for(
+template <typename F>
+requires(utility::backend_depth<typename F::backend_t>::value == 5) auto make_parameter_pack_for(
     typename utility::nth_backend<typename F::backend_t, 0>::type::
         configuration_t && a0,
     typename utility::nth_backend<typename F::backend_t, 1>::type::
@@ -167,12 +149,8 @@ auto make_parameter_pack_for(
     );
 }
 
-template <
-    typename F,
-    std::enable_if_t<
-        utility::backend_depth<typename F::backend_t>::value == 6,
-        bool> = true>
-auto make_parameter_pack_for(
+template <typename F>
+requires(utility::backend_depth<typename F::backend_t>::value == 6) auto make_parameter_pack_for(
     typename utility::nth_backend<typename F::backend_t, 0>::type::
         configuration_t && a0,
     typename utility::nth_backend<typename F::backend_t, 1>::type::
@@ -203,12 +181,8 @@ auto make_parameter_pack_for(
     );
 }
 
-template <
-    typename F,
-    std::enable_if_t<
-        utility::backend_depth<typename F::backend_t>::value == 7,
-        bool> = true>
-auto make_parameter_pack_for(
+template <typename F>
+requires(utility::backend_depth<typename F::backend_t>::value == 7) auto make_parameter_pack_for(
     typename utility::nth_backend<typename F::backend_t, 0>::type::
         configuration_t && a0,
     typename utility::nth_backend<typename F::backend_t, 1>::type::
@@ -243,12 +217,8 @@ auto make_parameter_pack_for(
     );
 }
 
-template <
-    typename F,
-    std::enable_if_t<
-        utility::backend_depth<typename F::backend_t>::value == 8,
-        bool> = true>
-auto make_parameter_pack_for(
+template <typename F>
+requires(utility::backend_depth<typename F::backend_t>::value == 8) auto make_parameter_pack_for(
     typename utility::nth_backend<typename F::backend_t, 0>::type::
         configuration_t && a0,
     typename utility::nth_backend<typename F::backend_t, 1>::type::
@@ -287,12 +257,8 @@ auto make_parameter_pack_for(
     );
 }
 
-template <
-    typename F,
-    std::enable_if_t<
-        utility::backend_depth<typename F::backend_t>::value == 9,
-        bool> = true>
-auto make_parameter_pack_for(
+template <typename F>
+requires(utility::backend_depth<typename F::backend_t>::value == 9) auto make_parameter_pack_for(
     typename utility::nth_backend<typename F::backend_t, 0>::type::
         configuration_t && a0,
     typename utility::nth_backend<typename F::backend_t, 1>::type::
@@ -335,12 +301,8 @@ auto make_parameter_pack_for(
     );
 }
 
-template <
-    typename F,
-    std::enable_if_t<
-        utility::backend_depth<typename F::backend_t>::value == 10,
-        bool> = true>
-auto make_parameter_pack_for(
+template <typename F>
+requires(utility::backend_depth<typename F::backend_t>::value == 10) auto make_parameter_pack_for(
     typename utility::nth_backend<typename F::backend_t, 0>::type::
         configuration_t && a0,
     typename utility::nth_backend<typename F::backend_t, 1>::type::

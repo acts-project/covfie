@@ -71,15 +71,10 @@ struct nearest_neighbour {
         {
         }
 
-        template <
-            typename T,
-            typename... Args,
-            std::enable_if_t<
-                std::is_same_v<
-                    typename T::parent_t::configuration_t,
-                    std::monostate>,
-                bool> = true>
-        explicit owning_data_t(const T & o)
+        template <typename T>
+        requires(std::same_as<
+                 typename T::parent_t::configuration_t,
+                 std::monostate>) explicit owning_data_t(const T & o)
             : m_backend(o.get_backend())
         {
         }
