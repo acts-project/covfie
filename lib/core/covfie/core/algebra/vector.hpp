@@ -36,14 +36,11 @@ struct vector : public matrix<N, 1, T, I> {
     {
     }
 
-    template <
-        typename... Args,
-        std::enable_if_t<
-            std::conjunction_v<std::is_scalar<Args>...> &&
-                std::conjunction_v<std::is_convertible<Args, T>...> &&
-                sizeof...(Args) == N,
-            bool> = true>
-    COVFIE_HOST_DEVICE vector(Args... args)
+    template <typename... Args>
+    requires(
+        (std::is_scalar_v<Args> && ...) &&
+        (std::is_convertible_v<Args, T> && ...) && sizeof...(Args) == N
+    ) COVFIE_HOST_DEVICE vector(Args... args)
         : vector(array::array<T, N>{std::forward<Args>(args)...})
     {
     }

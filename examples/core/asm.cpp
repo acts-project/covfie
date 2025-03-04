@@ -68,8 +68,3 @@ template covfie::field_view<backend_t3>::output_t
         backend_t3::contravariant_input_t::scalar_t,
         backend_t3::contravariant_input_t::scalar_t
     ) const;
-template covfie::field_view<backend_t4>::output_t
-    covfie::field_view<backend_t4>::at<
-        backend_t4::contravariant_input_t::scalar_t>(
-        backend_t4::contravariant_input_t::scalar_t
-    ) const;

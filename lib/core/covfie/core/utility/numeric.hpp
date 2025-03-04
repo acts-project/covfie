@@ -9,7 +9,7 @@
 #include <type_traits>
 
 namespace covfie::utility {
-template <typename T, std::enable_if_t<std::is_integral_v<T>, bool> = true>
+template <std::integral T>
 T round_pow2(T i)
 {
     T j = 1;
@@ -18,7 +18,7 @@ T round_pow2(T i)
     return j;
 }
 
-template <typename T, std::enable_if_t<std::is_integral_v<T>, bool> = true>
+template <std::integral T>
 T ipow(T i, T p)
 {
     T r = 1;

@@ -104,22 +104,17 @@ struct strided {
         owning_data_t & operator=(const owning_data_t &) = default;
         owning_data_t & operator=(owning_data_t &&) = default;
 
-        template <
-            typename T,
-            typename B = backend_t,
-            std::enable_if_t<
-                std::is_same_v<
-                    typename T::parent_t::configuration_t,
-                    configuration_t>,
-                bool> = true,
-            std::enable_if_t<
-                std::is_constructible_v<
-                    typename B::owning_data_t,
-                    std::size_t,
-                    std::add_rvalue_reference_t<std::unique_ptr<std::decay_t<
-                        typename B::covariant_output_t::vector_t>[]>>>,
-                bool> = true>
-        explicit owning_data_t(const T & o)
+        template <typename T>
+        requires(std::same_as<
+                 typename T::parent_t::configuration_t,
+                 configuration_t> &&
+                     std::constructible_from<
+                         typename backend_t::owning_data_t,
+                         std::size_t,
+                         std::add_rvalue_reference_t<std::unique_ptr<std::decay_t<
+                             typename backend_t::covariant_output_t::
+                                 vector_t>[]>>>) explicit owning_data_t(const T &
+                                                                            o)
             : m_sizes(o.get_configuration())
             , m_storage(
                   std::accumulate(
@@ -133,12 +128,10 @@ struct strided {
         {
         }
 
-        template <
-            typename B = backend_t,
-            std::enable_if_t<
-                std::is_constructible_v<typename B::owning_data_t, std::size_t>,
-                bool> = true>
         explicit owning_data_t(configuration_t conf)
+            requires(std::constructible_from<
+                     typename backend_t::owning_data_t,
+                     std::size_t>)
             : m_sizes(conf)
             , m_storage(std::accumulate(
                   std::begin(m_sizes),
@@ -149,20 +142,19 @@ struct strided {
         {
         }
 
-        template <
-            typename... Args,
-            std::enable_if_t<(sizeof...(Args) > 0), bool> = true>
-        explicit owning_data_t(parameter_pack<configuration_t, Args...> && args)
+        template <typename... Args>
+        requires(sizeof...(Args) > 0) explicit owning_data_t(
+            parameter_pack<configuration_t, Args...> && args
+        )
             : m_sizes(args.x)
             , m_storage(std::move(args.xs))
         {
         }
 
-        template <
-            typename T,
-            std::enable_if_t<std::is_constructible_v<owning_data_t, T>, bool> =
-                true>
-        explicit owning_data_t(parameter_pack<T> && args)
+        template <typename T>
+        requires(std::constructible_from<
+                 owning_data_t,
+                 T>) explicit owning_data_t(parameter_pack<T> && args)
             : owning_data_t(args.x)
         {
         }
