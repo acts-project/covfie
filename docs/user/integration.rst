@@ -37,10 +37,3 @@ flag to the configuration of the *downstream* project:
 .. code-block:: console
 
     $ cmake ... -DCMAKE_PREFIX_PATH=[path]
-
-The CMake setup exposes some of the flags which were used to installed covfie
-in the first place, which allows user to make certain decision based on the way
-in which covfie was installed. Variables set are as follows:
-
-:code:`COVFIE_QUIET`
-    Silences warnings about missing compiler features.

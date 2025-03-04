@@ -13,10 +13,6 @@ target_include_directories(
 
 target_compile_features(covfie_core INTERFACE cxx_std_20)
 
-if(COVFIE_QUIET)
-    target_compile_definitions(covfie_core INTERFACE COVFIE_QUIET)
-endif()
-
 # Logic to ensure that the core module can be installed properly.
 set_target_properties(
     covfie_core
