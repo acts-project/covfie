@@ -20,12 +20,6 @@ option(COVFIE_PLATFORM_CPU "Enable building of CPU code." On)
 option(COVFIE_PLATFORM_OPENMP "Enable building of OpenMP code.")
 option(COVFIE_PLATFORM_CUDA "Enable building of CUDA code.")
 
-# Additional options that may be useful in some cases, such as CI.
-option(
-    COVFIE_QUIET
-    "Disable warnings about missing C++ features. Enabling this is strongly discouraged."
-)
-
 option(COVFIE_FAIL_ON_WARNINGS "Treat compiler warnings as errors.")
 
 # Make the CMake modules in the cmake/ directory visible to the project.
