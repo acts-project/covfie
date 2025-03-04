@@ -15,7 +15,9 @@ option(COVFIE_BUILD_TESTS "Build test executables.")
 option(COVFIE_BUILD_EXAMPLES "Build example executables.")
 
 # Declare options for the different platforms that we wish to support.
+# NOTE: These flag are only used by the example, benchmark, and test code.
 option(COVFIE_PLATFORM_CPU "Enable building of CPU code." On)
+option(COVFIE_PLATFORM_OPENMP "Enable building of OpenMP code.")
 option(COVFIE_PLATFORM_CUDA "Enable building of CUDA code.")
 
 # Additional options that may be useful in some cases, such as CI.

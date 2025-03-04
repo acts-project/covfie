@@ -5,6 +5,8 @@
 # Enable the CUDA language!
 enable_language(CUDA)
 
+find_package(CUDAToolkit REQUIRED)
+
 # Set up the CUDA compiler flags for the tests.
 include(covfie-compiler-options-cuda)
 
@@ -17,6 +19,7 @@ target_link_libraries(
     PUBLIC
         covfie_core
         covfie_cuda
+        CUDA::cudart
         GTest::gtest
         GTest::gtest_main
 )
