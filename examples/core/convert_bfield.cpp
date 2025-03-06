@@ -30,7 +30,10 @@ void parse_opts(
         "input magnetic field to read"
     )("output,o",
       boost::program_options::value<std::string>()->required(),
-      "output magnetic field to write");
+      "output magnetic field to write"
+    )("scale,s",
+      boost::program_options::value<float>()->default_value(0.000299792458f),
+      "unit conversion scaling factor (default: 0.000299792458)");
 
     boost::program_options::parsed_options parsed =
         boost::program_options::command_line_parser(argc, argv)
@@ -46,6 +49,12 @@ void parse_opts(
 
     try {
         boost::program_options::notify(vm);
+        float scale_factor = vm["scale"].as<float>();
+        if (scale_factor <= 0.0f) {
+            BOOST_LOG_TRIVIAL(fatal) << "Invalid scale factor: " << scale_factor
+                                     << ". It must be positive!";
+            std::exit(1);
+        }
     } catch (boost::program_options::required_option & e) {
         BOOST_LOG_TRIVIAL(error) << e.what();
         std::exit(1);
@@ -57,7 +66,7 @@ using field_t = covfie::field<covfie::backend::affine<
         covfie::vector::size3,
         covfie::backend::array<covfie::vector::float3>>>>>;
 
-field_t read_bfield(const std::string & fn)
+field_t read_bfield(const std::string & fn, const float scale_factor)
 {
     std::ifstream f;
 
@@ -67,6 +76,7 @@ field_t read_bfield(const std::string & fn)
     float maxy = std::numeric_limits<float>::lowest();
     float minz = std::numeric_limits<float>::max();
     float maxz = std::numeric_limits<float>::lowest();
+    double spacing_x = 0.0, spacing_y = 0.0, spacing_z = 0.0;
 
     {
         BOOST_LOG_TRIVIAL(info)
@@ -96,11 +106,34 @@ field_t read_bfield(const std::string & fn)
         BOOST_LOG_TRIVIAL(info)
             << "Iterating over lines in the magnetic field file";
 
+        bool x_updated = false, y_updated = false, z_updated = false;
+
         /*
          * Read every line, and update our current minima and maxima
          * appropriately.
          */
         while (f >> xp >> yp >> zp >> Bx >> By >> Bz) {
+            if (n_lines == 0) {
+                // Initialize sample spacing with the first coordinate values
+                spacing_x = xp;
+                spacing_y = yp;
+                spacing_z = zp;
+            } else {
+                // Update sample spacing per coordinate once when they change
+                if (!x_updated && xp != spacing_x) {
+                    spacing_x = std::abs(xp - spacing_x);
+                    x_updated = true;
+                }
+                if (!y_updated && yp != spacing_y) {
+                    spacing_y = std::abs(yp - spacing_y);
+                    y_updated = true;
+                }
+                if (!z_updated && zp != spacing_z) {
+                    spacing_z = std::abs(zp - spacing_z);
+                    z_updated = true;
+                }
+            }
+
             minx = std::min(minx, xp);
             maxx = std::max(maxx, xp);
 
@@ -128,19 +161,28 @@ field_t read_bfield(const std::string & fn)
     BOOST_LOG_TRIVIAL(info)
         << "Field dimensions in z = [" << minz << ", " << maxz << "]";
 
-    BOOST_LOG_TRIVIAL(info)
-        << "Assuming sample spacing of 100.0 in each dimension";
+    BOOST_LOG_TRIVIAL(info) << "Computed sample spacing:";
+    BOOST_LOG_TRIVIAL(info) << "  x-spacing: " << spacing_x;
+    BOOST_LOG_TRIVIAL(info) << "  y-spacing: " << spacing_y;
+    BOOST_LOG_TRIVIAL(info) << "  z-spacing: " << spacing_z;
+
+    if (spacing_x == 0.0 || spacing_y == 0.0 || spacing_z == 0.0) {
+        BOOST_LOG_TRIVIAL(fatal)
+            << "Sample spacing is 0 in one dimension! Error in calculating the "
+               "sample spacing from file";
+        std::exit(1);
+    }
 
     /*
      * Now that we have the limits of our field, compute the size in each
      * dimension.
      */
     std::size_t sx =
-        static_cast<std::size_t>(std::lround((maxx - minx) / 100.0)) + 1;
+        static_cast<std::size_t>(std::lround((maxx - minx) / spacing_x)) + 1;
     std::size_t sy =
-        static_cast<std::size_t>(std::lround((maxy - miny) / 100.0)) + 1;
+        static_cast<std::size_t>(std::lround((maxy - miny) / spacing_y)) + 1;
     std::size_t sz =
-        static_cast<std::size_t>(std::lround((maxz - minz) / 100.0)) + 1;
+        static_cast<std::size_t>(std::lround((maxz - minz) / spacing_z)) + 1;
 
     BOOST_LOG_TRIVIAL(info)
         << "Magnetic field size is " << sx << "x" << sy << "x" << sz;
@@ -196,9 +238,11 @@ field_t read_bfield(const std::string & fn)
         while (f >> xp >> yp >> zp >> Bx >> By >> Bz) {
             field_t::view_t::output_t & p = fv.at(xp, yp, zp);
 
-            p[0] = Bx * 0.000299792458f;
-            p[1] = By * 0.000299792458f;
-            p[2] = Bz * 0.000299792458f;
+            p[0] = Bx * scale_factor;
+            p[1] = By * scale_factor;
+            p[2] = Bz * scale_factor;
+
+            ++n_lines;
         }
 
         BOOST_LOG_TRIVIAL(info)
@@ -222,7 +266,8 @@ int main(int argc, char ** argv)
                             << vm["input"].as<std::string>() << "\"";
     BOOST_LOG_TRIVIAL(info) << "Starting read of input file...";
 
-    field_t fb = read_bfield(vm["input"].as<std::string>());
+    field_t fb =
+        read_bfield(vm["input"].as<std::string>(), vm["scale"].as<float>());
 
     BOOST_LOG_TRIVIAL(info) << "Writing magnetic field to file \""
                             << vm["output"].as<std::string>() << "\"...";
