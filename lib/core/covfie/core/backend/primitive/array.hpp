@@ -194,6 +194,19 @@ struct array {
             utility::write_io_footer(fs, IO_MAGIC_HEADER);
         }
 
+        uint64_t get_size() const
+        {
+            return m_size;
+        }
+
+        std::unique_ptr<vector_t[]> get_host_array() const
+        {
+            std::unique_ptr<vector_t[]> rv =
+                std::make_unique<vector_t[]>(m_size);
+            std::memcpy(rv.get(), m_ptr.get(), m_size * sizeof(vector_t));
+            return rv;
+        }
+
         uint64_t m_size;
         std::unique_ptr<vector_t[]> m_ptr;
     };

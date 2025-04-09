@@ -91,6 +91,14 @@ struct cuda_device_array {
         {
         }
 
+        template <typename B>
+        requires(!std::same_as<B, owning_data_t> && concepts::array_1d_like_field_backend<typename B::parent_t>) explicit owning_data_t(
+            const B & o
+        )
+            : owning_data_t(o.get_size(), o.get_host_array())
+        {
+        }
+
         configuration_t get_configuration() const
         {
             return {m_size};
