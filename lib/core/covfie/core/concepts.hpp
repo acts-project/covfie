@@ -8,6 +8,7 @@
 
 #include <concepts>
 #include <iostream>
+#include <memory>
 #include <optional>
 
 #include <covfie/core/definitions.hpp>
@@ -231,6 +232,23 @@ concept field_backend = requires
                 d.get_backend()
             } -> std::same_as<const typename T::backend_t::non_owning_data_t &>;
         };
+    };
+};
+
+template <typename T>
+concept array_1d_like_field_backend = field_backend<T> && requires
+{
+    typename T::vector_t;
+
+    requires requires(const typename T::owning_data_t & d)
+    {
+        {
+            d.get_size()
+        } -> std::unsigned_integral;
+
+        {
+            d.get_host_array()
+        } -> std::same_as<std::unique_ptr<typename T::vector_t[]>>;
     };
 };
 
