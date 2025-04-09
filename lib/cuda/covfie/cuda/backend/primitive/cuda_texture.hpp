@@ -7,6 +7,7 @@
 #pragma once
 
 #include <memory>
+#include <optional>
 
 #include <cuda_runtime.h>
 
@@ -31,6 +32,8 @@ template <
     cuda_texture_interpolation _interpolation_method =
         cuda_texture_interpolation::LINEAR>
 struct cuda_texture {
+    static_assert(_input_vector_t::size == 2 || _input_vector_t::size == 3);
+
     using this_t =
         cuda_texture<_input_vector_t, _output_vector_t, _interpolation_method>;
 
@@ -54,10 +57,103 @@ struct cuda_texture {
         using parent_t = this_t;
 
         owning_data_t() = default;
-        owning_data_t(owning_data_t &&) = default;
-        owning_data_t & operator=(owning_data_t &&) = default;
-        owning_data_t & operator=(const owning_data_t & o) = default;
-        owning_data_t(const owning_data_t & o) = default;
+
+        owning_data_t(owning_data_t && o)
+            : m_array(o.m_array)
+            , m_tex(o.m_tex)
+        {
+            o.m_array = nullptr;
+            o.m_tex = std::nullopt;
+        }
+
+        owning_data_t & operator=(owning_data_t && o)
+        {
+            if (m_tex.has_value()) {
+                cudaErrorCheck(cudaDestroyTextureObject(*m_tex));
+                m_tex.reset();
+            }
+
+            if (m_array != nullptr) {
+                cudaErrorCheck(cudaFreeArray(m_array));
+            }
+
+            m_tex = o.m_tex;
+            m_array = o.m_array;
+
+            o.m_tex = std::nullopt;
+            o.m_array = nullptr;
+
+            return *this;
+        }
+
+        owning_data_t & operator=(const owning_data_t & o)
+        {
+            cudaChannelFormatDesc channelDesc =
+                cudaCreateChannelDesc<channel_t>();
+
+            cudaExtent extent;
+
+            cudaErrorCheck(
+                cudaArrayGetInfo(nullptr, &extent, nullptr, o.m_array)
+            );
+
+            cudaErrorCheck(cudaMalloc3DArray(&m_array, &channelDesc, extent));
+
+            if constexpr (_input_vector_t::size == 2) {
+                cudaErrorCheck(cudaMemcpy2DArrayToArray(
+                    m_array,
+                    0,
+                    0,
+                    o.m_array,
+                    0,
+                    0,
+                    extent.width * sizeof(channel_t),
+                    extent.height,
+                    cudaMemcpyDeviceToDevice
+                ));
+            } else if constexpr (_input_vector_t::size == 3) {
+                cudaMemcpy3DParms copyParams;
+                // cudaMemcpy3DParms copyParams = {0};
+                memset(&copyParams, 0, sizeof(cudaMemcpy3DParms));
+                copyParams.srcArray = o.m_array;
+                copyParams.dstArray = m_array;
+                copyParams.extent = extent;
+                copyParams.kind = cudaMemcpyDeviceToDevice;
+                cudaErrorCheck(cudaMemcpy3D(&copyParams));
+            }
+
+            cudaResourceDesc resDesc;
+            memset(&resDesc, 0, sizeof(cudaResourceDesc));
+            resDesc.resType = cudaResourceTypeArray;
+            resDesc.res.array.array = m_array;
+
+            cudaTextureDesc texDesc;
+            memset(&texDesc, 0, sizeof(cudaTextureDesc));
+
+            for (std::size_t i = 0; i < _input_vector_t::size; ++i) {
+                texDesc.addressMode[i] = cudaAddressModeClamp;
+            }
+
+            // TODO: Make configurable
+            if (_interpolation_method == cuda_texture_interpolation::LINEAR) {
+                texDesc.filterMode = cudaFilterModeLinear;
+            } else if (_interpolation_method == cuda_texture_interpolation::NEAREST_NEIGHBOUR)
+            {
+                texDesc.filterMode = cudaFilterModePoint;
+            }
+            texDesc.readMode = cudaReadModeElementType;
+
+            cudaErrorCheck(
+                cudaCreateTextureObject(&(*m_tex), &resDesc, &texDesc, nullptr)
+            );
+
+            return *this;
+        }
+
+        owning_data_t(const owning_data_t & o)
+        {
+            *this = o;
+        }
 
         template <typename T>
         requires(
@@ -66,6 +162,7 @@ struct cuda_texture {
             (T::parent_t::contravariant_input_t::dimensions ==
              contravariant_input_t::dimensions)
         ) owning_data_t(const T & o)
+            : m_tex(cudaTextureObject_t{})
         {
             cudaChannelFormatDesc channelDesc =
                 cudaCreateChannelDesc<channel_t>();
@@ -83,13 +180,17 @@ struct cuda_texture {
 
             cudaErrorCheck(cudaMalloc3DArray(&m_array, &channelDesc, extent));
 
-            std::unique_ptr<channel_t[]> stage = std::make_unique<channel_t[]>(
-                extent.width * extent.height * extent.depth
-            );
+            std::size_t stage_size = extent.width *
+                                     std::max(1UL, extent.height) *
+                                     std::max(1UL, extent.depth);
+
+            std::unique_ptr<channel_t[]> stage =
+                std::make_unique<channel_t[]>(stage_size);
 
             utility::nd_map(
                 std::function<void(decltype(srcSize)
-                )>([&no, &stage, &srcSize](decltype(srcSize) i) -> void {
+                )>([&no, &stage, &srcSize, &stage_size](decltype(srcSize) i
+                   ) -> void {
                     typename T::parent_t::covariant_output_t::vector_t v =
                         no.at(i);
 
@@ -109,6 +210,7 @@ struct cuda_texture {
                     }
 
                     std::size_t idx2 = static_cast<std::size_t>(idx);
+                    assert(idx2 < stage_size);
 
                     using stage_scalar_t =
                         typename covariant_output_t::scalar_t;
@@ -139,8 +241,8 @@ struct cuda_texture {
                     0,
                     0,
                     stage.get(),
-                    extent.width,
-                    extent.width,
+                    extent.width * sizeof(channel_t),
+                    extent.width * sizeof(channel_t),
                     extent.height,
                     cudaMemcpyHostToDevice
                 ));
@@ -183,7 +285,7 @@ struct cuda_texture {
             texDesc.readMode = cudaReadModeElementType;
 
             cudaErrorCheck(
-                cudaCreateTextureObject(&m_tex, &resDesc, &texDesc, nullptr)
+                cudaCreateTextureObject(&(*m_tex), &resDesc, &texDesc, nullptr)
             );
         }
 
@@ -195,8 +297,14 @@ struct cuda_texture {
 
         ~owning_data_t()
         {
-            cudaErrorCheck(cudaDestroyTextureObject(m_tex));
-            cudaErrorCheck(cudaFreeArray(m_array));
+            if (m_tex.has_value()) {
+                cudaErrorCheck(cudaDestroyTextureObject(*m_tex));
+                m_tex.reset();
+            }
+
+            if (m_array != nullptr) {
+                cudaErrorCheck(cudaFreeArray(m_array));
+            }
         }
 
         configuration_t get_configuration() const
@@ -217,14 +325,14 @@ struct cuda_texture {
         }
 
         cudaArray_t m_array;
-        cudaTextureObject_t m_tex;
+        std::optional<cudaTextureObject_t> m_tex;
     };
 
     struct non_owning_data_t {
         using parent_t = this_t;
 
         non_owning_data_t(const owning_data_t & o)
-            : m_tex(o.m_tex)
+            : m_tex(*o.m_tex)
         {
         }
 

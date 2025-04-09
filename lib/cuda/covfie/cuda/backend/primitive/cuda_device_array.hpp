@@ -56,20 +56,15 @@ struct cuda_device_array {
         owning_data_t & operator=(const owning_data_t & o)
         {
             m_size = o.m_size;
-            m_ptr = utility::cuda::device_copy_d2d(o.m_ptr, m_size);
+            m_ptr = utility::cuda::device_copy_d2d(o.m_ptr.get(), m_size);
+            return *this;
         }
 
         owning_data_t(const owning_data_t & o)
             : m_size(o.m_size)
-            , m_ptr(utility::cuda::device_copy_d2d(o.m_ptr, m_size))
+            , m_ptr(utility::cuda::device_copy_d2d(o.m_ptr.get(), m_size))
         {
             assert(m_size == 0 || m_ptr);
-
-            if (o.m_ptr && m_size > 0) {
-                std::memcpy(
-                    m_ptr.get(), o.m_ptr.get(), m_size * sizeof(vector_t)
-                );
-            }
         }
 
         explicit owning_data_t(parameter_pack<owning_data_t> && args)
