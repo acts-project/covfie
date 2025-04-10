@@ -82,7 +82,12 @@ struct strided {
 
                 for (std::size_t i = 0; i < covariant_output_t::dimensions; ++i)
                 {
-                    res[idx][i] = nother.at(t)[i];
+                    if constexpr (covariant_output_t::dimensions == 1 && !std::unsigned_integral<std::decay_t<decltype(t)>>)
+                    {
+                        res[idx][i] = nother.at(t[0])[i];
+                    } else {
+                        res[idx][i] = nother.at(t)[i];
+                    }
                 }
             },
             sizes
