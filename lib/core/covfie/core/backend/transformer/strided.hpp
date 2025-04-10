@@ -128,10 +128,8 @@ struct strided {
         {
         }
 
-        explicit owning_data_t(configuration_t conf)
-            requires(std::constructible_from<
-                     typename backend_t::owning_data_t,
-                     std::size_t>)
+        explicit owning_data_t(configuration_t conf
+        ) requires(std::constructible_from<typename backend_t::owning_data_t, std::size_t> && !std::constructible_from<typename backend_t::owning_data_t, utility::nd_size<1>>)
             : m_sizes(conf)
             , m_storage(std::accumulate(
                   std::begin(m_sizes),
@@ -139,6 +137,20 @@ struct strided {
                   static_cast<std::size_t>(1),
                   std::multiplies<std::size_t>()
               ))
+        {
+        }
+
+        explicit owning_data_t(configuration_t conf)
+            requires(std::constructible_from<
+                     typename backend_t::owning_data_t,
+                     utility::nd_size<1>>)
+            : m_sizes(conf)
+            , m_storage(utility::nd_size<1>{std::accumulate(
+                  std::begin(m_sizes),
+                  std::end(m_sizes),
+                  static_cast<std::size_t>(1),
+                  std::multiplies<std::size_t>()
+              )})
         {
         }
 
