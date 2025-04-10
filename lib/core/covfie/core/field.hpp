@@ -48,6 +48,16 @@ public:
     {
     }
 
+    explicit field(const storage_t & backend)
+        : m_backend(backend)
+    {
+    }
+
+    explicit field(storage_t && backend)
+        : m_backend(std::move(backend))
+    {
+    }
+
     explicit field(std::istream & fs)
         : m_backend(decltype(m_backend
           )::read_binary(utility::read_io_header(fs, IO_MAGIC_HEADER)))
