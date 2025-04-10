@@ -96,10 +96,19 @@ protected:
         );
 
         m_field = covfie::field<B>(f);
+        m_field_copied = *m_field;
+        m_field_assigned = covfie::field<B>();
+        m_field_move_assigned = covfie::field<B>();
+        *m_field_assigned = *m_field;
+        covfie::field<B> tmp = *m_field;
+        *m_field_move_assigned = std::move(tmp);
     }
 
     covfie::array::array<std::size_t, N> m_sizes;
     std::optional<covfie::field<B>> m_field;
+    std::optional<covfie::field<B>> m_field_copied;
+    std::optional<covfie::field<B>> m_field_assigned;
+    std::optional<covfie::field<B>> m_field_move_assigned;
 };
 
 template <std::size_t N, typename T>
@@ -114,11 +123,47 @@ using Backends1D = ::testing::Types<
     CudaStridedArrayBackend<1, std::size_t>,
     CudaStridedArrayBackend<1, float>>;
 TYPED_TEST_SUITE(TestCudaStrided1D, Backends1D, NameGenerator);
-TYPED_TEST(TestCudaStrided1D, LookUp)
+TYPED_TEST(TestCudaStrided1D, LookUpMoveConstructed)
 {
     for (std::size_t x = 0; x < this->m_sizes[0]; ++x) {
         std::decay_t<typename covfie::field<TypeParam>::output_t> o =
             retrieve_vector<covfie::field<TypeParam>>(*(this->m_field), {x});
+
+        EXPECT_EQ(o[0], x);
+    }
+}
+
+TYPED_TEST(TestCudaStrided1D, LookUpCopyConstructed)
+{
+    for (std::size_t x = 0; x < this->m_sizes[0]; ++x) {
+        std::decay_t<typename covfie::field<TypeParam>::output_t> o =
+            retrieve_vector<covfie::field<TypeParam>>(
+                *(this->m_field_copied), {x}
+            );
+
+        EXPECT_EQ(o[0], x);
+    }
+}
+
+TYPED_TEST(TestCudaStrided1D, LookUpMoveAssigned)
+{
+    for (std::size_t x = 0; x < this->m_sizes[0]; ++x) {
+        std::decay_t<typename covfie::field<TypeParam>::output_t> o =
+            retrieve_vector<covfie::field<TypeParam>>(
+                *(this->m_field_move_assigned), {x}
+            );
+
+        EXPECT_EQ(o[0], x);
+    }
+}
+
+TYPED_TEST(TestCudaStrided1D, LookUpCopyAssigned)
+{
+    for (std::size_t x = 0; x < this->m_sizes[0]; ++x) {
+        std::decay_t<typename covfie::field<TypeParam>::output_t> o =
+            retrieve_vector<covfie::field<TypeParam>>(
+                *(this->m_field_assigned), {x}
+            );
 
         EXPECT_EQ(o[0], x);
     }
@@ -131,7 +176,7 @@ using Backends2D = ::testing::Types<
     CudaStridedArrayBackend<2, std::size_t>,
     CudaStridedArrayBackend<2, float>>;
 TYPED_TEST_SUITE(TestCudaStrided2D, Backends2D, NameGenerator);
-TYPED_TEST(TestCudaStrided2D, LookUp)
+TYPED_TEST(TestCudaStrided2D, LookUpMoveConstructed)
 {
     for (std::size_t x = 0; x < this->m_sizes[0]; ++x) {
         for (std::size_t y = 0; y < this->m_sizes[1]; ++y) {
@@ -146,13 +191,58 @@ TYPED_TEST(TestCudaStrided2D, LookUp)
     }
 }
 
+TYPED_TEST(TestCudaStrided2D, LookUpCopyConstructed)
+{
+    for (std::size_t x = 0; x < this->m_sizes[0]; ++x) {
+        for (std::size_t y = 0; y < this->m_sizes[1]; ++y) {
+            std::decay_t<typename covfie::field<TypeParam>::output_t> o =
+                retrieve_vector<covfie::field<TypeParam>>(
+                    *(this->m_field_copied), {x, y}
+                );
+
+            EXPECT_EQ(o[0], x);
+            EXPECT_EQ(o[1], y);
+        }
+    }
+}
+
+TYPED_TEST(TestCudaStrided2D, LookUpMoveAssigned)
+{
+    for (std::size_t x = 0; x < this->m_sizes[0]; ++x) {
+        for (std::size_t y = 0; y < this->m_sizes[1]; ++y) {
+            std::decay_t<typename covfie::field<TypeParam>::output_t> o =
+                retrieve_vector<covfie::field<TypeParam>>(
+                    *(this->m_field_move_assigned), {x, y}
+                );
+
+            EXPECT_EQ(o[0], x);
+            EXPECT_EQ(o[1], y);
+        }
+    }
+}
+
+TYPED_TEST(TestCudaStrided2D, LookUpCopyAssigned)
+{
+    for (std::size_t x = 0; x < this->m_sizes[0]; ++x) {
+        for (std::size_t y = 0; y < this->m_sizes[1]; ++y) {
+            std::decay_t<typename covfie::field<TypeParam>::output_t> o =
+                retrieve_vector<covfie::field<TypeParam>>(
+                    *(this->m_field_assigned), {x, y}
+                );
+
+            EXPECT_EQ(o[0], x);
+            EXPECT_EQ(o[1], y);
+        }
+    }
+}
+
 template <typename B>
 using TestCudaStrided3D = TestLookupGeneric<3, B>;
 using Backends3D = ::testing::Types<
     CudaStridedArrayBackend<3, std::size_t>,
     CudaStridedArrayBackend<3, float>>;
 TYPED_TEST_SUITE(TestCudaStrided3D, Backends3D, NameGenerator);
-TYPED_TEST(TestCudaStrided3D, LookUp)
+TYPED_TEST(TestCudaStrided3D, LookUpMoveConstructed)
 {
     for (std::size_t x = 0; x < this->m_sizes[0]; ++x) {
         for (std::size_t y = 0; y < this->m_sizes[1]; ++y) {
@@ -160,6 +250,60 @@ TYPED_TEST(TestCudaStrided3D, LookUp)
                 std::decay_t<typename covfie::field<TypeParam>::output_t> o =
                     retrieve_vector<covfie::field<TypeParam>>(
                         *(this->m_field), {x, y, z}
+                    );
+
+                EXPECT_EQ(o[0], x);
+                EXPECT_EQ(o[1], y);
+                EXPECT_EQ(o[2], z);
+            }
+        }
+    }
+}
+
+TYPED_TEST(TestCudaStrided3D, LookUpCopyConstructed)
+{
+    for (std::size_t x = 0; x < this->m_sizes[0]; ++x) {
+        for (std::size_t y = 0; y < this->m_sizes[1]; ++y) {
+            for (std::size_t z = 0; z < this->m_sizes[2]; ++z) {
+                std::decay_t<typename covfie::field<TypeParam>::output_t> o =
+                    retrieve_vector<covfie::field<TypeParam>>(
+                        *(this->m_field_copied), {x, y, z}
+                    );
+
+                EXPECT_EQ(o[0], x);
+                EXPECT_EQ(o[1], y);
+                EXPECT_EQ(o[2], z);
+            }
+        }
+    }
+}
+
+TYPED_TEST(TestCudaStrided3D, LookUpMoveAssigned)
+{
+    for (std::size_t x = 0; x < this->m_sizes[0]; ++x) {
+        for (std::size_t y = 0; y < this->m_sizes[1]; ++y) {
+            for (std::size_t z = 0; z < this->m_sizes[2]; ++z) {
+                std::decay_t<typename covfie::field<TypeParam>::output_t> o =
+                    retrieve_vector<covfie::field<TypeParam>>(
+                        *(this->m_field_move_assigned), {x, y, z}
+                    );
+
+                EXPECT_EQ(o[0], x);
+                EXPECT_EQ(o[1], y);
+                EXPECT_EQ(o[2], z);
+            }
+        }
+    }
+}
+
+TYPED_TEST(TestCudaStrided3D, LookUpCopyAssigned)
+{
+    for (std::size_t x = 0; x < this->m_sizes[0]; ++x) {
+        for (std::size_t y = 0; y < this->m_sizes[1]; ++y) {
+            for (std::size_t z = 0; z < this->m_sizes[2]; ++z) {
+                std::decay_t<typename covfie::field<TypeParam>::output_t> o =
+                    retrieve_vector<covfie::field<TypeParam>>(
+                        *(this->m_field_assigned), {x, y, z}
                     );
 
                 EXPECT_EQ(o[0], x);

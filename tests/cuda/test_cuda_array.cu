@@ -120,7 +120,7 @@ using BackendsInteger1D = ::testing::Types<
     CudaArrayBackend<3, float>,
     CudaArrayBackend<3, double>>;
 TYPED_TEST_SUITE(TestCudaArray, BackendsInteger1D, NameGenerator);
-TYPED_TEST(TestCudaArray, LookUp)
+TYPED_TEST(TestCudaArray, LookUpMoveConstructed)
 {
     for (std::size_t x = 0; x < this->m_size; ++x) {
         std::decay_t<typename covfie::field<TypeParam>::output_t> o =
@@ -134,7 +134,10 @@ TYPED_TEST(TestCudaArray, LookUp)
             EXPECT_EQ(o[2], x + 2);
         }
     }
+}
 
+TYPED_TEST(TestCudaArray, LookUpCopyConstructed)
+{
     for (std::size_t x = 0; x < this->m_size; ++x) {
         std::decay_t<typename covfie::field<TypeParam>::output_t> o =
             retrieve_vector<covfie::field<TypeParam>>(
@@ -149,7 +152,10 @@ TYPED_TEST(TestCudaArray, LookUp)
             EXPECT_EQ(o[2], x + 2);
         }
     }
+}
 
+TYPED_TEST(TestCudaArray, LookUpCopyAssigned)
+{
     for (std::size_t x = 0; x < this->m_size; ++x) {
         std::decay_t<typename covfie::field<TypeParam>::output_t> o =
             retrieve_vector<covfie::field<TypeParam>>(
@@ -164,7 +170,10 @@ TYPED_TEST(TestCudaArray, LookUp)
             EXPECT_EQ(o[2], x + 2);
         }
     }
+}
 
+TYPED_TEST(TestCudaArray, LookUpMoveAssigned)
+{
     for (std::size_t x = 0; x < this->m_size; ++x) {
         std::decay_t<typename covfie::field<TypeParam>::output_t> o =
             retrieve_vector<covfie::field<TypeParam>>(
