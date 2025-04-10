@@ -7,6 +7,7 @@
 #pragma once
 
 #include <memory>
+#include <optional>
 
 #include <cuda_runtime.h>
 
@@ -53,48 +54,100 @@ unique_device_ptr<T> device_allocate(std::size_t n)
 }
 
 template <typename T>
-unique_device_ptr<T[]> device_copy_h2d(const T * h)
+unique_device_ptr<T[]>
+device_copy_h2d(const T * h, std::optional<cudaStream_t> stream = std::nullopt)
 {
     unique_device_ptr<T[]> r = device_allocate<T[]>();
 
-    cudaErrorCheck(cudaMemcpy(r.get(), h, sizeof(T), cudaMemcpyHostToDevice));
+    if (stream.has_value()) {
+        cudaErrorCheck(cudaMemcpyAsync(
+            r.get(), h, sizeof(T), cudaMemcpyHostToDevice, *stream
+        ));
+        cudaErrorCheck(cudaStreamSynchronize(*stream));
+    } else {
+        cudaErrorCheck(cudaMemcpy(r.get(), h, sizeof(T), cudaMemcpyHostToDevice)
+        );
+    }
 
     return r;
 }
 
 template <typename T>
-unique_device_ptr<T[]> device_copy_h2d(const T * h, std::size_t n)
+unique_device_ptr<T[]> device_copy_h2d(
+    const T * h,
+    std::size_t n,
+    std::optional<cudaStream_t> stream = std::nullopt
+)
 {
     unique_device_ptr<T[]> r = device_allocate<T[]>(n);
 
-    cudaErrorCheck(cudaMemcpy(
-        r.get(), h, n * sizeof(std::remove_extent_t<T>), cudaMemcpyHostToDevice
-    ));
+    if (stream.has_value()) {
+        cudaErrorCheck(cudaMemcpyAsync(
+            r.get(),
+            h,
+            n * sizeof(std::remove_extent_t<T>),
+            cudaMemcpyHostToDevice,
+            *stream
+        ));
+        cudaErrorCheck(cudaStreamSynchronize(*stream));
+    } else {
+        cudaErrorCheck(cudaMemcpy(
+            r.get(),
+            h,
+            n * sizeof(std::remove_extent_t<T>),
+            cudaMemcpyHostToDevice
+        ));
+    }
 
     return r;
 }
 
 template <typename T>
-unique_device_ptr<T[]> device_copy_d2d(const T * h)
+unique_device_ptr<T[]>
+device_copy_d2d(const T * h, std::optional<cudaStream_t> stream = std::nullopt)
 {
     unique_device_ptr<T[]> r = device_allocate<T[]>();
 
-    cudaErrorCheck(cudaMemcpy(r.get(), h, sizeof(T), cudaMemcpyDeviceToDevice));
+    if (stream.has_value()) {
+        cudaErrorCheck(cudaMemcpyAsync(
+            r.get(), h, sizeof(T), cudaMemcpyDeviceToDevice, *stream
+        ));
+        cudaErrorCheck(cudaStreamSynchronize(*stream));
+    } else {
+        cudaErrorCheck(
+            cudaMemcpy(r.get(), h, sizeof(T), cudaMemcpyDeviceToDevice)
+        );
+    }
 
     return r;
 }
 
 template <typename T>
-unique_device_ptr<T[]> device_copy_d2d(const T * h, std::size_t n)
+unique_device_ptr<T[]> device_copy_d2d(
+    const T * h,
+    std::size_t n,
+    std::optional<cudaStream_t> stream = std::nullopt
+)
 {
     unique_device_ptr<T[]> r = device_allocate<T[]>(n);
 
-    cudaErrorCheck(cudaMemcpy(
-        r.get(),
-        h,
-        n * sizeof(std::remove_extent_t<T>),
-        cudaMemcpyDeviceToDevice
-    ));
+    if (stream.has_value()) {
+        cudaErrorCheck(cudaMemcpyAsync(
+            r.get(),
+            h,
+            n * sizeof(std::remove_extent_t<T>),
+            cudaMemcpyDeviceToDevice,
+            *stream
+        ));
+        cudaErrorCheck(cudaStreamSynchronize(*stream));
+    } else {
+        cudaErrorCheck(cudaMemcpy(
+            r.get(),
+            h,
+            n * sizeof(std::remove_extent_t<T>),
+            cudaMemcpyDeviceToDevice
+        ));
+    }
 
     return r;
 }
