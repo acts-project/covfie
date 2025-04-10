@@ -129,7 +129,7 @@ using Backends2D = ::testing::Types<covfie::backend::cuda_texture<
     covfie::vector::float2,
     covfie::vector::float3>>;
 TYPED_TEST_SUITE(TestCudaLerpBackend2D, Backends2D, NameGenerator);
-TYPED_TEST(TestCudaLerpBackend2D, LookUp)
+TYPED_TEST(TestCudaLerpBackend2D, LookUpMoveConstructed)
 {
     for (std::size_t x = 0; x < this->m_sizes[0]; ++x) {
         for (std::size_t y = 0; y < this->m_sizes[1]; ++y) {
@@ -144,7 +144,10 @@ TYPED_TEST(TestCudaLerpBackend2D, LookUp)
             EXPECT_EQ(o[2], static_cast<float>(x + y));
         }
     }
+}
 
+TYPED_TEST(TestCudaLerpBackend2D, LookUpCopyConstructed)
+{
     for (std::size_t x = 0; x < this->m_sizes[0]; ++x) {
         for (std::size_t y = 0; y < this->m_sizes[1]; ++y) {
             std::decay_t<typename covfie::field<TypeParam>::output_t> o =
@@ -158,7 +161,10 @@ TYPED_TEST(TestCudaLerpBackend2D, LookUp)
             EXPECT_EQ(o[2], static_cast<float>(x + y));
         }
     }
+}
 
+TYPED_TEST(TestCudaLerpBackend2D, LookUpCopyAssigned)
+{
     for (std::size_t x = 0; x < this->m_sizes[0]; ++x) {
         for (std::size_t y = 0; y < this->m_sizes[1]; ++y) {
             std::decay_t<typename covfie::field<TypeParam>::output_t> o =
@@ -172,7 +178,10 @@ TYPED_TEST(TestCudaLerpBackend2D, LookUp)
             EXPECT_EQ(o[2], static_cast<float>(x + y));
         }
     }
+}
 
+TYPED_TEST(TestCudaLerpBackend2D, LookUpMoveAssigned)
+{
     for (std::size_t x = 0; x < this->m_sizes[0]; ++x) {
         for (std::size_t y = 0; y < this->m_sizes[1]; ++y) {
             std::decay_t<typename covfie::field<TypeParam>::output_t> o =
@@ -188,6 +197,23 @@ TYPED_TEST(TestCudaLerpBackend2D, LookUp)
     }
 }
 
+TYPED_TEST(TestCudaLerpBackend2D, LookUpInterpolated)
+{
+    for (std::size_t x = 0; x < this->m_sizes[0] - 1; ++x) {
+        for (std::size_t y = 0; y < this->m_sizes[1] - 1; ++y) {
+            std::decay_t<typename covfie::field<TypeParam>::output_t> o =
+                retrieve_vector<covfie::field<TypeParam>>(
+                    *(this->m_field),
+                    {static_cast<float>(x) + 0.25f,
+                     static_cast<float>(y) + 0.50f}
+                );
+
+            EXPECT_EQ(o[0], static_cast<float>(x) + 0.25f);
+            EXPECT_EQ(o[1], static_cast<float>(y) + 0.50f);
+        }
+    }
+}
+
 // 3D tests
 template <typename B>
 using TestCudaLerpBackend3D = TestLookupGeneric<3, B>;
@@ -195,7 +221,7 @@ using Backends3D = ::testing::Types<covfie::backend::cuda_texture<
     covfie::vector::float3,
     covfie::vector::float3>>;
 TYPED_TEST_SUITE(TestCudaLerpBackend3D, Backends3D, NameGenerator);
-TYPED_TEST(TestCudaLerpBackend3D, LookUp)
+TYPED_TEST(TestCudaLerpBackend3D, LookUpMoveConstructed)
 {
     for (std::size_t x = 0; x < this->m_sizes[0]; ++x) {
         for (std::size_t y = 0; y < this->m_sizes[1]; ++y) {
@@ -214,7 +240,10 @@ TYPED_TEST(TestCudaLerpBackend3D, LookUp)
             }
         }
     }
+}
 
+TYPED_TEST(TestCudaLerpBackend3D, LookUpCopyConstructed)
+{
     for (std::size_t x = 0; x < this->m_sizes[0]; ++x) {
         for (std::size_t y = 0; y < this->m_sizes[1]; ++y) {
             for (std::size_t z = 0; z < this->m_sizes[2]; ++z) {
@@ -232,25 +261,10 @@ TYPED_TEST(TestCudaLerpBackend3D, LookUp)
             }
         }
     }
+}
 
-    for (std::size_t x = 0; x < this->m_sizes[0] - 1; ++x) {
-        for (std::size_t y = 0; y < this->m_sizes[1] - 1; ++y) {
-            for (std::size_t z = 0; z < this->m_sizes[2] - 1; ++z) {
-                std::decay_t<typename covfie::field<TypeParam>::output_t> o =
-                    retrieve_vector<covfie::field<TypeParam>>(
-                        *(this->m_field_copied),
-                        {static_cast<float>(x) + 0.25f,
-                         static_cast<float>(y) + 0.50f,
-                         static_cast<float>(z) + 0.75f}
-                    );
-
-                EXPECT_EQ(o[0], static_cast<float>(x) + 0.25f);
-                EXPECT_EQ(o[1], static_cast<float>(y) + 0.50f);
-                EXPECT_EQ(o[2], static_cast<float>(z) + 0.75f);
-            }
-        }
-    }
-
+TYPED_TEST(TestCudaLerpBackend3D, LookUpCopyAssigned)
+{
     for (std::size_t x = 0; x < this->m_sizes[0]; ++x) {
         for (std::size_t y = 0; y < this->m_sizes[1]; ++y) {
             for (std::size_t z = 0; z < this->m_sizes[2]; ++z) {
@@ -268,7 +282,10 @@ TYPED_TEST(TestCudaLerpBackend3D, LookUp)
             }
         }
     }
+}
 
+TYPED_TEST(TestCudaLerpBackend3D, LookUpMoveAssigned)
+{
     for (std::size_t x = 0; x < this->m_sizes[0]; ++x) {
         for (std::size_t y = 0; y < this->m_sizes[1]; ++y) {
             for (std::size_t z = 0; z < this->m_sizes[2]; ++z) {
@@ -283,6 +300,27 @@ TYPED_TEST(TestCudaLerpBackend3D, LookUp)
                 EXPECT_EQ(o[0], static_cast<float>(x));
                 EXPECT_EQ(o[1], static_cast<float>(y));
                 EXPECT_EQ(o[2], static_cast<float>(z));
+            }
+        }
+    }
+}
+
+TYPED_TEST(TestCudaLerpBackend3D, LookUpInterpolated)
+{
+    for (std::size_t x = 0; x < this->m_sizes[0] - 1; ++x) {
+        for (std::size_t y = 0; y < this->m_sizes[1] - 1; ++y) {
+            for (std::size_t z = 0; z < this->m_sizes[2] - 1; ++z) {
+                std::decay_t<typename covfie::field<TypeParam>::output_t> o =
+                    retrieve_vector<covfie::field<TypeParam>>(
+                        *(this->m_field),
+                        {static_cast<float>(x) + 0.25f,
+                         static_cast<float>(y) + 0.50f,
+                         static_cast<float>(z) + 0.75f}
+                    );
+
+                EXPECT_EQ(o[0], static_cast<float>(x) + 0.25f);
+                EXPECT_EQ(o[1], static_cast<float>(y) + 0.50f);
+                EXPECT_EQ(o[2], static_cast<float>(z) + 0.75f);
             }
         }
     }
