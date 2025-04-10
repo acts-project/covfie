@@ -16,6 +16,7 @@
 #include <covfie/core/utility/nd_map.hpp>
 #include <covfie/core/vector.hpp>
 #include <covfie/cuda/backend/primitive/cuda_device_array.hpp>
+#include <covfie/cuda/utility/copy.hpp>
 
 #include "retrieve_vector.hpp"
 
@@ -83,8 +84,19 @@ protected:
             ;
         }
 
+        cudaStream_t stream;
+        cudaErrorCheck(cudaStreamCreate(&stream));
+
         m_field = covfie::field<B>(f);
+        m_field_stream =
+            covfie::utility::cuda::copy_field_with_stream<covfie::field<B>>(
+                f, stream
+            );
         m_field_copied = *m_field;
+        m_field_stream_copied =
+            covfie::utility::cuda::copy_field_with_stream<covfie::field<B>>(
+                f, stream
+            );
         m_field_assigned = covfie::field<B>();
         m_field_move_assigned = covfie::field<B>();
         *m_field_assigned = *m_field;
@@ -94,7 +106,9 @@ protected:
 
     std::size_t m_size;
     std::optional<covfie::field<B>> m_field;
+    std::optional<covfie::field<B>> m_field_stream;
     std::optional<covfie::field<B>> m_field_copied;
+    std::optional<covfie::field<B>> m_field_stream_copied;
     std::optional<covfie::field<B>> m_field_assigned;
     std::optional<covfie::field<B>> m_field_move_assigned;
 };
@@ -136,8 +150,74 @@ TYPED_TEST(TestCudaArray, LookUpMoveConstructed)
     }
 }
 
+TYPED_TEST(TestCudaArray, LookUpMoveStreamConstructed)
+{
+    for (std::size_t x = 0; x < this->m_size; ++x) {
+        std::decay_t<typename covfie::field<TypeParam>::output_t> o =
+            retrieve_vector<covfie::field<TypeParam>>(
+                *(this->m_field_stream), {x}
+            );
+
+        EXPECT_EQ(o[0], x);
+        if constexpr (TypeParam::covariant_output_t::dimensions >= 2) {
+            EXPECT_EQ(o[1], x + 1);
+        }
+        if constexpr (TypeParam::covariant_output_t::dimensions >= 3) {
+            EXPECT_EQ(o[2], x + 2);
+        }
+    }
+}
+
 TYPED_TEST(TestCudaArray, LookUpCopyConstructed)
 {
+    for (std::size_t x = 0; x < this->m_size; ++x) {
+        std::decay_t<typename covfie::field<TypeParam>::output_t> o =
+            retrieve_vector<covfie::field<TypeParam>>(
+                *(this->m_field_stream), {x}
+            );
+
+        EXPECT_EQ(o[0], x);
+        if constexpr (TypeParam::covariant_output_t::dimensions >= 2) {
+            EXPECT_EQ(o[1], x + 1);
+        }
+        if constexpr (TypeParam::covariant_output_t::dimensions >= 3) {
+            EXPECT_EQ(o[2], x + 2);
+        }
+    }
+
+    for (std::size_t x = 0; x < this->m_size; ++x) {
+        std::decay_t<typename covfie::field<TypeParam>::output_t> o =
+            retrieve_vector<covfie::field<TypeParam>>(
+                *(this->m_field_copied), {x}
+            );
+
+        EXPECT_EQ(o[0], x);
+        if constexpr (TypeParam::covariant_output_t::dimensions >= 2) {
+            EXPECT_EQ(o[1], x + 1);
+        }
+        if constexpr (TypeParam::covariant_output_t::dimensions >= 3) {
+            EXPECT_EQ(o[2], x + 2);
+        }
+    }
+}
+
+TYPED_TEST(TestCudaArray, LookUpCopyStreamConstructed)
+{
+    for (std::size_t x = 0; x < this->m_size; ++x) {
+        std::decay_t<typename covfie::field<TypeParam>::output_t> o =
+            retrieve_vector<covfie::field<TypeParam>>(
+                *(this->m_field_stream_copied), {x}
+            );
+
+        EXPECT_EQ(o[0], x);
+        if constexpr (TypeParam::covariant_output_t::dimensions >= 2) {
+            EXPECT_EQ(o[1], x + 1);
+        }
+        if constexpr (TypeParam::covariant_output_t::dimensions >= 3) {
+            EXPECT_EQ(o[2], x + 2);
+        }
+    }
+
     for (std::size_t x = 0; x < this->m_size; ++x) {
         std::decay_t<typename covfie::field<TypeParam>::output_t> o =
             retrieve_vector<covfie::field<TypeParam>>(
@@ -156,6 +236,21 @@ TYPED_TEST(TestCudaArray, LookUpCopyConstructed)
 
 TYPED_TEST(TestCudaArray, LookUpCopyAssigned)
 {
+    for (std::size_t x = 0; x < this->m_size; ++x) {
+        std::decay_t<typename covfie::field<TypeParam>::output_t> o =
+            retrieve_vector<covfie::field<TypeParam>>(
+                *(this->m_field_stream_copied), {x}
+            );
+
+        EXPECT_EQ(o[0], x);
+        if constexpr (TypeParam::covariant_output_t::dimensions >= 2) {
+            EXPECT_EQ(o[1], x + 1);
+        }
+        if constexpr (TypeParam::covariant_output_t::dimensions >= 3) {
+            EXPECT_EQ(o[2], x + 2);
+        }
+    }
+
     for (std::size_t x = 0; x < this->m_size; ++x) {
         std::decay_t<typename covfie::field<TypeParam>::output_t> o =
             retrieve_vector<covfie::field<TypeParam>>(

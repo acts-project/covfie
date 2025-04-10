@@ -56,19 +56,36 @@ struct cuda_device_array {
         owning_data_t & operator=(const owning_data_t & o)
         {
             m_size = o.m_size;
-            m_ptr = utility::cuda::device_copy_d2d(o.m_ptr.get(), m_size);
+            m_ptr = utility::cuda::device_copy_d2d(
+                o.m_ptr.get(), m_size, o.m_stream
+            );
+            m_stream = o.m_stream;
             return *this;
         }
 
         owning_data_t(const owning_data_t & o)
             : m_size(o.m_size)
-            , m_ptr(utility::cuda::device_copy_d2d(o.m_ptr.get(), m_size))
+            , m_ptr(utility::cuda::device_copy_d2d(
+                  o.m_ptr.get(), m_size, o.m_stream
+              ))
+            , m_stream(o.m_stream)
         {
             assert(m_size == 0 || m_ptr);
         }
 
         explicit owning_data_t(parameter_pack<owning_data_t> && args)
             : owning_data_t(std::move(args.x))
+        {
+        }
+
+        explicit owning_data_t(
+            std::size_t size,
+            std::unique_ptr<vector_t[]> && ptr,
+            std::optional<cudaStream_t> stream
+        )
+            : m_size(size)
+            , m_ptr(utility::cuda::device_copy_h2d(ptr.get(), size, stream))
+            , m_stream(stream)
         {
         }
 
@@ -80,8 +97,27 @@ struct cuda_device_array {
         explicit owning_data_t(
             std::size_t size, std::unique_ptr<vector_t[]> && ptr
         )
-            : m_size(size)
-            , m_ptr(utility::cuda::device_copy_h2d(ptr.get(), size))
+            : owning_data_t(size, std::move(ptr), std::nullopt)
+        {
+        }
+
+        explicit owning_data_t(
+            parameter_pack<configuration_t> && args, cudaStream_t stream
+        )
+            : owning_data_t(
+                  args.x[0], utility::cuda::device_allocate<vector_t[]>(m_size)
+              )
+        {
+        }
+
+        explicit owning_data_t(
+            std::size_t size,
+            std::unique_ptr<vector_t[]> && ptr,
+            cudaStream_t stream
+        )
+            : owning_data_t(
+                  size, std::move(ptr), std::optional<cudaStream_t>(stream)
+              )
         {
         }
 
@@ -90,6 +126,14 @@ struct cuda_device_array {
             const B & o
         )
             : owning_data_t(o.get_size(), o.get_host_array())
+        {
+        }
+
+        template <typename B>
+        requires(!std::same_as<B, owning_data_t> && concepts::array_1d_like_field_backend<typename B::parent_t>) explicit owning_data_t(
+            const B & o, cudaStream_t stream
+        )
+            : owning_data_t(o.get_size(), o.get_host_array(), stream)
         {
         }
 
@@ -179,6 +223,7 @@ struct cuda_device_array {
 
         std::size_t m_size;
         utility::cuda::unique_device_ptr<vector_t[]> m_ptr;
+        std::optional<cudaStream_t> m_stream;
     };
 
     struct non_owning_data_t {

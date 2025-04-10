@@ -289,6 +289,18 @@ struct cuda_texture {
             );
         }
 
+        // NOTE: The stream is currently ignored.
+        template <typename T>
+        requires(
+            std::unsigned_integral<
+                typename T::parent_t::contravariant_input_t::scalar_t> &&
+            (T::parent_t::contravariant_input_t::dimensions ==
+             contravariant_input_t::dimensions)
+        ) owning_data_t(const T & o, const cudaStream_t &)
+            : owning_data_t(o)
+        {
+        }
+
         template <typename T>
         owning_data_t(parameter_pack<T> && i)
             : owning_data_t(std::move(i.x))
@@ -326,6 +338,7 @@ struct cuda_texture {
 
         cudaArray_t m_array = nullptr;
         std::optional<cudaTextureObject_t> m_tex;
+        std::optional<cudaStream_t> m_stream;
     };
 
     struct non_owning_data_t {
