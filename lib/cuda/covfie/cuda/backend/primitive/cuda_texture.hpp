@@ -324,7 +324,7 @@ struct cuda_texture {
             throw std::invalid_argument("Cannot perform IO on texture memory.");
         }
 
-        cudaArray_t m_array;
+        cudaArray_t m_array = nullptr;
         std::optional<cudaTextureObject_t> m_tex;
     };
 
