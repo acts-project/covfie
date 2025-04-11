@@ -29,3 +29,8 @@ endif()
 if(COVFIE_PLATFORM_SYCL)
     add_subdirectory(sycl)
 endif()
+
+# The HIP tests are only built if requested.
+if(COVFIE_PLATFORM_HIP)
+    add_subdirectory(hip)
+endif()

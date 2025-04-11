@@ -20,6 +20,7 @@ option(COVFIE_PLATFORM_CPU "Enable building of CPU code." On)
 option(COVFIE_PLATFORM_OPENMP "Enable building of OpenMP code.")
 option(COVFIE_PLATFORM_CUDA "Enable building of CUDA code.")
 option(COVFIE_PLATFORM_SYCL "Enable building of SYCL code.")
+option(COVFIE_PLATFORM_HIP "Enable building of HIP code.")
 
 option(COVFIE_FAIL_ON_WARNINGS "Treat compiler warnings as errors.")
 

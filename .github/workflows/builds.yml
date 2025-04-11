@@ -137,6 +137,68 @@ jobs:
     - name: CPU tests
       run: build/tests/cpu/test_cpu
 
+  linux-hip:
+    strategy:
+      matrix:
+        BUILD:
+          - "Release"
+          - "Debug"
+        CXX_STANDARD:
+          - 20
+        COMPILER:
+          - NAME: "gcc"
+            CXX: "g++"
+        HIP_COMPILER:
+          - NAME: "amdclang"
+            HIPCC: "amdclang++"
+
+    name: "Linux/HIP/${{ matrix.BUILD }}/${{ matrix.COMPILER.NAME }}+${{ matrix.HIP_COMPILER.NAME }}/C++${{ matrix.CXX_STANDARD }}"
+
+    runs-on: "ubuntu-latest"
+
+    container: "rocm/dev-ubuntu-24.04:6.3.4"
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install dependencies
+      run: apt-get update && apt-get -y install
+        libboost-filesystem-dev
+        libboost-program-options-dev
+        libboost-log-dev
+        wget
+        cmake
+        libbenchmark-dev
+        g++-10
+    - name: Install Google Test
+      run: |
+        wget https://github.com/google/googletest/archive/refs/tags/v1.14.0.tar.gz
+        tar -xzvf v1.14.0.tar.gz
+        cmake -S googletest-1.14.0 -B gtest_build -DBUILD_GMOCK=Off -DCMAKE_INSTALL_PREFIX=$GITHUB_WORKSPACE/.prefixes/gtest/
+        cmake --build gtest_build -- -j $(nproc)
+        cmake --install gtest_build
+    - name: Configure
+      run: cmake
+        -DCMAKE_CXX_COMPILER=${{ matrix.COMPILER.CXX }}
+        -DCMAKE_HIP_COMPILER=${{ matrix.HIP_COMPILER.HIPCC }}
+        -DCMAKE_BUILD_TYPE=${{ matrix.BUILD }}
+        -DCOVFIE_FAIL_ON_WARNINGS=TRUE
+        -DCOVFIE_BUILD_TESTS=On
+        -DCOVFIE_BUILD_EXAMPLES=On
+        -DCOVFIE_BUILD_BENCHMARKS=On
+        -DCOVFIE_PLATFORM_HIP=On
+        -DCOVFIE_PLATFORM_CPU=On
+        -DCOVFIE_TEST_HEADERS=On
+        -DCMAKE_CXX_STANDARD=${{ matrix.CXX_STANDARD }}
+        -DCMAKE_PREFIX_PATH="/opt/rocm-6.3.4/;$GITHUB_WORKSPACE/.prefixes/gtest/"
+        -S $GITHUB_WORKSPACE
+        -B build
+    - name: Build
+      run: cmake --build build -- -j $(nproc)
+    - name: Core tests
+      run: build/tests/core/test_core
+    - name: CPU tests
+      run: build/tests/cpu/test_cpu
+
   linux-sycl:
     strategy:
       matrix:
