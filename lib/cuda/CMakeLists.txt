@@ -11,7 +11,12 @@ target_include_directories(
         $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 
-target_compile_features(covfie_cuda INTERFACE cxx_std_20)
+target_compile_features(
+    covfie_cuda
+    INTERFACE
+        cxx_std_20
+        cuda_std_20
+)
 
 target_link_libraries(covfie_cuda INTERFACE covfie_core)
 
