@@ -11,7 +11,7 @@ target_include_directories(
         $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 
-target_compile_features(covfie_hip INTERFACE cxx_std_20)
+target_compile_features(covfie_hip INTERFACE cxx_std_20 hip_std_20)
 
 target_link_libraries(covfie_hip INTERFACE covfie_core)
 
