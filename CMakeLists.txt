@@ -4,7 +4,7 @@
 
 cmake_minimum_required(VERSION 3.21)
 
-project("covfie" VERSION 0.12.1)
+project("covfie" VERSION 0.12.1 LANGUAGES CXX)
 
 # Load some dependencies.
 include(GNUInstallDirs)
