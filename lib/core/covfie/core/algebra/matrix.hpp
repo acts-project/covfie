@@ -33,7 +33,7 @@ struct matrix {
 
     matrix(const matrix<N, M, T, I> &) = default;
 
-    matrix& operator=(const matrix<N, M, T, I> &) = default;
+    matrix & operator=(const matrix<N, M, T, I> &) = default;
 
     COVFIE_HOST_DEVICE T operator()(const I i, const I j) const
     {
