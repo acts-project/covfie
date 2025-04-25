@@ -6,6 +6,7 @@ SPDX-PackageName = "covfie, a part of the ACTS project"
 path = [
         "docs/**",
         "README.md",
+        "CONTRIBUTING.md",
         "extra/layers/README.md"
 ]
 SPDX-FileCopyrightText = "2022 CERN"
