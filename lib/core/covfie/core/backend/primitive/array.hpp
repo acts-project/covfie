@@ -103,6 +103,7 @@ struct array {
                     m_ptr.get(), o.m_ptr.get(), m_size * sizeof(vector_t)
                 );
             }
+            return *this;
         }
 
         configuration_t get_configuration() const
