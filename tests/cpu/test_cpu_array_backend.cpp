@@ -217,3 +217,68 @@ TEST(TestFieldViewCPUArrayBackend, WriteRead3DArrayFloat)
         }
     }
 }
+
+TEST(TestFieldViewCPUArrayBackend, SwizzlingArrayBackend)
+{
+    using field_t = covfie::field<covfie::backend::strided<
+        covfie::vector::size3,
+        covfie::backend::array<covfie::vector::float3>>>;
+
+    constexpr std::size_t N = 5;
+    constexpr std::size_t M = 7;
+    constexpr std::size_t K = 2;
+    constexpr std::size_t S = N * M * K;
+
+    auto get_host_array = [](const field_t & f) {
+        return f.backend().get_backend().get_host_array();
+    };
+    auto get_size = [](const field_t & f) {
+        return f.backend().get_backend().get_size();
+    };
+
+    field_t f(
+        covfie::make_parameter_pack(
+            field_t::backend_t::configuration_t{N, M, K}
+        )
+    );
+
+    {
+        field_t::view_t fv(f);
+        fv.at(1, 1, 1)[1] = 1.f;
+    }
+
+    field_t f2(std::move(f));
+    EXPECT_EQ(get_size(f2), S);
+    {
+        auto observer = get_host_array(f2);
+        EXPECT_EQ(observer.get()->dimensions, 3);
+        field_t::view_t fv(f2);
+        EXPECT_EQ(fv.at(1, 1, 1)[1], 1.f);
+        fv.at(1, 1, 1)[1] = 2.f;
+    }
+
+    f = std::move(f2);
+    EXPECT_EQ(get_size(f), S);
+    {
+        auto observer = get_host_array(f);
+        EXPECT_EQ(observer.get()->dimensions, 3);
+        field_t::view_t fv(f);
+        EXPECT_EQ(fv.at(1, 1, 1)[1], 2.f);
+        fv.at(1, 1, 1)[1] = 3.f;
+    }
+
+    f2 = f;
+    EXPECT_EQ(get_size(f2), S);
+    {
+        auto observer = get_host_array(f2);
+        EXPECT_EQ(observer.get()->dimensions, 3);
+        EXPECT_EQ(get_size(f), S);
+        EXPECT_EQ(get_size(f2), S);
+
+        field_t::view_t fv(f);
+        EXPECT_EQ(fv.at(1, 1, 1)[1], 3.f);
+
+        field_t::view_t fv2(f2);
+        EXPECT_EQ(fv2.at(1, 1, 1)[1], 3.f);
+    }
+}
