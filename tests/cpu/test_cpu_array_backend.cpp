@@ -236,11 +236,8 @@ TEST(TestFieldViewCPUArrayBackend, SwizzlingArrayBackend)
         return f.backend().get_backend().get_size();
     };
 
-    field_t f(
-        covfie::make_parameter_pack(
-            field_t::backend_t::configuration_t{N, M, K}
-        )
-    );
+    field_t f(covfie::make_parameter_pack(field_t::backend_t::configuration_t{
+        N, M, K}));
 
     {
         field_t::view_t fv(f);
