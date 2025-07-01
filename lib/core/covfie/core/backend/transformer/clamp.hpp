@@ -19,6 +19,12 @@
 #include <covfie/core/vector.hpp>
 
 namespace covfie::backend {
+
+template <typename vector_t>
+struct clamp_configuration_t {
+    vector_t min, max;
+};
+
 template <concepts::field_backend _backend_t>
 struct clamp {
     using this_t = clamp<_backend_t>;
@@ -29,9 +35,8 @@ struct clamp {
     using contravariant_input_t = typename backend_t::contravariant_input_t;
     using covariant_output_t = typename backend_t::covariant_output_t;
 
-    struct configuration_t {
-        typename contravariant_input_t::vector_t min, max;
-    };
+    using configuration_t =
+        clamp_configuration_t<typename contravariant_input_t::vector_t>;
 
     static constexpr uint32_t IO_MAGIC_HEADER = 0xAB020002;
 
@@ -70,13 +75,21 @@ struct clamp {
                          dimensions>>) explicit owning_data_t(Args... args)
             : m_backend(std::forward<Args>(args)...)
         {
-            m_min.fill(static_cast<typename contravariant_input_t::scalar_t>(0)
-            );
-
             for (std::size_t i = 0; i < contravariant_input_t::dimensions; ++i)
             {
+                m_min[i] = 0;
                 m_max[i] = m_backend.get_configuration()[i];
             }
+        }
+
+        template <typename T>
+        requires(std::same_as<
+                 typename T::parent_t::configuration_t,
+                 configuration_t>) explicit owning_data_t(const T & o)
+            : m_min(o.get_configuration().min)
+            , m_max(o.get_configuration().max)
+            , m_backend(o.m_backend)
+        {
         }
 
         typename backend_t::owning_data_t & get_backend(void)
