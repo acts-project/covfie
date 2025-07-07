@@ -6,9 +6,6 @@
 
 include(CMakeFindDependencyMacro)
 
-# Descriptive version string: main version is defined in covfieConfigVersion.cmake
-set(covfie_VERSION_STRING "@covfie_VERSION_STRING@")
-
 include(
     "${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@Targets.cmake"
 )

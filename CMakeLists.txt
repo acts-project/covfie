@@ -4,9 +4,7 @@
 
 cmake_minimum_required(VERSION 3.21)
 
-include("${CMAKE_CURRENT_LIST_DIR}/cmake/CgvFindVersion.cmake")
-cgv_find_version(covfie)
-project("covfie" VERSION "${covfie_VERSION}" LANGUAGES CXX)
+project("covfie" VERSION 0.15.2 LANGUAGES CXX)
 
 # Load some dependencies.
 include(GNUInstallDirs)
