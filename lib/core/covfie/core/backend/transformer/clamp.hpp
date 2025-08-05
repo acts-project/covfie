@@ -81,7 +81,8 @@ struct clamp {
             for (std::size_t i = 0; i < contravariant_input_t::dimensions; ++i)
             {
                 m_min[i] = 0;
-                m_max[i] = m_backend.get_configuration()[i];
+                assert(m_backend.get_configuration()[i] > 0);
+                m_max[i] = m_backend.get_configuration()[i] - 1;
             }
         }
 
