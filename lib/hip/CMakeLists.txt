@@ -17,9 +17,14 @@ target_include_directories(
 #        cxx_std_20
 #        hip_std_20
 #)
-set_target_properties(covfie_hip PROPERTIES
-                      HIP_STANDARD 20 
-                      HIP_STANDARD_REQUIRED ON)
+set_target_properties(
+    covfie_hip
+    PROPERTIES
+        HIP_STANDARD
+            20
+        HIP_STANDARD_REQUIRED
+            ON
+)
 
 target_link_libraries(covfie_hip INTERFACE covfie_core)
 
