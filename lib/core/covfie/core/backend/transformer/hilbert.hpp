@@ -115,7 +115,7 @@ struct hilbert {
         typename T::parent_t::non_owning_data_t nother(other);
 
         utility::nd_map<decltype(sizes)>(
-            [&nother, &res](decltype(sizes) t) {
+            [&nother, &res, &sizes](decltype(sizes) t) {
                 coordinate_t c;
 
                 for (std::size_t i = 0; i < contravariant_input_t::dimensions;
@@ -123,7 +123,7 @@ struct hilbert {
                     c[i] = t[i];
                 }
 
-                std::size_t idx = calculate_index(c);
+                std::size_t idx = calculate_index(c, sizes);
 
                 for (std::size_t i = 0; i < covariant_output_t::dimensions; ++i)
                 {
@@ -263,7 +263,7 @@ struct hilbert {
             }
 #endif
 
-            return m_storage.at(calculate_index(c));
+            return m_storage.at(calculate_index(c, m_sizes));
         }
 
         typename backend_t::non_owning_data_t & get_backend(void)
