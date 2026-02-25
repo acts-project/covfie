@@ -25,6 +25,7 @@ add_executable(
     test_canonical.cpp
     test_atlas_like_io.cpp
     test_covariant_cast.cpp
+    test_hilbert_layout.cpp
 )
 
 # Ensure that the tests are linked against the required libraries.
