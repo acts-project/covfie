@@ -7,6 +7,7 @@
 #pragma once
 
 #include <cassert>
+#include <cstdint>
 #include <cstring>
 #include <memory>
 #include <utility>
