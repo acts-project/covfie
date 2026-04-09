@@ -6,7 +6,6 @@
 
 #pragma once
 
-#include <algorithm>
 #include <concepts>
 #include <iostream>
 #include <type_traits>
@@ -157,12 +156,18 @@ struct clamp {
         {
         }
 
+        template <typename S>
+        COVFIE_HOST_DEVICE static S clamp_scalar(S v, S lo, S hi)
+        {
+            return v < lo ? lo : (v > hi ? hi : v);
+        }
+
         template <std::size_t... Is>
         COVFIE_HOST_DEVICE typename contravariant_input_t::vector_t
         adjust(typename contravariant_input_t::vector_t coord, std::index_sequence<Is...>)
             const
         {
-            return {std::clamp(coord[Is], m_min[Is], m_max[Is])...};
+            return {clamp_scalar(coord[Is], m_min[Is], m_max[Is])...};
         }
 
         COVFIE_HOST_DEVICE typename covariant_output_t::vector_t
