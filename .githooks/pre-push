@@ -1,0 +1,22 @@
+#!/bin/bash
+
+# SPDX-PackageName: "covfie, a part of the ACTS project"
+# SPDX-FileCopyrightText: 2022 CERN
+# SPDX-License-Identifier: MPL-2.0
+
+while read local_ref local_oid remote_ref remote_oid
+do
+    if [[ "$local_ref" =~ ^refs/tags/[0-9]*\. ]]; then
+        echo "Tag name $local_ref is illegal, doesn't start with 'v'!"
+        exit 1
+    fi
+
+    if [[ "$local_ref" =~ ^refs/tags/v[0-9]*\. ]]; then
+        tagname=${local_ref:10:1000}
+        echo "Tag name $local_ref (short $tagname) is a valid tag..."
+
+        !(git tag -n1 "$tagname" | grep "^$tagname *covfie $tagname" > /dev/null) && echo "Tag text is not correct!" && exit 1
+
+        !(git show $local_oid:CMakeLists.txt | grep "project(\"covfie\" VERSION ${tagname:1:10000} LANGUAGES CXX)" > /dev/null) && echo "CMakeLists.txt version is wrongly set!" && exit 1
+    fi
+done
