@@ -20,3 +20,5 @@ do
         !(git show $local_oid:CMakeLists.txt | grep "project(\"covfie\" VERSION ${tagname:1:10000} LANGUAGES CXX)" > /dev/null) && echo "CMakeLists.txt version is wrongly set!" && exit 1
     fi
 done
+
+exit 0
