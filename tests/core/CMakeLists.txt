@@ -25,6 +25,7 @@ add_executable(
     test_canonical.cpp
     test_atlas_like_io.cpp
     test_covariant_cast.cpp
+    test_covariant_select.cpp
     test_hilbert_layout.cpp
 )
 
