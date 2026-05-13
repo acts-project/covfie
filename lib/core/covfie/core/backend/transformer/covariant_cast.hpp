@@ -112,7 +112,7 @@ struct covariant_cast {
         at(typename contravariant_input_t::vector_t c) const
         {
             return at_helper(
-                c, std::make_index_sequence<contravariant_input_t::dimensions>{}
+                c, std::make_index_sequence<covariant_output_t::dimensions>{}
             );
         }
 
