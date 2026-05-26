@@ -11,6 +11,7 @@
 
 #include <covfie/core/backend/primitive/identity.hpp>
 #include <covfie/core/backend/transformer/covariant_cast.hpp>
+#include <covfie/core/backend/transformer/covariant_select.hpp>
 #include <covfie/core/backend/transformer/linear.hpp>
 #include <covfie/core/field.hpp>
 
@@ -117,6 +118,100 @@ TEST(TestLinearInterpolator, Identity7D)
                 );
                 EXPECT_NEAR(
                     fv.at(x, y, z, 5.4f, 2.1f, -6.6f, -0.2f)[6], -0.2f, 0.01f
+                );
+            }
+        }
+    }
+}
+
+TEST(TestLinearInterpolator, Identity3DTo1D)
+{
+    using field_t =
+        covfie::field<covfie::backend::linear<covfie::backend::covariant_cast<
+            float,
+            covfie::backend::covariant_select<
+                covfie::backend::identity<covfie::vector::int3>,
+                1>>>>;
+
+    field_t f(covfie::make_parameter_pack(
+        field_t::backend_t::configuration_t({}),
+        field_t::backend_t::backend_t::configuration_t({}),
+        field_t::backend_t::backend_t::backend_t::configuration_t({}),
+        field_t::backend_t::backend_t::backend_t::backend_t::configuration_t({})
+    ));
+    field_t::view_t fv(f);
+
+    for (float x = -2.f; x < 2.f; x += 0.2f) {
+        for (float y = -2.f; y < 2.f; y += 0.2f) {
+            for (float z = -2.f; z < 2.f; z += 0.2f) {
+                EXPECT_NEAR(fv.at(x, y, z)[0], y, 0.01f);
+            }
+        }
+    }
+}
+
+TEST(TestLinearInterpolator, Identity3DTo2D)
+{
+    using field_t =
+        covfie::field<covfie::backend::linear<covfie::backend::covariant_cast<
+            float,
+            covfie::backend::covariant_select<
+                covfie::backend::identity<covfie::vector::int3>,
+                2,
+                0>>>>;
+
+    field_t f(covfie::make_parameter_pack(
+        field_t::backend_t::configuration_t({}),
+        field_t::backend_t::backend_t::configuration_t({}),
+        field_t::backend_t::backend_t::backend_t::configuration_t({}),
+        field_t::backend_t::backend_t::backend_t::backend_t::configuration_t({})
+    ));
+    field_t::view_t fv(f);
+
+    for (float x = -2.f; x < 2.f; x += 0.2f) {
+        for (float y = -2.f; y < 2.f; y += 0.2f) {
+            for (float z = -2.f; z < 2.f; z += 0.2f) {
+                EXPECT_NEAR(fv.at(x, y, z)[0], z, 0.01f);
+                EXPECT_NEAR(fv.at(x, y, z)[1], x, 0.01f);
+            }
+        }
+    }
+}
+
+TEST(TestLinearInterpolator, Identity7DTo4D)
+{
+    using field_t =
+        covfie::field<covfie::backend::linear<covfie::backend::covariant_cast<
+            float,
+            covfie::backend::covariant_select<
+                covfie::backend::identity<covfie::vector::vector_d<int, 7>>,
+                3,
+                1,
+                6,
+                0>>>>;
+
+    field_t f(covfie::make_parameter_pack(
+        field_t::backend_t::configuration_t({}),
+        field_t::backend_t::backend_t::configuration_t({}),
+        field_t::backend_t::backend_t::backend_t::configuration_t({}),
+        field_t::backend_t::backend_t::backend_t::backend_t::configuration_t({})
+    ));
+    field_t::view_t fv(f);
+
+    for (float x = -2.f; x < 2.f; x += 0.2f) {
+        for (float y = -2.f; y < 2.f; y += 0.2f) {
+            for (float z = -2.f; z < 2.f; z += 0.2f) {
+                EXPECT_NEAR(
+                    fv.at(x, y, z, 5.4f, 2.1f, -6.6f, -0.2f)[0], 5.4f, 0.01f
+                );
+                EXPECT_NEAR(
+                    fv.at(x, y, z, 5.4f, 2.1f, -6.6f, -0.2f)[1], y, 0.01f
+                );
+                EXPECT_NEAR(
+                    fv.at(x, y, z, 5.4f, 2.1f, -6.6f, -0.2f)[2], -0.2f, 0.01f
+                );
+                EXPECT_NEAR(
+                    fv.at(x, y, z, 5.4f, 2.1f, -6.6f, -0.2f)[3], x, 0.01f
                 );
             }
         }

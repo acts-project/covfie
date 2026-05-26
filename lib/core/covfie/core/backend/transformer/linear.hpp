@@ -10,6 +10,7 @@
 #include <cstddef>
 #include <iostream>
 #include <type_traits>
+#include <utility>
 #include <variant>
 
 #include <covfie/core/concepts.hpp>
@@ -142,222 +143,49 @@ struct linear {
         {
         }
 
-        template <std::size_t... Is>
-        COVFIE_HOST_DEVICE typename contravariant_output_t::vector_t
-        _backend_index_helper(typename contravariant_output_t::vector_t coord, std::size_t n, std::index_sequence<Is...>)
-            const
-        {
-            return {static_cast<typename decltype(m_backend
-            )::parent_t::contravariant_input_t::scalar_t>(
-                coord[Is] + ((n & (std::size_t(1) << Is)) ? 1 : 0)
-            )...};
-        }
-
         COVFIE_HOST_DEVICE typename covariant_output_t::vector_t
         at(typename contravariant_input_t::vector_t coord) const
         {
-            if constexpr (covariant_output_t::dimensions == 1) {
-                typename contravariant_output_t::scalar_t i =
+            typename contravariant_output_t::scalar_t
+                is[contravariant_output_t::dimensions];
+            input_scalar_type ls[contravariant_output_t::dimensions],
+                rs[contravariant_output_t::dimensions];
+            typename covariant_output_t::vector_t rv;
+
+            for (unsigned int i = 0; i < contravariant_output_t::dimensions;
+                 ++i)
+            {
+                is[contravariant_output_t::dimensions - (i + 1)] =
                     static_cast<typename contravariant_output_t::scalar_t>(
-                        coord[0]
+                        coord[i]
                     );
-
-                input_scalar_type a = coord[0] - std::trunc(coord[0]);
-
-                input_scalar_type ra = static_cast<input_scalar_type>(1.) - a;
-
-                std::remove_reference_t<typename covariant_output_t::vector_t>
-                    pc[2];
-
-                for (std::size_t n = 0; n < 2; ++n) {
-                    pc[n] =
-                        m_backend.at({static_cast<typename decltype(m_backend
-                        )::parent_t::contravariant_input_t::scalar_t>(
-                            i + ((n & 1) ? 1 : 0)
-                        )});
-                }
-
-                typename covariant_output_t::vector_t rv;
-
-                for (std::size_t q = 0; q < covariant_output_t::dimensions; ++q)
-                {
-                    rv[q] = ra * static_cast<input_scalar_type>(pc[0][q]) +
-                            a * static_cast<input_scalar_type>(pc[1][q]);
-                }
-
-                return rv;
-            } else if constexpr (covariant_output_t::dimensions == 2) {
-                typename contravariant_output_t::scalar_t i =
-                    static_cast<typename contravariant_output_t::scalar_t>(
-                        coord[0]
-                    );
-                typename contravariant_output_t::scalar_t j =
-                    static_cast<typename contravariant_output_t::scalar_t>(
-                        coord[1]
-                    );
-
-                input_scalar_type a = coord[0] - std::trunc(coord[0]);
-                input_scalar_type b = coord[1] - std::trunc(coord[1]);
-
-                input_scalar_type ra = static_cast<input_scalar_type>(1.) - a;
-                input_scalar_type rb = static_cast<input_scalar_type>(1.) - b;
-
-                std::remove_reference_t<typename covariant_output_t::vector_t>
-                    pc[4];
-
-                for (std::size_t n = 0; n < 4; ++n) {
-                    pc[n] = m_backend.at(
-                        {static_cast<typename decltype(m_backend
-                         )::parent_t::contravariant_input_t::scalar_t>(
-                             i + ((n & 2) ? 1 : 0)
-                         ),
-                         static_cast<typename decltype(m_backend
-                         )::parent_t::contravariant_input_t::scalar_t>(
-                             j + ((n & 1) ? 1 : 0)
-                         )}
-                    );
-                }
-
-                typename covariant_output_t::vector_t rv;
-
-                for (std::size_t q = 0; q < covariant_output_t::dimensions; ++q)
-                {
-                    rv[q] = ra * rb * static_cast<input_scalar_type>(pc[0][q]) +
-                            ra * b * static_cast<input_scalar_type>(pc[1][q]) +
-                            a * rb * static_cast<input_scalar_type>(pc[2][q]) +
-                            a * b * static_cast<input_scalar_type>(pc[3][q]);
-                }
-
-                return rv;
-            } else if constexpr (covariant_output_t::dimensions == 3) {
-                typename contravariant_output_t::scalar_t i =
-                    static_cast<typename contravariant_output_t::scalar_t>(
-                        coord[0]
-                    );
-                typename contravariant_output_t::scalar_t j =
-                    static_cast<typename contravariant_output_t::scalar_t>(
-                        coord[1]
-                    );
-                typename contravariant_output_t::scalar_t k =
-                    static_cast<typename contravariant_output_t::scalar_t>(
-                        coord[2]
-                    );
-
-                input_scalar_type a = coord[0] - std::trunc(coord[0]);
-                input_scalar_type b = coord[1] - std::trunc(coord[1]);
-                input_scalar_type c = coord[2] - std::trunc(coord[2]);
-
-                input_scalar_type ra = static_cast<input_scalar_type>(1.) - a;
-                input_scalar_type rb = static_cast<input_scalar_type>(1.) - b;
-                input_scalar_type rc = static_cast<input_scalar_type>(1.) - c;
-
-                std::remove_reference_t<typename covariant_output_t::vector_t>
-                    pc[8];
-
-                for (std::size_t n = 0; n < 8; ++n) {
-                    pc[n] = m_backend.at(
-                        {static_cast<typename decltype(m_backend
-                         )::parent_t::contravariant_input_t::scalar_t>(
-                             i + ((n & 4) ? 1 : 0)
-                         ),
-                         static_cast<typename decltype(m_backend
-                         )::parent_t::contravariant_input_t::scalar_t>(
-                             j + ((n & 2) ? 1 : 0)
-                         ),
-                         static_cast<typename decltype(m_backend
-                         )::parent_t::contravariant_input_t::scalar_t>(
-                             k + ((n & 1) ? 1 : 0)
-                         )}
-                    );
-                }
-
-                typename covariant_output_t::vector_t rv;
-
-                for (std::size_t q = 0; q < covariant_output_t::dimensions; ++q)
-                {
-                    rv[q] =
-                        ra * rb * rc *
-                            static_cast<input_scalar_type>(pc[0][q]) +
-                        ra * rb * c * static_cast<input_scalar_type>(pc[1][q]) +
-                        ra * b * rc * static_cast<input_scalar_type>(pc[2][q]) +
-                        ra * b * c * static_cast<input_scalar_type>(pc[3][q]) +
-                        a * rb * rc * static_cast<input_scalar_type>(pc[4][q]) +
-                        a * rb * c * static_cast<input_scalar_type>(pc[5][q]) +
-                        a * b * rc * static_cast<input_scalar_type>(pc[6][q]) +
-                        a * b * c * static_cast<input_scalar_type>(pc[7][q]);
-                }
-
-                return rv;
-            } else {
-                typename contravariant_output_t::vector_t is;
-
-                for (std::size_t n = 0; n < contravariant_output_t::dimensions;
-                     ++n)
-                {
-                    is[n] =
-                        static_cast<contravariant_output_t::scalar_t>(coord[n]);
-                }
-
-                input_scalar_type vs[contravariant_output_t::dimensions];
-
-                for (std::size_t n = 0; n < contravariant_output_t::dimensions;
-                     ++n)
-                {
-                    vs[n] = coord[n] - std::trunc(coord[n]);
-                }
-
-                input_scalar_type rs[contravariant_output_t::dimensions];
-
-                for (std::size_t n = 0; n < contravariant_output_t::dimensions;
-                     ++n)
-                {
-                    rs[n] = static_cast<input_scalar_type>(1.) - vs[n];
-                }
-
-                std::remove_reference_t<typename covariant_output_t::vector_t>
-                    pc[std::size_t(1) << covariant_output_t::dimensions];
-
-                for (std::size_t n = 0;
-                     n < std::size_t(1) << covariant_output_t::dimensions;
-                     ++n)
-                {
-                    pc[n] = m_backend.at(_backend_index_helper(
-                        is,
-                        n,
-                        std::make_index_sequence<
-                            contravariant_input_t::dimensions>{}
-                    ));
-                }
-
-                typename covariant_output_t::vector_t rv;
-
-                for (std::size_t q = 0; q < covariant_output_t::dimensions; ++q)
-                {
-                    rv[q] = 0.f;
-
-                    for (std::size_t n = 0;
-                         n < std::size_t(1) << covariant_output_t::dimensions;
-                         ++n)
-                    {
-                        input_scalar_type f{1.};
-
-                        for (std::size_t m = 0;
-                             m < covariant_output_t::dimensions;
-                             ++m)
-                        {
-                            if (n & (std::size_t(1) << m)) {
-                                f *= vs[m];
-                            } else {
-                                f *= rs[m];
-                            }
-                        }
-
-                        rv[q] += f * static_cast<input_scalar_type>(pc[n][q]);
-                    }
-                }
-
-                return rv;
+                ls[contravariant_output_t::dimensions - (i + 1)] =
+                    coord[i] - std::trunc(coord[i]);
+                rs[contravariant_output_t::dimensions - (i + 1)] =
+                    static_cast<input_scalar_type>(1.) -
+                    ls[contravariant_output_t::dimensions - (i + 1)];
             }
+
+            for (unsigned int i = 0; i < covariant_output_t::dimensions; ++i) {
+                rv[i] = static_cast<typename covariant_output_t::scalar_t>(0.f);
+            }
+
+            for (std::size_t n = 0;
+                 n < (1u << contravariant_output_t::dimensions);
+                 ++n)
+            {
+                decltype(auto) pc = underlying_getter(n, is);
+                const auto ifac = weight_helper(n, ls, rs);
+
+                for (std::size_t q = 0; q < covariant_output_t::dimensions; ++q)
+                {
+                    rv[q] += static_cast<covariant_output_t::scalar_t>(
+                        ifac * static_cast<input_scalar_type>(pc[q])
+                    );
+                }
+            }
+
+            return rv;
         }
 
         typename backend_t::non_owning_data_t & get_backend(void)
@@ -371,6 +199,56 @@ struct linear {
         }
 
         typename backend_t::non_owning_data_t m_backend;
+
+    private:
+        template <std::size_t... Is>
+        COVFIE_HOST_DEVICE input_scalar_type
+        weight_helper_impl(std::size_t n, const input_scalar_type (&ls)[contravariant_output_t::dimensions], const input_scalar_type (&rs)[contravariant_output_t::dimensions], std::index_sequence<Is...>)
+            const
+        {
+            return (((n & (1u << Is)) ? ls[Is] : rs[Is]) * ...);
+        }
+
+        COVFIE_HOST_DEVICE input_scalar_type weight_helper(
+            std::size_t n,
+            const input_scalar_type (&ls)[contravariant_output_t::dimensions],
+            const input_scalar_type (&rs)[contravariant_output_t::dimensions]
+        ) const
+        {
+            return weight_helper_impl(
+                n,
+                ls,
+                rs,
+                std::make_index_sequence<contravariant_output_t::dimensions>()
+            );
+        }
+
+        template <std::size_t... Is>
+        COVFIE_HOST_DEVICE decltype(auto)
+        underlying_getter_impl(std::size_t n, const typename contravariant_output_t::scalar_t (&is)[contravariant_output_t::dimensions], std::index_sequence<Is...>)
+            const
+        {
+            return m_backend.at({(static_cast<typename decltype(m_backend
+                                  )::parent_t::contravariant_input_t::scalar_t>(
+                is[contravariant_output_t::dimensions - (Is + 1)] +
+                ((n & (1u << (contravariant_output_t::dimensions - (Is + 1))))
+                     ? 1
+                     : 0)
+            ))...});
+        }
+
+        COVFIE_HOST_DEVICE decltype(auto) underlying_getter(
+            std::size_t n,
+            const typename contravariant_output_t::scalar_t (&is
+            )[contravariant_output_t::dimensions]
+        ) const
+        {
+            return underlying_getter_impl(
+                n,
+                is,
+                std::make_index_sequence<contravariant_output_t::dimensions>()
+            );
+        }
     };
 };
 }
