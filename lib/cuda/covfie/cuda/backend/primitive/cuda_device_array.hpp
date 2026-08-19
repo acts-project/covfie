@@ -90,7 +90,7 @@ struct cuda_device_array {
         }
 
         explicit owning_data_t(parameter_pack<configuration_t> && args)
-            : owning_data_t(args.x[0], std::make_unique<vector_t[]>(m_size))
+            : owning_data_t(args.x[0], std::make_unique<vector_t[]>(args.x[0]))
         {
         }
 
@@ -105,7 +105,8 @@ struct cuda_device_array {
             parameter_pack<configuration_t> && args, cudaStream_t stream
         )
             : owning_data_t(
-                  args.x[0], utility::cuda::device_allocate<vector_t[]>(m_size)
+                  args.x[0],
+                  utility::cuda::device_allocate<vector_t[]>(args.x[0])
               )
         {
         }
