@@ -39,18 +39,10 @@ requires(concepts::field_backend<T> &&
                           typename T::backend_t::owning_data_t &&>)
         {
             return typename T::owning_data_t(std::move(new_backend));
-        } else if constexpr (std::constructible_from<
-                                 typename T::owning_data_t,
-                                 decltype(backend.get_configuration()),
-                                 typename T::backend_t::owning_data_t &&>)
-        {
+        } else {
             return typename T::owning_data_t(
                 backend.get_configuration(), std::move(new_backend)
             );
-        } else {
-            return typename T::owning_data_t(make_parameter_pack(
-                backend.get_configuration(), std::move(new_backend)
-            ));
         }
     }
 }
