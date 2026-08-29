@@ -13,6 +13,7 @@
 #include <covfie/core/field_view.hpp>
 #include <covfie/core/parameter_pack.hpp>
 #include <covfie/core/utility/binary_io.hpp>
+#include <covfie/core/utility/construction.hpp>
 
 namespace covfie {
 template <concepts::field_backend _backend_t>
@@ -45,7 +46,7 @@ public:
 
     template <typename... Args>
     explicit field(parameter_pack<Args...> && args)
-        : m_backend(std::forward<parameter_pack<Args...>>(args))
+        : m_backend(utility::construct<backend_t>(std::move(args)))
     {
     }
 

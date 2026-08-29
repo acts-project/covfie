@@ -49,18 +49,6 @@ struct affine {
         owning_data_t & operator=(const owning_data_t &) = default;
         owning_data_t & operator=(owning_data_t &&) = default;
 
-        template <typename... Args>
-        explicit owning_data_t(parameter_pack<configuration_t, Args...> && args)
-            : m_transform(args.x)
-            , m_backend(std::move(args.xs))
-        {
-        }
-
-        explicit owning_data_t(parameter_pack<owning_data_t> && conf)
-            : owning_data_t(std::move(conf.x))
-        {
-        }
-
         template <typename T>
         requires(std::same_as<
                  typename T::parent_t::configuration_t,
