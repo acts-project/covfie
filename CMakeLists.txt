@@ -51,6 +51,8 @@ if(COVFIE_BUILD_TESTS)
         )
     endif()
 
+    enable_testing()
+
     add_subdirectory(tests)
 endif()
 

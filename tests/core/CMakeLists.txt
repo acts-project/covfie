@@ -39,3 +39,6 @@ target_link_libraries(
         Boost::filesystem
         testing_utils
 )
+
+# Register the individual test cases with CTest.
+gtest_discover_tests(test_core DISCOVERY_MODE PRE_TEST)

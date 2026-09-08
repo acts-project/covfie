@@ -6,6 +6,11 @@
 # up.
 find_package(GTest CONFIG REQUIRED)
 
+# Provides gtest_discover_tests, which the subdirectories below use to register
+# their cases with CTest. Discovery is deferred to test time (PRE_TEST) so that
+# the device test binaries are not run on the build machine.
+include(GoogleTest)
+
 # Set up the C++ compiler flags for the tests.
 include(covfie-compiler-options-cpp)
 
