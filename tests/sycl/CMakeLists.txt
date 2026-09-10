@@ -14,3 +14,6 @@ target_link_libraries(
         GTest::gtest
         GTest::gtest_main
 )
+
+# Register the individual test cases with CTest.
+gtest_discover_tests(test_sycl DISCOVERY_MODE PRE_TEST)
