@@ -4,6 +4,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+#include <cstddef>
+
 #include <covfie/core/backend/primitive/array.hpp>
 #include <covfie/core/backend/transformer/dereference.hpp>
 #include <covfie/core/backend/transformer/shuffle.hpp>

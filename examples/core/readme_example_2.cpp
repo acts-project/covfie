@@ -5,6 +5,7 @@
  */
 
 #include <cmath>
+#include <cstddef>
 #include <iostream>
 
 #include <covfie/core/backend/primitive/array.hpp>

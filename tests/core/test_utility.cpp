@@ -4,6 +4,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+#include <cstddef>
+
 #include <gtest/gtest.h>
 
 #include <covfie/core/utility/nd_map.hpp>

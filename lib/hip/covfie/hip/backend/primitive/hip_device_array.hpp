@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include <cstddef>
+#include <cstdint>
 #include <memory>
 
 #include <hip/hip_runtime.h>

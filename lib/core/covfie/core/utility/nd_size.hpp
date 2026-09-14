@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include <cstddef>
+
 #include <covfie/core/array.hpp>
 
 namespace covfie::utility {

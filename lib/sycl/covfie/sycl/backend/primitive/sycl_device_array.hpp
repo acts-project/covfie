@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include <cstddef>
+#include <cstdint>
 #include <memory>
 
 #include <covfie/core/backend/primitive/array.hpp>

@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include <cstddef>
+
 #include <benchmark/benchmark.h>
 
 namespace covfie::benchmark {

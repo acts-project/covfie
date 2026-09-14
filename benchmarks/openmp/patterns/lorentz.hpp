@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include <cstddef>
+#include <cstdint>
 #include <random>
 
 #include <covfie/benchmark/lorentz.hpp>

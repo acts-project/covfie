@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include <cstdint>
+
 #include <benchmark/benchmark.h>
 #include <boost/core/demangle.hpp>
 #include <boost/mp11.hpp>

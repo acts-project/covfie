@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+#include <cstddef>
 #include <fstream>
 
 #include <boost/filesystem.hpp>

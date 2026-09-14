@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include <cstddef>
+
 #include <covfie/core/backend/primitive/constant.hpp>
 #include <covfie/core/field.hpp>
 #include <covfie/core/vector.hpp>
