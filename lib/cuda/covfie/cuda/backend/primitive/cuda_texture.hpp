@@ -329,12 +329,6 @@ struct cuda_texture {
         {
         }
 
-        template <typename T>
-        owning_data_t(parameter_pack<T> && i)
-            : owning_data_t(std::move(i.x))
-        {
-        }
-
         ~owning_data_t()
         {
             if (m_tex.has_value()) {

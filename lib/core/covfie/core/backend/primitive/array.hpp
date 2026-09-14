@@ -62,16 +62,6 @@ struct array {
         {
         }
 
-        explicit owning_data_t(parameter_pack<owning_data_t> && conf)
-            : owning_data_t(std::move(conf.x))
-        {
-        }
-
-        explicit owning_data_t(parameter_pack<configuration_t> && conf)
-            : owning_data_t(conf.x[0])
-        {
-        }
-
         explicit owning_data_t(
             std::size_t size, std::unique_ptr<vector_t[]> && ptr
         )

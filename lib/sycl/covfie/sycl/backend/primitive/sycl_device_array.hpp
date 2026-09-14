@@ -83,14 +83,9 @@ struct sycl_device_array {
             assert(m_size == 0 || m_ptr);
         }
 
-        explicit owning_data_t(parameter_pack<owning_data_t> && args)
-            : owning_data_t(std::move(args.x))
-        {
-        }
-
         // TODO
-        explicit owning_data_t(parameter_pack<configuration_t> && args)
-            : m_size(args.x[0])
+        explicit owning_data_t(configuration_t conf)
+            : m_size(conf[0])
             , m_ptr(utility::sycl::device_allocate<vector_t[]>(m_size, m_queue))
         {
         }

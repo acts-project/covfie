@@ -27,27 +27,6 @@ concept is_constructible_from_config_and_backend = requires(
 };
 
 template <typename T>
-concept is_constructible_from_parameter_pack_len_gt1 =
-    requires(parameter_pack<typename T::configuration_t, std::monostate> && p)
-{
-    {typename T::owning_data_t(std::move(p))};
-};
-
-template <typename T>
-concept is_constructible_from_parameter_pack_len_eq1 =
-    requires(parameter_pack<typename T::configuration_t> && p)
-{
-    {typename T::owning_data_t(std::move(p))};
-};
-
-template <typename T>
-concept is_constructible_from_parameter_pack_self =
-    requires(parameter_pack<typename T::owning_data_t> && p)
-{
-    {typename T::owning_data_t(std::move(p))};
-};
-
-template <typename T>
 concept is_constructible_from_self_rvalue =
     requires(typename T::owning_data_t && p)
 {
@@ -123,11 +102,17 @@ concept field_backend = requires
     };
 
     /*
-     * Check for additional constructability from parameter packs.
+     * An initial backend must be constructible from its configuration alone,
+     * because there is no child for it to take. A non-initial backend is
+     * constructible from a configuration and an already-built child, which is
+     * checked further down. A layer that can size its own child may also offer
+     * the configuration-only form, but it cannot be required to, because a
+     * stateless layer has no way to size anything.
      */
-    requires is_initial<T> || is_constructible_from_parameter_pack_len_gt1<T>;
-    requires !is_initial<T> || is_constructible_from_parameter_pack_len_eq1<T>;
-    requires is_constructible_from_parameter_pack_self<T>;
+    requires !is_initial<T> || requires(typename T::configuration_t && c)
+    {
+        {typename T::owning_data_t(std::move(c))};
+    };
 
     /*
      * Check whether the field is constructible from itself.

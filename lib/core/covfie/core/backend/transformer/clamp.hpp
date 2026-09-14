@@ -47,25 +47,12 @@ struct clamp {
 
         owning_data_t() = default;
 
-        template <typename... Args>
-        explicit owning_data_t(parameter_pack<configuration_t, Args...> && args)
-            : m_min(args.x.min)
-            , m_max(args.x.max)
-            , m_backend(std::move(args.xs))
-        {
-        }
-
         explicit owning_data_t(
             const configuration_t & c, typename backend_t::owning_data_t && b
         )
             : m_min(c.min)
             , m_max(c.max)
             , m_backend(std::forward<typename backend_t::owning_data_t>(b))
-        {
-        }
-
-        explicit owning_data_t(parameter_pack<owning_data_t> && conf)
-            : owning_data_t(std::move(conf.x))
         {
         }
 
