@@ -25,22 +25,23 @@ retrieve_vector(typename F::view_t v, typename F::coordinate_t c)
     std::decay_t<typename F::output_t> * rv_d;
     std::decay_t<typename F::output_t> rv_h;
 
-    cudaErrorCheck(cudaMalloc(&rv_d, sizeof(std::decay_t<typename F::output_t>))
+    COVFIE_CUDA_ERROR_CHECK(
+        cudaMalloc(&rv_d, sizeof(std::decay_t<typename F::output_t>))
     );
 
     retrieve_vector_kernel<F><<<1, 1>>>(v, c, rv_d);
 
-    cudaErrorCheck(cudaGetLastError());
-    cudaErrorCheck(cudaDeviceSynchronize());
+    COVFIE_CUDA_ERROR_CHECK(cudaGetLastError());
+    COVFIE_CUDA_ERROR_CHECK(cudaDeviceSynchronize());
 
-    cudaErrorCheck(cudaMemcpy(
+    COVFIE_CUDA_ERROR_CHECK(cudaMemcpy(
         &rv_h,
         rv_d,
         sizeof(std::decay_t<typename F::output_t>),
         cudaMemcpyDeviceToHost
     ));
-    cudaErrorCheck(cudaDeviceSynchronize());
-    cudaErrorCheck(cudaFree(rv_d));
+    COVFIE_CUDA_ERROR_CHECK(cudaDeviceSynchronize());
+    COVFIE_CUDA_ERROR_CHECK(cudaFree(rv_d));
 
     return rv_h;
 }

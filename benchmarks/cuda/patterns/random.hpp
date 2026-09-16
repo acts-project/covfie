@@ -72,12 +72,14 @@ struct Random : covfie::benchmark::AccessPattern<Random> {
         covfie::benchmark::propagation_agent<3> * device_agents = nullptr;
         float * device_out = nullptr;
 
-        cudaErrorCheck(cudaMalloc(
+        COVFIE_CUDA_ERROR_CHECK(cudaMalloc(
             &device_agents,
             p.agents * sizeof(covfie::benchmark::propagation_agent<3>)
         ));
-        cudaErrorCheck(cudaMalloc(&device_out, p.agents * sizeof(float)));
-        cudaErrorCheck(cudaMemcpy(
+        COVFIE_CUDA_ERROR_CHECK(
+            cudaMalloc(&device_out, p.agents * sizeof(float))
+        );
+        COVFIE_CUDA_ERROR_CHECK(cudaMemcpy(
             device_agents,
             objs.data(),
             p.agents * sizeof(covfie::benchmark::propagation_agent<3>),
@@ -97,16 +99,16 @@ struct Random : covfie::benchmark::AccessPattern<Random> {
             device_agents, device_out, p.agents, f
         );
 
-        cudaErrorCheck(cudaGetLastError());
-        cudaErrorCheck(cudaDeviceSynchronize());
+        COVFIE_CUDA_ERROR_CHECK(cudaGetLastError());
+        COVFIE_CUDA_ERROR_CHECK(cudaDeviceSynchronize());
 
         state.PauseTiming();
 
         std::chrono::high_resolution_clock::time_point end =
             std::chrono::high_resolution_clock::now();
 
-        cudaErrorCheck(cudaFree(device_agents));
-        cudaErrorCheck(cudaFree(device_out));
+        COVFIE_CUDA_ERROR_CHECK(cudaFree(device_agents));
+        COVFIE_CUDA_ERROR_CHECK(cudaFree(device_out));
 
         auto elapsed_seconds =
             std::chrono::duration_cast<std::chrono::duration<double>>(

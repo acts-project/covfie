@@ -139,7 +139,7 @@ int main(int argc, char ** argv)
 
     unsigned char * img_device;
 
-    cudaErrorCheck(cudaMalloc(
+    COVFIE_CUDA_ERROR_CHECK(cudaMalloc(
         reinterpret_cast<void **>(&img_device),
         width * height * sizeof(unsigned char)
     ));
@@ -159,8 +159,8 @@ int main(int argc, char ** argv)
         nf, img_device, width, height, vm["z"].as<float>()
     );
 
-    cudaErrorCheck(cudaGetLastError());
-    cudaErrorCheck(cudaDeviceSynchronize());
+    COVFIE_CUDA_ERROR_CHECK(cudaGetLastError());
+    COVFIE_CUDA_ERROR_CHECK(cudaDeviceSynchronize());
 
     std::chrono::high_resolution_clock::time_point t2 =
         std::chrono::high_resolution_clock::now();
@@ -177,7 +177,7 @@ int main(int argc, char ** argv)
 
     BOOST_LOG_TRIVIAL(info) << "Copying image from device to host...";
 
-    cudaErrorCheck(cudaMemcpy(
+    COVFIE_CUDA_ERROR_CHECK(cudaMemcpy(
         img_host.get(),
         img_device,
         width * height * sizeof(unsigned char),
@@ -186,7 +186,7 @@ int main(int argc, char ** argv)
 
     BOOST_LOG_TRIVIAL(info) << "Deallocating device memory...";
 
-    cudaErrorCheck(cudaFree(img_device));
+    COVFIE_CUDA_ERROR_CHECK(cudaFree(img_device));
 
     BOOST_LOG_TRIVIAL(info) << "Saving image to file \""
                             << vm["output"].as<std::string>() << "\"...";

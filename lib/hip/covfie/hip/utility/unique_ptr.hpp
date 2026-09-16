@@ -23,7 +23,7 @@ struct device_deleter {
 public:
     void operator()(void * p) const
     {
-        hipErrorCheck(hipFree(p));
+        COVFIE_HIP_ERROR_CHECK(hipFree(p));
     }
 };
 

@@ -73,11 +73,11 @@ struct EulerPattern : covfie::benchmark::AccessPattern<EulerPattern> {
 
         covfie::benchmark::propagation_agent<3> * device_agents = nullptr;
 
-        cudaErrorCheck(cudaMalloc(
+        COVFIE_CUDA_ERROR_CHECK(cudaMalloc(
             &device_agents,
             p.agents * sizeof(covfie::benchmark::propagation_agent<3>)
         ));
-        cudaErrorCheck(cudaMemcpy(
+        COVFIE_CUDA_ERROR_CHECK(cudaMemcpy(
             device_agents,
             objs.data(),
             p.agents * sizeof(covfie::benchmark::propagation_agent<3>),
@@ -97,15 +97,15 @@ struct EulerPattern : covfie::benchmark::AccessPattern<EulerPattern> {
             device_agents, p.agents, p.steps, f
         );
 
-        cudaErrorCheck(cudaGetLastError());
-        cudaErrorCheck(cudaDeviceSynchronize());
+        COVFIE_CUDA_ERROR_CHECK(cudaGetLastError());
+        COVFIE_CUDA_ERROR_CHECK(cudaDeviceSynchronize());
 
         state.PauseTiming();
 
         std::chrono::high_resolution_clock::time_point end =
             std::chrono::high_resolution_clock::now();
 
-        cudaErrorCheck(cudaFree(device_agents));
+        COVFIE_CUDA_ERROR_CHECK(cudaFree(device_agents));
 
         auto elapsed_seconds =
             std::chrono::duration_cast<std::chrono::duration<double>>(

@@ -71,12 +71,12 @@ struct cuda_texture {
         owning_data_t & operator=(owning_data_t && o)
         {
             if (m_tex.has_value()) {
-                cudaErrorCheck(cudaDestroyTextureObject(*m_tex));
+                COVFIE_CUDA_ERROR_CHECK(cudaDestroyTextureObject(*m_tex));
                 m_tex.reset();
             }
 
             if (m_array != nullptr) {
-                cudaErrorCheck(cudaFreeArray(m_array));
+                COVFIE_CUDA_ERROR_CHECK(cudaFreeArray(m_array));
             }
 
             m_tex = o.m_tex;
@@ -100,12 +100,12 @@ struct cuda_texture {
              * assignment operator does.
              */
             if (m_tex.has_value()) {
-                cudaErrorCheck(cudaDestroyTextureObject(*m_tex));
+                COVFIE_CUDA_ERROR_CHECK(cudaDestroyTextureObject(*m_tex));
                 m_tex.reset();
             }
 
             if (m_array != nullptr) {
-                cudaErrorCheck(cudaFreeArray(m_array));
+                COVFIE_CUDA_ERROR_CHECK(cudaFreeArray(m_array));
                 m_array = nullptr;
             }
 
@@ -114,14 +114,16 @@ struct cuda_texture {
 
             cudaExtent extent;
 
-            cudaErrorCheck(
+            COVFIE_CUDA_ERROR_CHECK(
                 cudaArrayGetInfo(nullptr, &extent, nullptr, o.m_array)
             );
 
-            cudaErrorCheck(cudaMalloc3DArray(&m_array, &channelDesc, extent));
+            COVFIE_CUDA_ERROR_CHECK(
+                cudaMalloc3DArray(&m_array, &channelDesc, extent)
+            );
 
             if constexpr (_input_vector_t::size == 2) {
-                cudaErrorCheck(cudaMemcpy2DArrayToArray(
+                COVFIE_CUDA_ERROR_CHECK(cudaMemcpy2DArrayToArray(
                     m_array,
                     0,
                     0,
@@ -140,7 +142,7 @@ struct cuda_texture {
                 copyParams.dstArray = m_array;
                 copyParams.extent = extent;
                 copyParams.kind = cudaMemcpyDeviceToDevice;
-                cudaErrorCheck(cudaMemcpy3D(&copyParams));
+                COVFIE_CUDA_ERROR_CHECK(cudaMemcpy3D(&copyParams));
             }
 
             cudaResourceDesc resDesc;
@@ -171,7 +173,7 @@ struct cuda_texture {
              */
             m_tex = cudaTextureObject_t{};
 
-            cudaErrorCheck(
+            COVFIE_CUDA_ERROR_CHECK(
                 cudaCreateTextureObject(&(*m_tex), &resDesc, &texDesc, nullptr)
             );
 
@@ -206,7 +208,9 @@ struct cuda_texture {
                 _input_vector_t::size >= 3 ? srcSize[2] : 0
             );
 
-            cudaErrorCheck(cudaMalloc3DArray(&m_array, &channelDesc, extent));
+            COVFIE_CUDA_ERROR_CHECK(
+                cudaMalloc3DArray(&m_array, &channelDesc, extent)
+            );
 
             std::size_t stage_size = extent.width *
                                      std::max(1UL, extent.height) *
@@ -264,7 +268,7 @@ struct cuda_texture {
             );
 
             if constexpr (_input_vector_t::size == 2) {
-                cudaErrorCheck(cudaMemcpy2DToArray(
+                COVFIE_CUDA_ERROR_CHECK(cudaMemcpy2DToArray(
                     m_array,
                     0,
                     0,
@@ -287,7 +291,7 @@ struct cuda_texture {
                 copyParams.dstArray = m_array;
                 copyParams.extent = extent;
                 copyParams.kind = cudaMemcpyHostToDevice;
-                cudaErrorCheck(cudaMemcpy3D(&copyParams));
+                COVFIE_CUDA_ERROR_CHECK(cudaMemcpy3D(&copyParams));
             }
 
             cudaResourceDesc resDesc;
@@ -312,7 +316,7 @@ struct cuda_texture {
             }
             texDesc.readMode = cudaReadModeElementType;
 
-            cudaErrorCheck(
+            COVFIE_CUDA_ERROR_CHECK(
                 cudaCreateTextureObject(&(*m_tex), &resDesc, &texDesc, nullptr)
             );
         }
@@ -338,12 +342,12 @@ struct cuda_texture {
         ~owning_data_t()
         {
             if (m_tex.has_value()) {
-                cudaErrorCheck(cudaDestroyTextureObject(*m_tex));
+                COVFIE_CUDA_ERROR_CHECK(cudaDestroyTextureObject(*m_tex));
                 m_tex.reset();
             }
 
             if (m_array != nullptr) {
-                cudaErrorCheck(cudaFreeArray(m_array));
+                COVFIE_CUDA_ERROR_CHECK(cudaFreeArray(m_array));
             }
         }
 

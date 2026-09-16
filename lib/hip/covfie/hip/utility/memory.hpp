@@ -29,7 +29,7 @@ unique_device_ptr<T> device_allocate()
 
     pointer_t p;
 
-    hipErrorCheck(hipMalloc(&p, sizeof(T)));
+    COVFIE_HIP_ERROR_CHECK(hipMalloc(&p, sizeof(T)));
 
     return unique_device_ptr<T>(p);
 }
@@ -49,7 +49,7 @@ unique_device_ptr<T> device_allocate(std::size_t n)
 
     pointer_t p;
 
-    hipErrorCheck(hipMalloc(&p, n * sizeof(std::remove_extent_t<T>)));
+    COVFIE_HIP_ERROR_CHECK(hipMalloc(&p, n * sizeof(std::remove_extent_t<T>)));
 
     return unique_device_ptr<T>(p);
 }
@@ -61,12 +61,14 @@ device_copy_h2d(const T * h, std::optional<hipStream_t> stream = std::nullopt)
     unique_device_ptr<T[]> r = device_allocate<T[]>();
 
     if (stream.has_value()) {
-        hipErrorCheck(hipMemcpyAsync(
+        COVFIE_HIP_ERROR_CHECK(hipMemcpyAsync(
             r.get(), h, sizeof(T), hipMemcpyHostToDevice, *stream
         ));
-        hipErrorCheck(hipStreamSynchronize(*stream));
+        COVFIE_HIP_ERROR_CHECK(hipStreamSynchronize(*stream));
     } else {
-        hipErrorCheck(hipMemcpy(r.get(), h, sizeof(T), hipMemcpyHostToDevice));
+        COVFIE_HIP_ERROR_CHECK(
+            hipMemcpy(r.get(), h, sizeof(T), hipMemcpyHostToDevice)
+        );
     }
 
     return r;
@@ -80,16 +82,16 @@ unique_device_ptr<T[]> device_copy_h2d(
     unique_device_ptr<T[]> r = device_allocate<T[]>(n);
 
     if (stream.has_value()) {
-        hipErrorCheck(hipMemcpyAsync(
+        COVFIE_HIP_ERROR_CHECK(hipMemcpyAsync(
             r.get(),
             h,
             n * sizeof(std::remove_extent_t<T>),
             hipMemcpyHostToDevice,
             *stream
         ));
-        hipErrorCheck(hipStreamSynchronize(*stream));
+        COVFIE_HIP_ERROR_CHECK(hipStreamSynchronize(*stream));
     } else {
-        hipErrorCheck(hipMemcpy(
+        COVFIE_HIP_ERROR_CHECK(hipMemcpy(
             r.get(),
             h,
             n * sizeof(std::remove_extent_t<T>),
@@ -107,12 +109,13 @@ device_copy_d2d(const T * h, std::optional<hipStream_t> stream = std::nullopt)
     unique_device_ptr<T[]> r = device_allocate<T[]>();
 
     if (stream.has_value()) {
-        hipErrorCheck(hipMemcpyAsync(
+        COVFIE_HIP_ERROR_CHECK(hipMemcpyAsync(
             r.get(), h, sizeof(T), hipMemcpyDeviceToDevice, *stream
         ));
-        hipErrorCheck(hipStreamSynchronize(*stream));
+        COVFIE_HIP_ERROR_CHECK(hipStreamSynchronize(*stream));
     } else {
-        hipErrorCheck(hipMemcpy(r.get(), h, sizeof(T), hipMemcpyDeviceToDevice)
+        COVFIE_HIP_ERROR_CHECK(
+            hipMemcpy(r.get(), h, sizeof(T), hipMemcpyDeviceToDevice)
         );
     }
 
@@ -127,16 +130,16 @@ unique_device_ptr<T[]> device_copy_d2d(
     unique_device_ptr<T[]> r = device_allocate<T[]>(n);
 
     if (stream.has_value()) {
-        hipErrorCheck(hipMemcpyAsync(
+        COVFIE_HIP_ERROR_CHECK(hipMemcpyAsync(
             r.get(),
             h,
             n * sizeof(std::remove_extent_t<T>),
             hipMemcpyDeviceToDevice,
             *stream
         ));
-        hipErrorCheck(hipStreamSynchronize(*stream));
+        COVFIE_HIP_ERROR_CHECK(hipStreamSynchronize(*stream));
     } else {
-        hipErrorCheck(hipMemcpy(
+        COVFIE_HIP_ERROR_CHECK(hipMemcpy(
             r.get(),
             h,
             n * sizeof(std::remove_extent_t<T>),
@@ -155,16 +158,16 @@ std::unique_ptr<T[]> device_copy_d2h(
     std::unique_ptr<T[]> r = std::make_unique<T[]>(n);
 
     if (stream.has_value()) {
-        hipErrorCheck(hipMemcpyAsync(
+        COVFIE_HIP_ERROR_CHECK(hipMemcpyAsync(
             r.get(),
             d,
             n * sizeof(std::remove_extent_t<T>),
             hipMemcpyDeviceToHost,
             *stream
         ));
-        hipErrorCheck(hipStreamSynchronize(*stream));
+        COVFIE_HIP_ERROR_CHECK(hipStreamSynchronize(*stream));
     } else {
-        hipErrorCheck(hipMemcpy(
+        COVFIE_HIP_ERROR_CHECK(hipMemcpy(
             r.get(),
             d,
             n * sizeof(std::remove_extent_t<T>),
