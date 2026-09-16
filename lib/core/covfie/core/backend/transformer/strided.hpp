@@ -58,7 +58,7 @@ struct strided {
                 std::accumulate(
                     std::begin(sizes),
                     std::end(sizes),
-                    1ul,
+                    static_cast<std::size_t>(1),
                     std::multiplies<std::size_t>()
                 )
             );
@@ -127,7 +127,7 @@ struct strided {
                   std::accumulate(
                       std::begin(m_sizes),
                       std::end(m_sizes),
-                      1ul,
+                      static_cast<std::size_t>(1),
                       std::multiplies<std::size_t>()
                   ),
                   make_strided_copy(o)

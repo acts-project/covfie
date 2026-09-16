@@ -212,9 +212,10 @@ struct cuda_texture {
                 cudaMalloc3DArray(&m_array, &channelDesc, extent)
             );
 
-            std::size_t stage_size = extent.width *
-                                     std::max(1UL, extent.height) *
-                                     std::max(1UL, extent.depth);
+            std::size_t stage_size =
+                extent.width *
+                std::max(static_cast<std::size_t>(1), extent.height) *
+                std::max(static_cast<std::size_t>(1), extent.depth);
 
             std::unique_ptr<channel_t[]> stage =
                 std::make_unique<channel_t[]>(stage_size);
