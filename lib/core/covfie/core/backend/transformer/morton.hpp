@@ -17,7 +17,7 @@
 
 #if defined(__x86_64__) && (defined(__GNUC__) || defined(__clang__)) &&        \
     defined(__BMI2__)
-#define HAVE_BMI2
+#define COVFIE_HAVE_BMI2
 #include <x86intrin.h>
 #endif
 
@@ -33,7 +33,7 @@
 #include <covfie/core/vector.hpp>
 
 namespace covfie::backend {
-#ifdef HAVE_BMI2
+#ifdef COVFIE_HAVE_BMI2
 template <typename Ix, typename Ox, std::size_t N>
 struct morton_pdep_mask {
     template <std::size_t I>
@@ -102,7 +102,7 @@ struct morton {
     COVFIE_HOST_DEVICE static std::size_t
     calculate_index(typename contravariant_input_t::vector_t c)
     {
-#ifdef HAVE_BMI2
+#ifdef COVFIE_HAVE_BMI2
         if constexpr (use_bmi2) {
             return morton_pdep_mask<
                 typename contravariant_input_t::scalar_t,

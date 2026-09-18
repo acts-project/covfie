@@ -29,7 +29,7 @@ unique_device_ptr<T> device_allocate()
 
     pointer_t p;
 
-    cudaErrorCheck(cudaMalloc(&p, sizeof(T)));
+    COVFIE_CUDA_ERROR_CHECK(cudaMalloc(&p, sizeof(T)));
 
     return unique_device_ptr<T>(p);
 }
@@ -49,7 +49,8 @@ unique_device_ptr<T> device_allocate(std::size_t n)
 
     pointer_t p;
 
-    cudaErrorCheck(cudaMalloc(&p, n * sizeof(std::remove_extent_t<T>)));
+    COVFIE_CUDA_ERROR_CHECK(cudaMalloc(&p, n * sizeof(std::remove_extent_t<T>))
+    );
 
     return unique_device_ptr<T>(p);
 }
@@ -61,12 +62,13 @@ device_copy_h2d(const T * h, std::optional<cudaStream_t> stream = std::nullopt)
     unique_device_ptr<T[]> r = device_allocate<T[]>();
 
     if (stream.has_value()) {
-        cudaErrorCheck(cudaMemcpyAsync(
+        COVFIE_CUDA_ERROR_CHECK(cudaMemcpyAsync(
             r.get(), h, sizeof(T), cudaMemcpyHostToDevice, *stream
         ));
-        cudaErrorCheck(cudaStreamSynchronize(*stream));
+        COVFIE_CUDA_ERROR_CHECK(cudaStreamSynchronize(*stream));
     } else {
-        cudaErrorCheck(cudaMemcpy(r.get(), h, sizeof(T), cudaMemcpyHostToDevice)
+        COVFIE_CUDA_ERROR_CHECK(
+            cudaMemcpy(r.get(), h, sizeof(T), cudaMemcpyHostToDevice)
         );
     }
 
@@ -83,16 +85,16 @@ unique_device_ptr<T[]> device_copy_h2d(
     unique_device_ptr<T[]> r = device_allocate<T[]>(n);
 
     if (stream.has_value()) {
-        cudaErrorCheck(cudaMemcpyAsync(
+        COVFIE_CUDA_ERROR_CHECK(cudaMemcpyAsync(
             r.get(),
             h,
             n * sizeof(std::remove_extent_t<T>),
             cudaMemcpyHostToDevice,
             *stream
         ));
-        cudaErrorCheck(cudaStreamSynchronize(*stream));
+        COVFIE_CUDA_ERROR_CHECK(cudaStreamSynchronize(*stream));
     } else {
-        cudaErrorCheck(cudaMemcpy(
+        COVFIE_CUDA_ERROR_CHECK(cudaMemcpy(
             r.get(),
             h,
             n * sizeof(std::remove_extent_t<T>),
@@ -110,12 +112,12 @@ device_copy_d2d(const T * h, std::optional<cudaStream_t> stream = std::nullopt)
     unique_device_ptr<T[]> r = device_allocate<T[]>();
 
     if (stream.has_value()) {
-        cudaErrorCheck(cudaMemcpyAsync(
+        COVFIE_CUDA_ERROR_CHECK(cudaMemcpyAsync(
             r.get(), h, sizeof(T), cudaMemcpyDeviceToDevice, *stream
         ));
-        cudaErrorCheck(cudaStreamSynchronize(*stream));
+        COVFIE_CUDA_ERROR_CHECK(cudaStreamSynchronize(*stream));
     } else {
-        cudaErrorCheck(
+        COVFIE_CUDA_ERROR_CHECK(
             cudaMemcpy(r.get(), h, sizeof(T), cudaMemcpyDeviceToDevice)
         );
     }
@@ -133,16 +135,16 @@ unique_device_ptr<T[]> device_copy_d2d(
     unique_device_ptr<T[]> r = device_allocate<T[]>(n);
 
     if (stream.has_value()) {
-        cudaErrorCheck(cudaMemcpyAsync(
+        COVFIE_CUDA_ERROR_CHECK(cudaMemcpyAsync(
             r.get(),
             h,
             n * sizeof(std::remove_extent_t<T>),
             cudaMemcpyDeviceToDevice,
             *stream
         ));
-        cudaErrorCheck(cudaStreamSynchronize(*stream));
+        COVFIE_CUDA_ERROR_CHECK(cudaStreamSynchronize(*stream));
     } else {
-        cudaErrorCheck(cudaMemcpy(
+        COVFIE_CUDA_ERROR_CHECK(cudaMemcpy(
             r.get(),
             h,
             n * sizeof(std::remove_extent_t<T>),
@@ -163,16 +165,16 @@ std::unique_ptr<T[]> device_copy_d2h(
     std::unique_ptr<T[]> r = std::make_unique<T[]>(n);
 
     if (stream.has_value()) {
-        cudaErrorCheck(cudaMemcpyAsync(
+        COVFIE_CUDA_ERROR_CHECK(cudaMemcpyAsync(
             r.get(),
             d,
             n * sizeof(std::remove_extent_t<T>),
             cudaMemcpyDeviceToHost,
             *stream
         ));
-        cudaErrorCheck(cudaStreamSynchronize(*stream));
+        COVFIE_CUDA_ERROR_CHECK(cudaStreamSynchronize(*stream));
     } else {
-        cudaErrorCheck(cudaMemcpy(
+        COVFIE_CUDA_ERROR_CHECK(cudaMemcpy(
             r.get(),
             d,
             n * sizeof(std::remove_extent_t<T>),

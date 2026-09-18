@@ -109,7 +109,7 @@ protected:
         );
 
         cudaStream_t stream;
-        cudaErrorCheck(cudaStreamCreate(&stream));
+        COVFIE_CUDA_ERROR_CHECK(cudaStreamCreate(&stream));
 
         m_field = covfie::field<B>(f);
         m_field_stream =

@@ -23,7 +23,7 @@ struct device_deleter {
 public:
     void operator()(void * p) const
     {
-        cudaErrorCheck(cudaFree(p));
+        COVFIE_CUDA_ERROR_CHECK(cudaFree(p));
     }
 };
 

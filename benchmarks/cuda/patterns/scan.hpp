@@ -60,7 +60,8 @@ struct Scan : covfie::benchmark::AccessPattern<Scan> {
 
         float * device_out = nullptr;
 
-        cudaErrorCheck(cudaMalloc(&device_out, p.x * p.y * p.z * sizeof(float))
+        COVFIE_CUDA_ERROR_CHECK(
+            cudaMalloc(&device_out, p.x * p.y * p.z * sizeof(float))
         );
 
         std::chrono::high_resolution_clock::time_point begin =
@@ -89,15 +90,15 @@ struct Scan : covfie::benchmark::AccessPattern<Scan> {
             static_cast<int>(p.z)
         );
 
-        cudaErrorCheck(cudaGetLastError());
-        cudaErrorCheck(cudaDeviceSynchronize());
+        COVFIE_CUDA_ERROR_CHECK(cudaGetLastError());
+        COVFIE_CUDA_ERROR_CHECK(cudaDeviceSynchronize());
 
         state.PauseTiming();
 
         std::chrono::high_resolution_clock::time_point end =
             std::chrono::high_resolution_clock::now();
 
-        cudaErrorCheck(cudaFree(device_out));
+        COVFIE_CUDA_ERROR_CHECK(cudaFree(device_out));
 
         auto elapsed_seconds =
             std::chrono::duration_cast<std::chrono::duration<double>>(

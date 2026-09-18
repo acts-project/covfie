@@ -86,7 +86,7 @@ protected:
         }
 
         hipStream_t stream;
-        hipErrorCheck(hipStreamCreate(&stream));
+        COVFIE_HIP_ERROR_CHECK(hipStreamCreate(&stream));
 
         m_field = covfie::field<B>(f);
         m_field_stream =

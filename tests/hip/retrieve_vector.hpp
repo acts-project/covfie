@@ -25,21 +25,23 @@ retrieve_vector(typename F::view_t v, typename F::coordinate_t c)
     std::decay_t<typename F::output_t> * rv_d;
     std::decay_t<typename F::output_t> rv_h;
 
-    hipErrorCheck(hipMalloc(&rv_d, sizeof(std::decay_t<typename F::output_t>)));
+    COVFIE_HIP_ERROR_CHECK(
+        hipMalloc(&rv_d, sizeof(std::decay_t<typename F::output_t>))
+    );
 
     retrieve_vector_kernel<F><<<1, 1>>>(v, c, rv_d);
 
-    hipErrorCheck(hipGetLastError());
-    hipErrorCheck(hipDeviceSynchronize());
+    COVFIE_HIP_ERROR_CHECK(hipGetLastError());
+    COVFIE_HIP_ERROR_CHECK(hipDeviceSynchronize());
 
-    hipErrorCheck(hipMemcpy(
+    COVFIE_HIP_ERROR_CHECK(hipMemcpy(
         &rv_h,
         rv_d,
         sizeof(std::decay_t<typename F::output_t>),
         hipMemcpyDeviceToHost
     ));
-    hipErrorCheck(hipDeviceSynchronize());
-    hipErrorCheck(hipFree(rv_d));
+    COVFIE_HIP_ERROR_CHECK(hipDeviceSynchronize());
+    COVFIE_HIP_ERROR_CHECK(hipFree(rv_d));
 
     return rv_h;
 }

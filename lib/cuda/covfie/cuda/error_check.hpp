@@ -10,7 +10,7 @@
 
 #include <cuda_runtime_api.h>
 
-#define cudaErrorCheck(r)                                                      \
+#define COVFIE_CUDA_ERROR_CHECK(r)                                             \
     {                                                                          \
         _cudaErrorCheck((r), __FILE__, __LINE__);                              \
     }

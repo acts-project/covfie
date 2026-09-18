@@ -53,7 +53,7 @@ COVFIE_HOST_DEVICE inline __attribute__((always_inline)) void lorentz_step(
     o.pos[1] += o.mom[1] * s;
     o.pos[2] += o.mom[2] * s;
 
-    if (UNLIKELY(
+    if (COVFIE_UNLIKELY(
             o.pos[0] < -9999.f || o.pos[0] > 9999.f || o.pos[1] < -9999.f ||
             o.pos[1] > 9999.f || o.pos[2] < -14999.f || o.pos[2] > 14999.f
         ))

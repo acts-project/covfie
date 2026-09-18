@@ -7,13 +7,13 @@
 #pragma once
 
 #ifdef _MSC_VER
-#define UNLIKELY(x) x
+#define COVFIE_UNLIKELY(x) x
 #else
-#define UNLIKELY(x) __builtin_expect(x, false)
+#define COVFIE_UNLIKELY(x) __builtin_expect(x, false)
 #endif
 
 #ifdef _MSC_VER
-#define LIKELY(x) x
+#define COVFIE_LIKELY(x) x
 #else
-#define LIKELY(x) __builtin_expect(x, true)
+#define COVFIE_LIKELY(x) __builtin_expect(x, true)
 #endif

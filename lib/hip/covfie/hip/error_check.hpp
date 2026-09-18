@@ -10,7 +10,7 @@
 
 #include <hip/hip_runtime.h>
 
-#define hipErrorCheck(r)                                                       \
+#define COVFIE_HIP_ERROR_CHECK(r)                                              \
     {                                                                          \
         _hipErrorCheck((r), __FILE__, __LINE__);                               \
     }
