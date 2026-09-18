@@ -119,7 +119,7 @@ struct morton {
                 for (std::size_t j = 0; j < contravariant_input_t::dimensions;
                      ++j)
                 {
-                    idx |= (c[j] & (1UL << i))
+                    idx |= (c[j] & (static_cast<std::size_t>(1) << i))
                            << (i * (contravariant_input_t::dimensions - 1) + j);
                 }
             }
