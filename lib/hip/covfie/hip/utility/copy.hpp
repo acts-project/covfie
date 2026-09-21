@@ -28,24 +28,13 @@ requires(concepts::field_backend<T> &&
 
     if constexpr (can_construct_with_stream) {
         return typename T::owning_data_t(std::forward<U>(backend), stream);
-    } else if constexpr (std::constructible_from<
-                             typename T::owning_data_t,
-                             decltype(backend.get_configuration()),
-                             typename T::backend_t::owning_data_t &&>)
-    {
+    } else {
         return typename T::owning_data_t(
             backend.get_configuration(),
             copy_backend_with_stream<typename T::backend_t>(
                 backend.get_backend(), stream
             )
         );
-    } else {
-        return typename T::owning_data_t(make_parameter_pack(
-            backend.get_configuration(),
-            copy_backend_with_stream<typename T::backend_t>(
-                backend.get_backend(), stream
-            )
-        ));
     }
 }
 

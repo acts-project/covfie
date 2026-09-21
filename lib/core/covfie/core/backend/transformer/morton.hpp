@@ -216,23 +216,6 @@ struct morton {
         {
         }
 
-        template <typename... Args>
-        requires(sizeof...(Args) > 0) explicit owning_data_t(
-            parameter_pack<configuration_t, Args...> && args
-        )
-            : m_sizes(args.x)
-            , m_storage(std::move(args.xs))
-        {
-        }
-
-        template <typename T>
-        requires(std::constructible_from<
-                 owning_data_t,
-                 T>) explicit owning_data_t(parameter_pack<T> && args)
-            : owning_data_t(args.x)
-        {
-        }
-
         explicit owning_data_t(
             const configuration_t & c, typename backend_t::owning_data_t && b
         )

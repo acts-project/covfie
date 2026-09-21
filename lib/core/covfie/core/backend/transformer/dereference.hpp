@@ -44,21 +44,10 @@ struct dereference {
         {
         }
 
-        explicit owning_data_t(parameter_pack<owning_data_t> && conf)
-            : owning_data_t(std::move(conf.x))
-        {
-        }
-
-        template <typename... Args>
-        explicit owning_data_t(parameter_pack<configuration_t, Args...> && args)
-            : m_backend(std::move(args.xs))
-        {
-        }
-
         explicit owning_data_t(
             const configuration_t &, typename backend_t::owning_data_t && b
         )
-            : m_backend(b)
+            : m_backend(std::forward<typename backend_t::owning_data_t>(b))
         {
         }
 

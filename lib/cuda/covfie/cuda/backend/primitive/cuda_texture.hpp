@@ -60,6 +60,10 @@ struct cuda_texture {
 
         owning_data_t() = default;
 
+        explicit owning_data_t(configuration_t)
+        {
+        }
+
         owning_data_t(owning_data_t && o)
             : m_array(o.m_array)
             , m_tex(o.m_tex)
@@ -331,12 +335,6 @@ struct cuda_texture {
              contravariant_input_t::dimensions)
         ) owning_data_t(const T & o, const cudaStream_t &)
             : owning_data_t(o)
-        {
-        }
-
-        template <typename T>
-        owning_data_t(parameter_pack<T> && i)
-            : owning_data_t(std::move(i.x))
         {
         }
 

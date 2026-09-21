@@ -75,11 +75,6 @@ struct cuda_device_array {
             assert(m_size == 0 || m_ptr);
         }
 
-        explicit owning_data_t(parameter_pack<owning_data_t> && args)
-            : owning_data_t(std::move(args.x))
-        {
-        }
-
         explicit owning_data_t(
             std::size_t size,
             std::unique_ptr<vector_t[]> && ptr,
@@ -91,8 +86,8 @@ struct cuda_device_array {
         {
         }
 
-        explicit owning_data_t(parameter_pack<configuration_t> && args)
-            : owning_data_t(args.x[0], std::make_unique<vector_t[]>(args.x[0]))
+        explicit owning_data_t(configuration_t conf)
+            : owning_data_t(conf[0], std::make_unique<vector_t[]>(conf[0]))
         {
         }
 
