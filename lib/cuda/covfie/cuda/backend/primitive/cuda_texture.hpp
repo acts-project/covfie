@@ -388,11 +388,23 @@ struct cuda_texture {
             channel_t r;
 
             if constexpr (_input_vector_t::size == 1) {
-                r = tex1D<channel_t>(m_tex, i[0] + 0.5);
+                r = tex1D<channel_t>(
+                    m_tex,
+                    i[0] + static_cast<contravariant_input_t::scalar_t>(0.5)
+                );
             } else if constexpr (_input_vector_t::size == 2) {
-                r = tex2D<channel_t>(m_tex, i[0] + 0.5, i[1] + 0.5);
+                r = tex2D<channel_t>(
+                    m_tex,
+                    i[0] + static_cast<contravariant_input_t::scalar_t>(0.5),
+                    i[1] + static_cast<contravariant_input_t::scalar_t>(0.5)
+                );
             } else if constexpr (_input_vector_t::size == 3) {
-                r = tex3D<channel_t>(m_tex, i[0] + 0.5, i[1] + 0.5, i[2] + 0.5);
+                r = tex3D<channel_t>(
+                    m_tex,
+                    i[0] + static_cast<contravariant_input_t::scalar_t>(0.5),
+                    i[1] + static_cast<contravariant_input_t::scalar_t>(0.5),
+                    i[2] + static_cast<contravariant_input_t::scalar_t>(0.5)
+                );
             }
 
             if constexpr (_output_vector_t::size == 1) {
