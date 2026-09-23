@@ -13,7 +13,26 @@
 
 #include <covfie/core/definitions.hpp>
 #include <covfie/core/parameter_pack.hpp>
+#include <covfie/core/utility/nd_size.hpp>
+
 namespace covfie::concepts {
+template <std::size_t N>
+struct is_nd_size_of_dim_trait {
+    template <typename T>
+    struct helper {
+        static constexpr bool value = false;
+    };
+
+    template <typename S>
+    struct helper<utility::nd_size<N, S>> {
+        static constexpr bool value = true;
+    };
+};
+
+template <typename T, std::size_t N>
+concept is_nd_size_of_dim =
+    is_nd_size_of_dim_trait<N>::template helper<T>::value;
+
 template <typename T>
 concept is_initial = T::is_initial == true;
 

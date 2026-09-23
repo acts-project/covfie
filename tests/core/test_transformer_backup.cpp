@@ -62,6 +62,25 @@ TEST(TestTransformerBackup, ConfigurationFromBackendSize)
     }
 }
 
+TEST(TestTransformerBackup, UnsignedIndexConfigurationFromBackendSize)
+{
+    using inner_t = covfie::backend::strided<
+        covfie::vector::uint2,
+        covfie::backend::array<covfie::vector::float2>>;
+    using backup_t = covfie::backend::backup<inner_t>;
+    backup_t::owning_data_t data(inner_t::configuration_t{2u, 3u});
+    auto conf = data.get_configuration();
+    for (std::size_t i = 0; i < 2; ++i) {
+        EXPECT_EQ(conf.min[i], 0u);
+        EXPECT_EQ(conf.max[i], i + 1);
+        EXPECT_EQ(conf.default_value[i], 0.f);
+    }
+    backup_t::non_owning_data_t view(data);
+    auto outside = view.at({2u, 3u});
+    EXPECT_EQ(outside[0], 0.f);
+    EXPECT_EQ(outside[1], 0.f);
+}
+
 TEST(TestTransformerBackup, InRangeLookup)
 {
     field_t f = make_field();

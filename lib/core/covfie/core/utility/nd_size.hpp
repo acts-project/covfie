@@ -11,6 +11,6 @@
 #include <covfie/core/array.hpp>
 
 namespace covfie::utility {
-template <std::size_t N>
-using nd_size = array::array<std::size_t, N>;
+template <std::size_t N, typename index_t>
+using nd_size = array::array<index_t, N>;
 }

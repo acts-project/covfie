@@ -45,7 +45,13 @@ struct hilbert {
     using coordinate_t = typename contravariant_input_t::vector_t;
     using array_t = backend_t;
 
-    using configuration_t = utility::nd_size<contravariant_input_t::dimensions>;
+    using configuration_t = utility::nd_size<
+        contravariant_input_t::dimensions,
+        typename contravariant_input_t::scalar_t>;
+
+    // Keep the binary dimensions independent of the in-memory index type.
+    using io_configuration_t =
+        utility::nd_size<contravariant_input_t::dimensions, std::size_t>;
 
     static constexpr uint32_t IO_MAGIC_HEADER = 0xAB020004;
 
@@ -75,7 +81,9 @@ struct hilbert {
 
     COVFIE_HOST_DEVICE static std::size_t calculate_index(
         coordinate_t c,
-        utility::nd_size<contravariant_input_t::dimensions> sizes
+        utility::nd_size<
+            contravariant_input_t::dimensions,
+            typename contravariant_input_t::scalar_t> sizes
     )
     {
         // Borrowed from https://en.wikipedia.org/wiki/Hilbert_curve
@@ -108,7 +116,7 @@ struct hilbert {
             res = std::make_unique<std::decay_t<
                 typename backend_t::covariant_output_t::vector_t>[]>(
                 utility::ipow(
-                    utility::round_pow2(
+                    utility::round_pow2<std::size_t>(
                         *std::max_element(sizes.begin(), sizes.end())
                     ),
                     contravariant_input_t::dimensions
@@ -161,7 +169,7 @@ struct hilbert {
             : m_sizes(o.get_configuration())
             , m_storage(
                   utility::ipow(
-                      utility::round_pow2(
+                      utility::round_pow2<std::size_t>(
                           *std::max_element(m_sizes.begin(), m_sizes.end())
                       ),
                       contravariant_input_t::dimensions
@@ -208,7 +216,7 @@ struct hilbert {
         {
             utility::read_io_header(fs, IO_MAGIC_HEADER);
 
-            auto sizes = utility::read_binary<decltype(m_sizes)>(fs);
+            auto sizes = utility::read_binary<io_configuration_t>(fs);
             auto be = decltype(m_storage)::read_binary(fs);
 
             utility::read_io_footer(fs, IO_MAGIC_HEADER);
@@ -220,10 +228,8 @@ struct hilbert {
         {
             utility::write_io_header(fs, IO_MAGIC_HEADER);
 
-            fs.write(
-                reinterpret_cast<const char *>(&o.m_sizes),
-                sizeof(decltype(m_sizes))
-            );
+            const io_configuration_t sizes = o.m_sizes;
+            fs.write(reinterpret_cast<const char *>(&sizes), sizeof(sizes));
 
             decltype(m_storage)::write_binary(fs, o.m_storage);
 

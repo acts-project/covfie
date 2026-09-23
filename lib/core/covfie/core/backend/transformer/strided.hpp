@@ -9,8 +9,9 @@
 #include <cstddef>
 #include <cstdint>
 #include <iostream>
+#include <limits>
 #include <memory>
-#include <numeric>
+#include <stdexcept>
 #include <type_traits>
 
 #include <covfie/core/backend/primitive/array.hpp>
@@ -18,6 +19,7 @@
 #include <covfie/core/parameter_pack.hpp>
 #include <covfie/core/qualifiers.hpp>
 #include <covfie/core/utility/binary_io.hpp>
+#include <covfie/core/utility/checked_size.hpp>
 #include <covfie/core/utility/nd_map.hpp>
 #include <covfie/core/utility/nd_size.hpp>
 #include <covfie/core/vector.hpp>
@@ -41,26 +43,85 @@ struct strided {
     using coordinate_t = typename contravariant_input_t::vector_t;
     using array_t = backend_t;
 
-    using configuration_t = utility::nd_size<contravariant_input_t::dimensions>;
+    using configuration_t = utility::nd_size<
+        contravariant_input_t::dimensions,
+        typename contravariant_input_t::scalar_t>;
+
+    // Keep the binary dimensions independent of the in-memory index type.
+    using io_configuration_t =
+        utility::nd_size<contravariant_input_t::dimensions, std::size_t>;
 
     static constexpr uint32_t IO_MAGIC_HEADER = 0xAB020010;
+
+    static std::size_t configuration_size(const configuration_t & sizes)
+    {
+        // An empty grid has no offsets, regardless of the other extents.
+        for (auto size : sizes) {
+            if (size == 0) {
+                return 0;
+            }
+        }
+
+        std::size_t count = 1;
+        for (auto size : sizes) {
+            const auto extent = utility::checked_size<std::size_t>(size);
+            if (count > std::numeric_limits<std::size_t>::max() / extent) {
+                throw std::overflow_error(
+                    "Strided field volume overflows size_t."
+                );
+            }
+            count *= extent;
+        }
+        return count;
+    }
+
+    template <
+        concepts::is_nd_size_of_dim<contravariant_input_t::dimensions> config_t>
+    static configuration_t checked_configuration(const config_t & conf)
+    {
+        configuration_t sizes;
+        for (std::size_t i = 0; i < contravariant_input_t::dimensions; ++i) {
+            sizes[i] =
+                utility::checked_size<typename contravariant_input_t::scalar_t>(
+                    conf[i]
+                );
+        }
+
+        const auto count = configuration_size(sizes);
+        if (count != 0) {
+            // Coordinate arithmetic and the child index must both represent
+            // every flattened offset. The count itself can be one larger.
+            utility::checked_size<typename contravariant_input_t::scalar_t>(
+                count - 1
+            );
+            utility::checked_size<typename contravariant_output_t::scalar_t>(
+                count - 1
+            );
+        }
+        if constexpr (concepts::is_nd_size_of_dim<
+                          typename backend_t::configuration_t,
+                          1>)
+        {
+            // Check before implicitly narrowing a one-dimensional child
+            // configuration, which would hide overflow from its constructor.
+            utility::checked_size<
+                typename backend_t::configuration_t::value_type>(count);
+        }
+        return sizes;
+    }
 
     template <typename T>
     static std::unique_ptr<
         std::decay_t<typename backend_t::covariant_output_t::vector_t>[]>
     make_strided_copy(const T & other)
     {
-        configuration_t sizes = other.get_configuration();
+        configuration_t sizes =
+            checked_configuration(other.get_configuration());
         std::unique_ptr<
             std::decay_t<typename backend_t::covariant_output_t::vector_t>[]>
             res = std::make_unique<std::decay_t<
                 typename backend_t::covariant_output_t::vector_t>[]>(
-                std::accumulate(
-                    std::begin(sizes),
-                    std::end(sizes),
-                    static_cast<std::size_t>(1),
-                    std::multiplies<std::size_t>()
-                )
+                configuration_size(sizes)
             );
         typename T::parent_t::non_owning_data_t nother(other);
 
@@ -112,7 +173,7 @@ struct strided {
         owning_data_t & operator=(owning_data_t &&) = default;
 
         template <typename T>
-        requires(std::same_as<
+        requires(std::convertible_to<
                  typename T::parent_t::configuration_t,
                  configuration_t> &&
                      std::constructible_from<
@@ -122,49 +183,52 @@ struct strided {
                              typename backend_t::covariant_output_t::
                                  vector_t>[]>>>) explicit owning_data_t(const T &
                                                                             o)
-            : m_sizes(o.get_configuration())
-            , m_storage(
-                  std::accumulate(
-                      std::begin(m_sizes),
-                      std::end(m_sizes),
-                      static_cast<std::size_t>(1),
-                      std::multiplies<std::size_t>()
-                  ),
-                  make_strided_copy(o)
-              )
+            : m_sizes(checked_configuration(o.get_configuration()))
+            , m_storage(configuration_size(m_sizes), make_strided_copy(o))
+        {
+        }
+
+        // Intercept other scalar types before implicit array conversion can
+        // truncate a dimension on the way into the configuration overloads.
+        template <concepts::is_nd_size_of_dim<contravariant_input_t::dimensions>
+                      config_t>
+        requires(std::constructible_from<typename backend_t::owning_data_t, std::size_t> || std::constructible_from<typename backend_t::owning_data_t, utility::nd_size<1, std::size_t>>) explicit owning_data_t(
+            const config_t & conf
+        )
+            : owning_data_t(checked_configuration(conf))
         {
         }
 
         explicit owning_data_t(configuration_t conf
-        ) requires(std::constructible_from<typename backend_t::owning_data_t, std::size_t> && !std::constructible_from<typename backend_t::owning_data_t, utility::nd_size<1>>)
-            : m_sizes(conf)
-            , m_storage(std::accumulate(
-                  std::begin(m_sizes),
-                  std::end(m_sizes),
-                  static_cast<std::size_t>(1),
-                  std::multiplies<std::size_t>()
-              ))
+        ) requires(std::constructible_from<typename backend_t::owning_data_t, std::size_t> && !std::constructible_from<typename backend_t::owning_data_t, utility::nd_size<1, std::size_t>>)
+            : m_sizes(checked_configuration(conf))
+            , m_storage(configuration_size(m_sizes))
         {
         }
 
         explicit owning_data_t(configuration_t conf)
             requires(std::constructible_from<
                      typename backend_t::owning_data_t,
-                     utility::nd_size<1>>)
-            : m_sizes(conf)
-            , m_storage(utility::nd_size<1>{std::accumulate(
-                  std::begin(m_sizes),
-                  std::end(m_sizes),
-                  static_cast<std::size_t>(1),
-                  std::multiplies<std::size_t>()
-              )})
+                     utility::nd_size<1, std::size_t>>)
+            : m_sizes(checked_configuration(conf))
+            , m_storage(utility::nd_size<1, std::size_t>{
+                  configuration_size(m_sizes)})
+        {
+        }
+
+        template <concepts::is_nd_size_of_dim<contravariant_input_t::dimensions>
+                      config_t>
+        explicit owning_data_t(
+            const config_t & c, typename backend_t::owning_data_t && b
+        )
+            : owning_data_t(checked_configuration(c), std::move(b))
         {
         }
 
         explicit owning_data_t(
             const configuration_t & c, typename backend_t::owning_data_t && b
         )
-            : m_sizes(c)
+            : m_sizes(checked_configuration(c))
             , m_storage(std::forward<typename backend_t::owning_data_t>(b))
         {
         }
@@ -188,7 +252,9 @@ struct strided {
         {
             utility::read_io_header(fs, IO_MAGIC_HEADER);
 
-            auto sizes = utility::read_binary<decltype(m_sizes)>(fs);
+            auto sizes = checked_configuration(
+                utility::read_binary<io_configuration_t>(fs)
+            );
             auto be = backend_t::owning_data_t::read_binary(fs);
 
             utility::read_io_footer(fs, IO_MAGIC_HEADER);
@@ -200,10 +266,8 @@ struct strided {
         {
             utility::write_io_header(fs, IO_MAGIC_HEADER);
 
-            fs.write(
-                reinterpret_cast<const char *>(&o.m_sizes),
-                sizeof(decltype(o.m_sizes))
-            );
+            const io_configuration_t sizes = o.m_sizes;
+            fs.write(reinterpret_cast<const char *>(&sizes), sizeof(sizes));
 
             backend_t::owning_data_t::write_binary(fs, o.m_storage);
 

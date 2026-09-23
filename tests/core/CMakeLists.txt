@@ -30,6 +30,9 @@ add_executable(
     test_covariant_select.cpp
     test_hilbert_layout.cpp
     test_morton_layout.cpp
+    test_strided_conversion.cpp
+    test_strided_limits.cpp
+    test_index_types.cpp
 )
 
 # Ensure that the tests are linked against the required libraries.
