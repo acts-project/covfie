@@ -17,6 +17,7 @@
 #include <covfie/core/parameter_pack.hpp>
 #include <covfie/core/qualifiers.hpp>
 #include <covfie/core/utility/binary_io.hpp>
+#include <covfie/core/utility/checked_size.hpp>
 #include <covfie/core/utility/nd_size.hpp>
 #include <covfie/core/vector.hpp>
 
@@ -35,7 +36,11 @@ struct array {
 
     using vector_t = std::decay_t<typename covariant_output_t::vector_t>;
 
-    using configuration_t = utility::nd_size<contravariant_input_t::dimensions>;
+    using configuration_t =
+        utility::nd_size<contravariant_input_t::dimensions, _index_t>;
+
+    // Preserve the existing binary size representation.
+    using io_size_t = std::uint64_t;
 
     static constexpr uint32_t IO_MAGIC_HEADER = 0xAB010000;
 
@@ -52,7 +57,7 @@ struct array {
         owning_data_t & operator=(owning_data_t &&) = default;
 
         explicit owning_data_t(std::size_t n)
-            : m_size(n)
+            : m_size(utility::checked_size<_index_t>(n))
             , m_ptr(std::make_unique<vector_t[]>(n))
         {
         }
@@ -65,7 +70,7 @@ struct array {
         explicit owning_data_t(
             std::size_t size, std::unique_ptr<vector_t[]> && ptr
         )
-            : m_size(size)
+            : m_size(utility::checked_size<_index_t>(size))
             , m_ptr(std::move(ptr))
         {
         }
@@ -116,8 +121,9 @@ struct array {
                 );
             }
 
-            auto size =
-                utility::read_binary<std::decay_t<decltype(m_size)>>(fs);
+            const auto size = utility::checked_size<_index_t>(
+                utility::read_binary<io_size_t>(fs)
+            );
             std::unique_ptr<vector_t[]> ptr =
                 std::make_unique<vector_t[]>(size);
 
@@ -170,10 +176,8 @@ struct array {
                 sizeof(std::decay_t<decltype(float_width)>)
             );
 
-            fs.write(
-                reinterpret_cast<const char *>(&o.m_size),
-                sizeof(std::decay_t<decltype(o.m_size)>)
-            );
+            const io_size_t size = o.m_size;
+            fs.write(reinterpret_cast<const char *>(&size), sizeof(size));
 
             for (std::size_t i = 0; i < o.m_size; ++i) {
                 for (std::size_t j = 0; j < _output_vector_t::size; ++j) {
@@ -187,7 +191,7 @@ struct array {
             utility::write_io_footer(fs, IO_MAGIC_HEADER);
         }
 
-        uint64_t get_size() const
+        _index_t get_size() const
         {
             return m_size;
         }
@@ -200,7 +204,7 @@ struct array {
             return rv;
         }
 
-        uint64_t m_size;
+        _index_t m_size;
         std::unique_ptr<vector_t[]> m_ptr;
     };
 
@@ -220,7 +224,7 @@ struct array {
             return m_ptr[i];
         }
 
-        uint64_t m_size;
+        _index_t m_size;
         typename decltype(owning_data_t::m_ptr)::pointer m_ptr;
     };
 };

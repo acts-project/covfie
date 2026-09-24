@@ -15,6 +15,7 @@
 #include <covfie/core/backend/primitive/array.hpp>
 #include <covfie/core/concepts.hpp>
 #include <covfie/core/qualifiers.hpp>
+#include <covfie/core/utility/checked_size.hpp>
 #include <covfie/core/vector.hpp>
 #include <covfie/cuda/error_check.hpp>
 #include <covfie/cuda/utility/memory.hpp>
@@ -39,7 +40,10 @@ struct cuda_device_array {
     using value_t = typename output_vector_t::type[output_vector_t::size];
     using vector_t = std::decay_t<typename covariant_output_t::vector_t>;
 
-    using configuration_t = utility::nd_size<1>;
+    using configuration_t = utility::nd_size<1, _index_t>;
+
+    // Preserve the existing binary size representation.
+    using io_size_t = std::size_t;
 
     static constexpr uint32_t IO_MAGIC_HEADER = 0xAB110000;
 
@@ -80,7 +84,7 @@ struct cuda_device_array {
             std::unique_ptr<vector_t[]> && ptr,
             std::optional<cudaStream_t> stream
         )
-            : m_size(size)
+            : m_size(utility::checked_size<_index_t>(size))
             , m_ptr(utility::cuda::device_copy_h2d(ptr.get(), size, stream))
             , m_stream(stream)
         {
@@ -153,8 +157,9 @@ struct cuda_device_array {
                 );
             }
 
-            auto size =
-                utility::read_binary<std::decay_t<decltype(m_size)>>(fs);
+            const auto size = utility::checked_size<_index_t>(
+                utility::read_binary<io_size_t>(fs)
+            );
             std::unique_ptr<vector_t[]> ptr =
                 std::make_unique<vector_t[]>(size);
 
@@ -202,10 +207,8 @@ struct cuda_device_array {
                 sizeof(std::decay_t<decltype(float_width)>)
             );
 
-            fs.write(
-                reinterpret_cast<const char *>(&o.m_size),
-                sizeof(std::decay_t<decltype(o.m_size)>)
-            );
+            const io_size_t size = o.m_size;
+            fs.write(reinterpret_cast<const char *>(&size), sizeof(size));
 
             /*
              * The data lives in device memory, which the host cannot read
@@ -227,7 +230,7 @@ struct cuda_device_array {
             utility::write_io_footer(fs, IO_MAGIC_HEADER);
         }
 
-        std::size_t m_size;
+        _index_t m_size;
         utility::cuda::unique_device_ptr<vector_t[]> m_ptr;
         std::optional<cudaStream_t> m_stream;
     };

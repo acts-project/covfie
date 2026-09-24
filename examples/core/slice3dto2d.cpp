@@ -116,9 +116,9 @@ int main(int argc, char ** argv)
 
     BOOST_LOG_TRIVIAL(info) << "Building new output vector field...";
 
-    covfie::utility::nd_size<3> in_size =
-        f.backend().get_backend().get_backend().get_configuration();
-    covfie::utility::nd_size<2> out_size{0u, 0u};
+    auto in_size = f.backend().get_backend().get_backend().get_configuration();
+    covfie::utility::nd_size<2, std::decay_t<decltype(in_size)>::value_type>
+        out_size{0u, 0u};
 
     if (vm["axis"].as<std::string>() == "x") {
         out_size = {in_size[1], in_size[2]};

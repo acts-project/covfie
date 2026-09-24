@@ -57,10 +57,9 @@ struct clamp {
         }
 
         template <typename... Args>
-        requires(std::same_as<
+        requires(concepts::is_nd_size_of_dim<
                  typename backend_t::configuration_t,
-                 utility::nd_size<
-                     backend_t::contravariant_input_t::dimensions>> &&
+                 backend_t::contravariant_input_t::dimensions> &&
                      std::constructible_from<
                          typename backend_t::owning_data_t,
                          Args...>) explicit owning_data_t(Args... args)

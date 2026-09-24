@@ -9,6 +9,7 @@
 #include <cstring>
 #include <fstream>
 #include <sstream>
+#include <utility>
 
 #include <boost/filesystem.hpp>
 #include <gtest/gtest.h>
@@ -16,8 +17,89 @@
 
 #include <covfie/core/backend/primitive/array.hpp>
 #include <covfie/core/backend/transformer/dereference.hpp>
+#include <covfie/core/backend/transformer/hilbert.hpp>
+#include <covfie/core/backend/transformer/morton.hpp>
 #include <covfie/core/backend/transformer/strided.hpp>
 #include <covfie/core/field.hpp>
+
+namespace {
+template <typename Wide, typename Narrow>
+void check_index_independent_dimensions()
+{
+    using storage_t = typename Wide::backend_t;
+    typename storage_t::owning_data_t storage(16);
+    typename storage_t::non_owning_data_t storage_view(storage);
+    for (std::size_t i = 0; i < 16; ++i) {
+        storage_view.at(i)[0] = static_cast<float>(i);
+        storage_view.at(i)[1] = -static_cast<float>(i);
+    }
+
+    covfie::field<Wide> wide(typename Wide::owning_data_t(
+        typename Wide::configuration_t{std::size_t{4}, std::size_t{4}},
+        std::move(storage)
+    ));
+    std::stringstream wide_stream;
+    wide.dump(wide_stream);
+
+    // The field and layout headers are followed by two size_t dimensions,
+    // matching the format used before dimensions had a configurable type.
+    std::size_t dimensions[2]{};
+    const auto bytes = wide_stream.str();
+    std::memcpy(
+        dimensions, bytes.data() + 4 * sizeof(uint32_t), sizeof(dimensions)
+    );
+    EXPECT_EQ(dimensions[0], 4u);
+    EXPECT_EQ(dimensions[1], 4u);
+
+    covfie::field<Narrow> narrow(wide_stream);
+    std::stringstream narrow_stream;
+    narrow.dump(narrow_stream);
+    EXPECT_EQ(narrow_stream.str(), bytes);
+
+    covfie::field<Wide> round_trip(narrow_stream);
+    covfie::field_view<Wide> wide_view(wide);
+    covfie::field_view<Narrow> narrow_view(narrow);
+    covfie::field_view<Wide> round_trip_view(round_trip);
+    for (unsigned int x = 0; x < 4; ++x) {
+        for (unsigned int y = 0; y < 4; ++y) {
+            for (std::size_t component = 0; component < 2; ++component) {
+                EXPECT_EQ(
+                    narrow_view.at(x, y)[component],
+                    wide_view.at(x, y)[component]
+                );
+                EXPECT_EQ(
+                    round_trip_view.at(x, y)[component],
+                    wide_view.at(x, y)[component]
+                );
+            }
+        }
+    }
+}
+}
+
+TEST(TestBinaryIO, StridedDimensionsUseSizeT)
+{
+    using storage_t = covfie::backend::array<covfie::vector::float2>;
+    check_index_independent_dimensions<
+        covfie::backend::strided<covfie::vector::size2, storage_t>,
+        covfie::backend::strided<covfie::vector::uint2, storage_t>>();
+}
+
+TEST(TestBinaryIO, MortonDimensionsUseSizeT)
+{
+    using storage_t = covfie::backend::array<covfie::vector::float2>;
+    check_index_independent_dimensions<
+        covfie::backend::morton<covfie::vector::size2, storage_t, false>,
+        covfie::backend::morton<covfie::vector::uint2, storage_t, false>>();
+}
+
+TEST(TestBinaryIO, HilbertDimensionsUseSizeT)
+{
+    using storage_t = covfie::backend::array<covfie::vector::float2>;
+    check_index_independent_dimensions<
+        covfie::backend::hilbert<covfie::vector::size2, storage_t>,
+        covfie::backend::hilbert<covfie::vector::uint2, storage_t>>();
+}
 
 TEST(TestBinaryIO, WriteRead1DSingleFloatBuilder)
 {

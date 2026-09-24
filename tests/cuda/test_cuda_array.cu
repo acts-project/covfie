@@ -5,7 +5,10 @@
  */
 
 #include <cstddef>
+#include <cstdint>
 #include <optional>
+#include <stdexcept>
+#include <type_traits>
 #include <utility>
 
 #include <gtest/gtest.h>
@@ -20,6 +23,34 @@
 #include <covfie/cuda/utility/copy.hpp>
 
 #include "retrieve_vector.hpp"
+
+TEST(TestCudaArray, NarrowIndexSize)
+{
+    using array_t = covfie::backend::
+        cuda_device_array<covfie::vector::float2, std::uint8_t>;
+    static_assert(std::is_same_v<
+                  decltype(array_t::owning_data_t::m_size),
+                  std::uint8_t>);
+    array_t::owning_data_t empty;
+    EXPECT_EQ(empty.get_configuration()[0], 0u);
+    std::unique_ptr<array_t::vector_t[]> storage;
+    // Reject the count before attempting any device allocation or copy.
+    EXPECT_THROW(
+        array_t::owning_data_t(256, std::move(storage)), std::overflow_error
+    );
+}
+
+TEST(TestCudaArray, RejectStridedShapeBeforeAllocation)
+{
+    using array_t = covfie::backend::
+        cuda_device_array<covfie::vector::float2, std::uint8_t>;
+    using strided_t = covfie::backend::strided<covfie::vector::uint2, array_t>;
+    // No CUDA device is needed: reject the volume before allocating storage.
+    EXPECT_THROW(
+        (strided_t::owning_data_t{strided_t::configuration_t{16u, 16u}}),
+        std::overflow_error
+    );
+}
 
 namespace {
 template <std::size_t N, typename T, std::size_t... Is>

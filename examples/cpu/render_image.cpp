@@ -84,7 +84,7 @@ int main(int argc, char ** argv)
 
     BOOST_LOG_TRIVIAL(info) << "Allocating memory for output image...";
 
-    covfie::utility::nd_size<2> im_size = f.backend().get_configuration();
+    auto im_size = f.backend().get_configuration();
 
     std::unique_ptr<unsigned char[]> img =
         std::make_unique<unsigned char[]>(im_size[1] * im_size[0]);

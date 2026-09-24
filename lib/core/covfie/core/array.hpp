@@ -7,6 +7,7 @@
 #pragma once
 
 #include <cassert>
+#include <concepts>
 #include <cstddef>
 #include <utility>
 
@@ -20,6 +21,15 @@ requires(_size > 0) struct array {
     static constexpr std::size_t dimensions = _size;
 
     array() = default;
+
+    template <typename U>
+    requires std::convertible_to<U, scalar_t>
+        COVFIE_HOST_DEVICE constexpr array(const array<U, dimensions> & other)
+    {
+        for (std::size_t i = 0; i < dimensions; ++i) {
+            m_data[i] = static_cast<scalar_t>(other[i]);
+        }
+    }
 
     COVFIE_HOST_DEVICE array(const scalar_t (&arr)[dimensions])
         requires(dimensions > 1)
