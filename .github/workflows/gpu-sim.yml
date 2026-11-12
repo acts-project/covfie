@@ -1,0 +1,119 @@
+# This file is part of covfie, a part of the ACTS project
+#
+# Copyright (c) 2022 CERN
+#
+# This Source Code Form is subject to the terms of the Mozilla Public License,
+# v. 2.0. If a copy of the MPL was not distributed with this file, You can
+# obtain one at http://mozilla.org/MPL/2.0/.
+
+name: GPU Simulator
+
+# Optional, non-required check. The hosted runners have no GPU, so builds.yml
+# builds the CUDA and HIP tests but cannot run them. This workflow builds the
+# same two test executables and runs them on a simulated NVIDIA H100 and a
+# simulated AMD Instinct MI300X (https://github.com/pantheongpu/pantheonsim).
+# A simulator cannot reproduce hardware-specific behavior or timing, so it
+# complements real-GPU testing and does not replace it.
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "lib/**"
+      - "tests/**"
+      - "cmake/**"
+      - "CMakeLists.txt"
+      - ".github/workflows/gpu-sim.yml"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  cuda:
+    name: "Linux/CUDA/Release/nvcc12.6 and simulated H100"
+
+    runs-on: "ubuntu-24.04"
+
+    timeout-minutes: 60
+
+    steps:
+    - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+      with:
+        persist-credentials: false
+    - name: Set up the simulated GPU and CUDA toolkit
+      uses: pantheongpu/setup-pantheonsim@ca87fe3143b29166822b923d6050945c5179408c # v0.1.5
+      with:
+        gpu: nvidia/h100
+        cuda-toolkit: "12.6"
+    - name: Install dependencies
+      run: sudo apt-get update && sudo apt-get -y install
+        libboost-filesystem-dev
+        libgtest-dev
+    # 90-virtual embeds PTX only, which is what the simulator runs, and the
+    # simulator needs the shared CUDA runtime.
+    - name: Configure
+      run: cmake
+        -DCMAKE_BUILD_TYPE=Release
+        -DCMAKE_CUDA_ARCHITECTURES=90-virtual
+        -DCMAKE_CUDA_RUNTIME_LIBRARY=Shared
+        -DCOVFIE_BUILD_TESTS=On
+        -DCOVFIE_PLATFORM_CUDA=On
+        -DCMAKE_CXX_STANDARD=20
+        -S $GITHUB_WORKSPACE
+        -B build
+    - name: Build
+      run: cmake --build build --target test_cuda -- -j 3
+    # The TestCudaStrided1D cases are left out because their fixture segfaults
+    # on the host, on a real GPU as well: copy_backend_with_stream builds the
+    # one-dimensional strided backend through its converting constructor,
+    # which reads the device array from host code.
+    - name: CUDA tests
+      run: vgpu run build/tests/cuda/test_cuda
+        --gtest_filter=-TestCudaStrided1D/*
+
+  hip:
+    name: "Linux/HIP/Release/ROCm 6.4 and simulated MI300X"
+
+    runs-on: "ubuntu-24.04"
+
+    timeout-minutes: 60
+
+    steps:
+    - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+      with:
+        persist-credentials: false
+    - name: Set up the simulated GPU and ROCm
+      uses: pantheongpu/setup-pantheonsim@ca87fe3143b29166822b923d6050945c5179408c # v0.1.5
+      with:
+        gpu: amd/mi300x
+        cuda-toolkit: none
+        rocm: "6.4"
+    # find_package(hip) needs the amd_comgr CMake config and the HSA runtime,
+    # which the compiler-only ROCm install of the action does not include.
+    - name: Install dependencies
+      run: sudo apt-get update && sudo apt-get -y install
+        libboost-filesystem-dev
+        libgtest-dev
+        comgr
+        hsa-rocr
+    # The explicit architecture (gfx942 is the MI300X) keeps CMake from
+    # probing for a GPU.
+    - name: Configure
+      run: cmake
+        -DCMAKE_HIP_COMPILER=/opt/rocm/lib/llvm/bin/clang++
+        -DCMAKE_HIP_ARCHITECTURES=gfx942
+        -DCMAKE_BUILD_TYPE=Release
+        -DCOVFIE_BUILD_TESTS=On
+        -DCOVFIE_PLATFORM_HIP=On
+        -DCMAKE_CXX_STANDARD=20
+        -DCMAKE_PREFIX_PATH=/opt/rocm
+        -S $GITHUB_WORKSPACE
+        -B build
+    - name: Build
+      run: cmake --build build --target test_hip -- -j 3
+    - name: HIP tests
+      run: vgpu run build/tests/hip/test_hip
